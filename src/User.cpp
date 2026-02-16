@@ -1,4 +1,5 @@
 #include "../include/User.h"
+#include "Log.h"
 
 // Getters & Setters
 string User::getName(){return name;}
@@ -36,11 +37,11 @@ User::User(string n, string p){
 // General
 void User::addCaveLog(Cave& c){
     caveLogs.push_back(c);
-    //c.setID(caveLogs.size())
+    c.setID(caveLogs.size()-1);
 }
 void User::addHikeLog(Hike &h){
     hikeLogs.push_back(h);
-    // h.setID(hikeLogs.size());
+    h.setID(hikeLogs.size()-1);
     // logic here
     // temp: object will have id variable
 }

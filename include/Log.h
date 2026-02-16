@@ -12,12 +12,15 @@ class Log{
     vector<string> notes;
     string date;
     int id{};
+    int participantID{};
 public : 
     int getDurationMins();
     string getLocation();
     vector<string> getParticipants();
     vector<string> getNotes();
     string getDate();
+    int getID();
+    int getPID;
 
     void setDurationMins(int duration);
     void setDuration(int hours, int mins);
@@ -25,10 +28,11 @@ public :
     void setParticipants(vector<string> participants);
     void setNotes(vector<string> notes);
     void setDate(string date);
+    void setID(int id);
 
     void addParticipant(string name);
     // search for name in the vector, might be better to make this based on id.
-    void removeParticpant(string name); 
+    void removeParticpant(int pID); 
     //
     void display();
 };

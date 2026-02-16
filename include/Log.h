@@ -28,9 +28,10 @@ public :
     // search for name in the vector, might be better to make this based on id.
     void removeParticpant(string name); 
     //
+    void display();
 };
 
-class Cave : Log {
+class Cave : public Log {
     bool srtCave{};
     bool caveLeader{};
     bool rigger{};
@@ -43,10 +44,10 @@ public :
     bool setCaveLeader(bool b);
     bool setRigger(bool b);
 
-    void displayLog();
+    void display();
 };
 
-class Hike : Log {
+class Hike : public Log {
     int distance{};
     string weather;
 public : 
@@ -55,6 +56,6 @@ public :
     void setDistance(int distance);
     void setWeather(string weather);
 
-    void displayLog();
+    void display();
 };
 #endif

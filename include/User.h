@@ -4,35 +4,35 @@
 #include <vector>
 using std::string;
 using std::vector;
-class Cave;
-class Hike;
+class CaveLog;
+class HikeLog;
 
 class User{
     int id{};
     static int num_users;
     string name;
     string passwd;
-    vector<Cave> caveLogs;
-    vector<Hike> hikeLogs;
+    vector<CaveLog> caveLogs;
+    vector<HikeLog> hikeLogs;
 
 public :
     // Getters
     string getName();
     string getPasswd();
-    vector<Cave> &getCaveLogs();
-    vector<Hike> &getHikeLogs();
+    vector<CaveLog> &getCaveLogs();
+    vector<HikeLog> &getHikeLogs();
 
     // Setters
     void setID(int id);
     void setName(string name);
     void setPasswd(string passwd);
-    void setCaveLogs(vector<Cave> &caveLogs);
-    void setHikeLogs(vector<Hike> &hikeLogs);
+    void setCaveLogs(vector<CaveLog> &caveLogs);
+    void setHikeLogs(vector<HikeLog> &hikeLogs);
 
     // General
     void generateID();
-    void addCaveLog(Cave& clog);
-    void addHikeLog(Hike& hlog);
+    void addCaveLog(CaveLog& clog);
+    void addHikeLog(HikeLog& hlog);
     void removeCaveLog(int id);
     void removeHikeLog(int id);
 
@@ -40,6 +40,5 @@ public :
     User();
     User(string name);
     User(string name, string passwd);
-
 };
 #endif

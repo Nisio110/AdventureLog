@@ -4,14 +4,14 @@
 // Getters & Setters
 string User::getName(){return name;}
 string User::getPasswd(){return passwd;}
-vector<Cave> &User::getCaveLogs(){return caveLogs;}
-vector<Hike> &User::getHikeLogs(){return hikeLogs;}
+vector<CaveLog> &User::getCaveLogs(){return caveLogs;}
+vector<HikeLog> &User::getHikeLogs(){return hikeLogs;}
 
 void User::setID(int i){id = i;}
 void User::setName(string n){name = n;}
 void User::setPasswd(string p){passwd = p;}
-void User::setCaveLogs(vector<Cave> &cl){caveLogs = cl;}
-void User::setHikeLogs(vector<Hike> &hl){hikeLogs = hl;}
+void User::setCaveLogs(vector<CaveLog> &cl){caveLogs = cl;}
+void User::setHikeLogs(vector<HikeLog> &hl){hikeLogs = hl;}
 
 void User::generateID(){
     num_users += 1;
@@ -35,11 +35,11 @@ User::User(string n, string p){
 }
 
 // General
-void User::addCaveLog(Cave& c){
+void User::addCaveLog(CaveLog& c){
     caveLogs.push_back(c);
     c.setID(caveLogs.size()-1);
 }
-void User::addHikeLog(Hike &h){
+void User::addHikeLog(HikeLog &h){
     hikeLogs.push_back(h);
     h.setID(hikeLogs.size()-1);
     // logic here

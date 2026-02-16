@@ -44,9 +44,9 @@ class CaveLog : public Log {
     bool rigger{};
 public : 
     // Getters
-    bool isSrtCave();
-    bool isCaveLeader();
-    bool isRigger();
+    bool wasSRTCave();
+    bool wasCaveLeader();
+    bool wasRigger();
     // Setters
     bool setSrtCave(bool b);
     bool setCaveLeader(bool b);
@@ -57,21 +57,29 @@ public :
 
     // Constructors
     CaveLog();
-    CaveLog(string name);
-    CaveLog(string name, bool srt);
-    CaveLog(string name, bool srt, bool leader);
-    CaveLog(string name, bool srt, bool leader, bool rigger);
+    CaveLog(string name, string date);
+    CaveLog(string date, string location, vector<string> notes);
+    CaveLog(string name, string date, string location, vector<string> notes);
+    CaveLog(string name, string location, vector<string> participants, vector<string> notes, string date, bool srt, bool leader, bool rigger);
 };
 
 class HikeLog : public Log {
     int distance{};
     string weather;
 public : 
+    // Getters
     int getDistance();
     string getWeather();
+    // Setters
     void setDistance(int distance);
     void setWeather(string weather);
 
+    // General
     void display();
+
+    // Constructors
+    HikeLog();
+    HikeLog(int distance);
+    HikeLog(int distance, string weather);
 };
 #endif

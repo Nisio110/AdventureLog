@@ -8,12 +8,12 @@ class Cave;
 class Hike;
 
 class User{
+    int id{};
+    static int num_users;
     string name;
     string passwd;
     vector<Cave> caveLogs;
     vector<Hike> hikeLogs;
-    int id{};
-    static int num_users;
 
 public :
     // Getters
@@ -33,6 +33,7 @@ public :
     int addHikeLog();
     void removeCaveLog(int id);
     void removeHikeLog(int id);
+    void createID();
 
     // Constructors
     User();

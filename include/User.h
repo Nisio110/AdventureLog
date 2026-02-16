@@ -10,26 +10,30 @@ class Hike;
 class User{
     string name;
     string passwd;
-    int numHikeLogs{};
-    int numCaveLogs{};
-    int numLogs{};
-    
     vector<Cave> caveLogs;
     vector<Hike> hikeLogs;
+
 public :
+    // Getters
     string getName();
     string getPassword();
-    int getNumLogs();
-    int getNumHikeLogs();
-    int getNumCaveLogs();
     Cave getCaveLog(int id);
     Hike getHikeLog(int id);
+
+    // Setters
     void setName(string name);
     void setPasswd(string passwd);
-    
+
+    // General
     int addCaveLog();
     int addHikeLog();
     void removeCaveLog(int id);
     void removeHikeLog(int id);
+
+    // Constructors
+    User();
+    User(string name);
+    User(string name, string passwd);
+
 };
 #endif

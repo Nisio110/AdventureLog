@@ -12,17 +12,21 @@ class User{
     string passwd;
     vector<Cave> caveLogs;
     vector<Hike> hikeLogs;
+    int id{};
+    static int num_users;
 
 public :
     // Getters
     string getName();
-    string getPassword();
-    Cave getCaveLog(int id);
-    Hike getHikeLog(int id);
+    string getPasswd();
+    vector<Cave> &getCaveLogs();
+    vector<Hike> &getHikeLogs();
 
     // Setters
     void setName(string name);
     void setPasswd(string passwd);
+    void setCaveLogs(vector<Cave> caveLogs);
+    void setHikeLogs(vector<Hike> hikeLogs);
 
     // General
     int addCaveLog();

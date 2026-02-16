@@ -27,6 +27,6 @@ void Log::removeParticpant(int pID){
 } 
 void Log::display(){
     string small_div = "--- ";
-    cout << small_div << LOG << small_div;
+    cout << small_div << "LOG" << small_div;
 
 }

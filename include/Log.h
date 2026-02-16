@@ -6,18 +6,20 @@ using std::string;
 using std::vector;
 
 class Log{
-    int duration{}; // will add a setter that takes hours and minutes
+    int durationMins{}; // will add a setter that takes hours and minutes
     string location;
     vector<string> participants;
+    vector<string> notes;
     string date;
+    int id{};
 public : 
-    int getDuration();
+    int getDurationMins();
     string getLocation();
     vector<string> getParticipants();
     vector<string> getNotes();
     string getDate();
 
-    void setDuration(int duration);
+    void setDurationMins(int duration);
     void setDuration(int hours, int mins);
     void setLocation(string location);
     void setParticipants(vector<string> participants);

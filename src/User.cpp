@@ -11,6 +11,27 @@ void User::setPasswd(string p){passwd = p;}
 void User::setCaveLogs(vector<Cave> cl){caveLogs = cl;}
 void User::setHikeLogs(vector<Hike> hl){hikeLogs = hl;}
 
+void User::createID(){
+    num_users += 1;
+    id = num_users;
+}
+
+User::User(){
+    createID();
+    setName("N/A");
+    setPasswd("password123");
+}
+User::User(string n){
+    createID();
+    setName(n);
+    setPasswd("password123");
+}
+User::User(string n, string p){
+    createID();
+    setName(n);
+    setPasswd(p);
+}
+
 // General
 int User::addCaveLog(){
     int id; // temp: object will have id variable
@@ -34,24 +55,3 @@ void User::removeCaveLog(int id){
 void User::removeHikeLog(int id){
     // logic here
 } // pass in objects id variable 
-
-void User::createID(){
-    num_users += 1;
-    id = num_users;
-}
-
-User::User(){
-    createID();
-    setName("N/A");
-    setPasswd("password123");
-}
-User::User(string n){
-    createID();
-    setName(n);
-    setPasswd("password123");
-}
-User::User(string n, string p){
-    createID();
-    setName(n);
-    setPasswd(p);
-}

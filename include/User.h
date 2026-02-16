@@ -34,7 +34,6 @@ public :
     void addHikeLog(HikeLog& hlog);
     void removeCaveLog(int id);
     void removeHikeLog(int id);
-    void createID();
 
     // Constructors
     User();

@@ -1,4 +1,6 @@
 #include "../include/Log.h"
+#include <iostream>
+using std::cout;
 
 int Log::getDurationMins() {return durationMins;}
 string Log::getLocation() {return location;}
@@ -23,3 +25,8 @@ void Log::addParticipant(string p){
 void Log::removeParticpant(int pID){
    participants.erase(participants.begin() + pID);
 } 
+void Log::display(){
+    string small_div = "--- ";
+    cout << small_div << LOG << small_div;
+
+}

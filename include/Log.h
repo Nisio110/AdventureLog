@@ -37,23 +37,33 @@ public :
     void display();
 };
 
-class Cave : public Log {
+class CaveLog : public Log {
+    string name;
     bool srtCave{};
     bool caveLeader{};
     bool rigger{};
 public : 
+    // Getters
     bool isSrtCave();
     bool isCaveLeader();
     bool isRigger();
-
+    // Setters
     bool setSrtCave(bool b);
     bool setCaveLeader(bool b);
     bool setRigger(bool b);
 
+    // General
     void display();
+
+    // Constructors
+    CaveLog();
+    CaveLog(string name);
+    CaveLog(string name, bool srt);
+    CaveLog(string name, bool srt, bool leader);
+    CaveLog(string name, bool srt, bool leader, bool rigger);
 };
 
-class Hike : public Log {
+class HikeLog : public Log {
     int distance{};
     string weather;
 public : 

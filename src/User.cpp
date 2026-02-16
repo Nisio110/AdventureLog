@@ -6,10 +6,11 @@ string User::getPasswd(){return passwd;}
 vector<Cave> &User::getCaveLogs(){return caveLogs;}
 vector<Hike> &User::getHikeLogs(){return hikeLogs;}
 
+void User::setID(int i){id = i;}
 void User::setName(string n){name = n;}
 void User::setPasswd(string p){passwd = p;}
-void User::setCaveLogs(vector<Cave> cl){caveLogs = cl;}
-void User::setHikeLogs(vector<Hike> hl){hikeLogs = hl;}
+void User::setCaveLogs(vector<Cave> &cl){caveLogs = cl;}
+void User::setHikeLogs(vector<Hike> &hl){hikeLogs = hl;}
 
 void User::generateID(){
     num_users += 1;
@@ -33,25 +34,20 @@ User::User(string n, string p){
 }
 
 // General
-int User::addCaveLog(){
-    int id; // temp: object will have id variable
-    // log adding logic
-    return id;
+void User::addCaveLog(Cave& c){
+    caveLogs.push_back(c);
+    //c.setID(caveLogs.size())
 }
-int User::addCaveLog(){
-    int id; // temp: object will have id variable
-    // logic here
-    return id;
-}
-int User::addHikeLog(){
+void User::addHikeLog(Hike &h){
+    hikeLogs.push_back(h);
+    // h.setID(hikeLogs.size());
     // logic here
     // temp: object will have id variable
-    return id;
 }
 void User::removeCaveLog(int id){
-    // logic here
+    caveLogs.erase(caveLogs.begin()+id);
 } // pass in objects id variable 
 
 void User::removeHikeLog(int id){
-    // logic here
+    hikeLogs.erase(hikeLogs.begin()+id);
 } // pass in objects id variable 

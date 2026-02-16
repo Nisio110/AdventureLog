@@ -23,15 +23,16 @@ public :
     vector<Hike> &getHikeLogs();
 
     // Setters
+    void setID(int id);
     void setName(string name);
     void setPasswd(string passwd);
-    void setCaveLogs(vector<Cave> caveLogs);
-    void setHikeLogs(vector<Hike> hikeLogs);
+    void setCaveLogs(vector<Cave> &caveLogs);
+    void setHikeLogs(vector<Hike> &hikeLogs);
 
     // General
     void generateID();
-    int addCaveLog();
-    int addHikeLog();
+    void addCaveLog(Cave& clog);
+    void addHikeLog(Hike& hlog);
     void removeCaveLog(int id);
     void removeHikeLog(int id);
 

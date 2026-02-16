@@ -13,42 +13,45 @@ void User::setHikeLogs(vector<Hike> hl){hikeLogs = hl;}
 
 // General
 int User::addCaveLog(){
-    int id;
+    int id; // temp: object will have id variable
     // log adding logic
     return id;
 }
 int User::addCaveLog(){
-    int id{};
+    int id; // temp: object will have id variable
     // logic here
     return id;
 }
 int User::addHikeLog(){
     // logic here
+    // temp: object will have id variable
     return id;
 }
 void User::removeCaveLog(int id){
     // logic here
-}
+} // pass in objects id variable 
 
 void User::removeHikeLog(int id){
     // logic here
-} 
+} // pass in objects id variable 
+
+void User::createID(){
+    num_users += 1;
+    id = num_users;
+}
 
 User::User(){
-    num_users += 1;
-    id = num_users;
-    name = "N/A";
-    passwd = "password123";
+    createID();
+    setName("N/A");
+    setPasswd("password123");
 }
 User::User(string n){
-    num_users += 1;
-    id = num_users;
+    createID();
     setName(n);
     setPasswd("password123");
 }
 User::User(string n, string p){
-    num_users += 1;
-    id = num_users;
+    createID();
     setName(n);
     setPasswd(p);
 }

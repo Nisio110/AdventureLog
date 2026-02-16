@@ -29,11 +29,11 @@ public :
     void setHikeLogs(vector<Hike> hikeLogs);
 
     // General
+    void generateID();
     int addCaveLog();
     int addHikeLog();
     void removeCaveLog(int id);
     void removeHikeLog(int id);
-    void createID();
 
     // Constructors
     User();

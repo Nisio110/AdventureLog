@@ -11,23 +11,23 @@ void User::setPasswd(string p){passwd = p;}
 void User::setCaveLogs(vector<Cave> cl){caveLogs = cl;}
 void User::setHikeLogs(vector<Hike> hl){hikeLogs = hl;}
 
-void User::createID(){
+void User::generateID(){
     num_users += 1;
     id = num_users;
 }
 
 User::User(){
-    createID();
+    generateID();
     setName("N/A");
     setPasswd("password123");
 }
 User::User(string n){
-    createID();
+    generateID();
     setName(n);
     setPasswd("password123");
 }
 User::User(string n, string p){
-    createID();
+    generateID();
     setName(n);
     setPasswd(p);
 }

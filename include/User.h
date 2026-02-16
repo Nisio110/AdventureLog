@@ -8,28 +8,38 @@ class Cave;
 class Hike;
 
 class User{
+    int id{};
+    static int num_users;
     string name;
     string passwd;
-    int numHikeLogs{};
-    int numCaveLogs{};
-    int numLogs{};
-    
     vector<Cave> caveLogs;
     vector<Hike> hikeLogs;
+
 public :
+    // Getters
     string getName();
-    string getPassword();
-    int getNumLogs();
-    int getNumHikeLogs();
-    int getNumCaveLogs();
-    Cave getCaveLog(int id);
-    Hike getHikeLog(int id);
+    string getPasswd();
+    vector<Cave> &getCaveLogs();
+    vector<Hike> &getHikeLogs();
+
+    // Setters
+    void setID(int id);
     void setName(string name);
     void setPasswd(string passwd);
-    
-    int addCaveLog();
-    int addHikeLog();
+    void setCaveLogs(vector<Cave> &caveLogs);
+    void setHikeLogs(vector<Hike> &hikeLogs);
+
+    // General
+    void generateID();
+    void addCaveLog(Cave& clog);
+    void addHikeLog(Hike& hlog);
     void removeCaveLog(int id);
     void removeHikeLog(int id);
+
+    // Constructors
+    User();
+    User(string name);
+    User(string name, string passwd);
+
 };
 #endif

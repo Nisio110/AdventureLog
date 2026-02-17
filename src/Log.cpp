@@ -49,7 +49,7 @@ void CaveLog::setRigger(bool b){ rigger = b; }
 
 void CaveLog::display(){
     string small_div = "--- ";
-    cout << small_div << "LOG " << small_div << '\n'
+    cout << small_div << " CAVE LOG " << small_div << '\n'
     << "Date: " << date << "\n"
     << "Cave: " << name << "\n"
     << "Area: " << area << "\n"

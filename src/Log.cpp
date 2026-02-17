@@ -6,7 +6,7 @@ using std::cout;
 
 // Getters
 int Log::getDurationMins() {return durationMins;}
-string Log::getLocation() {return location;}
+string Log::getLocation() {return area;}
 vector<string> Log::getParticipants() {return participants;}
 vector<string> Log::getNotes() {return notes;}
 string Log::getDate() {return date;}
@@ -15,7 +15,7 @@ int Log::getID(){ return id; }
 // Setters
 void Log::setDurationMins(int dMins){ durationMins = dMins; }
 void Log::setDuration(int hours, int mins){ durationMins = (hours*60) + mins; }
-void Log::setLocation(string l){ location = l; }
+void Log::setLocation(string l){ area = l; }
 void Log::setParticipants(vector<string> ps){ participants = ps; }
 void Log::setNotes(vector<string> ns){ notes = ns; }
 void Log::setDate(string d){ date = d; }
@@ -33,7 +33,7 @@ void Log::display(){
     string small_div = "--- ";
     cout << small_div << "LOG" << small_div << '\n'
     << "Date: " << date << "\n"
-    << "Location: " << location << "\n";
+    << "Area: " << area << "\n";
 
 }
 
@@ -51,7 +51,8 @@ void CaveLog::display(){
     string small_div = "--- ";
     cout << small_div << "LOG " << small_div << '\n'
     << "Date: " << date << "\n"
-    << "Location: " << location << "\n"
+    << "Cave: " << name << "\n"
+    << "Area: " << area << "\n"
     << small_div << small_div << small_div << '\n';
 }
 

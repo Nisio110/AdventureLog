@@ -8,7 +8,7 @@ using std::vector;
 class Log{
 protected:
     int durationMins{}; // will add a setter that takes hours and minutes
-    string location{"N/A"};
+    string area{"N/A"};
     vector<string> participants;
     vector<string> notes;
     string date{"N/A"};

@@ -6,13 +6,14 @@ using std::string;
 using std::vector;
 
 class Log{
+protected:
     int durationMins{}; // will add a setter that takes hours and minutes
-    string location;
+    string location{"N/A"};
     vector<string> participants;
     vector<string> notes;
-    string date;
-    int id{};
-    int participantID{};
+    string date{"N/A"};
+    int id{-1};                 // initialised to -1 to make errors obvious
+    int participantID{-1}; 
 public : 
     int getDurationMins();
     string getLocation();
@@ -20,7 +21,7 @@ public :
     vector<string> getNotes();
     string getDate();
     int getID();
-    int getPID;
+    int getPID();
 
     void setDurationMins(int duration);
     void setDuration(int hours, int mins);
@@ -44,13 +45,15 @@ class CaveLog : public Log {
     bool rigger{};
 public : 
     // Getters
+    string getName();
     bool wasSRTCave();
     bool wasCaveLeader();
     bool wasRigger();
     // Setters
-    bool setSrtCave(bool b);
-    bool setCaveLeader(bool b);
-    bool setRigger(bool b);
+    void setName(string name);
+    void setSRTCave(bool b);
+    void setCaveLeader(bool b);
+    void setRigger(bool b);
 
     // General
     void display();
@@ -58,9 +61,8 @@ public :
     // Constructors
     CaveLog();
     CaveLog(string name, string date);
-    CaveLog(string date, string location, vector<string> notes);
     CaveLog(string name, string date, string location, vector<string> notes);
-    CaveLog(string name, string location, vector<string> participants, vector<string> notes, string date, bool srt, bool leader, bool rigger);
+    CaveLog(string name, string date, string location, vector<string> notes, vector<string> participants, bool srt, bool leader, bool rigger);
 };
 
 class HikeLog : public Log {

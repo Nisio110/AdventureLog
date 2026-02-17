@@ -4,8 +4,7 @@
 #include <vector>
 using std::string;
 using std::vector;
-class CaveLog;
-class HikeLog;
+#include "Log.h"
 
 class User{
     int id{};

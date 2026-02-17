@@ -1,5 +1,5 @@
 #include "../include/User.h"
-#include "Log.h"
+int User::num_users = 0;
 
 // Getters & Setters
 string User::getName(){return name;}

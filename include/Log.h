@@ -2,6 +2,8 @@
 #define _LOG_
 #include <string>
 #include <vector>
+#include "Participants.h"
+
 using std::string;
 using std::vector;
 
@@ -9,32 +11,29 @@ class Log{
 protected:
     int durationMins{}; // will add a setter that takes hours and minutes
     string area{"N/A"};
-    vector<string> participants;
+    Participants p; 
     string note;
     string date{"N/A"};
     int id{-1};                 // initialised to -1 to make errors obvious
-    int participantID{-1}; 
 public : 
+    // Getters
     int getDurationMins();
     string getArea();
-    vector<string> getParticipants();
     string getNote();
     string getDate();
+    Participants getParticipants();
     int getID();
-    int getPID();
 
+    // Setters
     void setDurationMins(int duration);
     void setDuration(int hours, int mins);
     void setArea(string location);
-    void setParticipants(vector<string> participants);
     void setNote(string notes);
     void setDate(string date);
     void setID(int id);
+    void setParticipants(Participants p);
 
-    void addParticipant(string name);
-    // search for name in the vector, might be better to make this based on id.
-    void removeParticpant(int pID); 
-    //
+    // General
     void display();
 };
 

@@ -1,0 +1,16 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>Relation</id><coordinates><x>10</x><y>10</y><w>200</w><h>50</h></coordinates><panel_attributes>lt=[Qualification]&lt;-
+m2=1..5,6
+</panel_attributes><additional_attributes>50;20;180;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>10</x><y>10</y><w>210</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Stereotype&gt;&gt;
+Package::FatClass
+{Some Properties}
+--
+-id: Long
+_-ClassAttribute: Long_
+--
+#Operation(i: int): int
+/+AbstractOperation()/
+--
+Responsibilities
+-- Resp1
+*-- Resp2*</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>270</x><y>380</y><w>140</w><h>70</h></coordinates><panel_attributes>Note..
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element></diagram>

@@ -20,13 +20,10 @@ void User::generateID(){
 
 User::User(){
     generateID();
-    setName("N/A");
-    setPasswd("password123");
 }
 User::User(string n){
     generateID();
     setName(n);
-    setPasswd("password123");
 }
 User::User(string n, string p){
     generateID();

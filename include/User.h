@@ -9,7 +9,7 @@ using std::vector;
 class User{
     int id{};
     static int num_users;
-    string name;
+    string name{"N/A"};
     string passwd;
     vector<CaveLog> caveLogs;
     vector<HikeLog> hikeLogs;

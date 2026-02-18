@@ -24,6 +24,7 @@ public :
     // Setters
     void setID(int id);
     void setName(string name);
+
     void setPasswd(string passwd);
     void setCaveLogs(vector<CaveLog> &caveLogs);
     void setHikeLogs(vector<HikeLog> &hikeLogs);

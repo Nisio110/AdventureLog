@@ -2,6 +2,7 @@
 int User::num_users = 0;
 
 // Getters & Setters
+int User::getID(){ return id; }
 string User::getName(){return name;}
 string User::getPasswd(){return passwd;}
 vector<CaveLog> &User::getCaveLogs(){return caveLogs;}

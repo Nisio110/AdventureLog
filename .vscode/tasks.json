@@ -7,11 +7,9 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${workspaceFolder}/src/Main.cpp",
-                "${workspaceFolder}/src/User.cpp",
-                "${workspaceFolder}/src/Log.cpp",
+                "${workspaceFolder}/src/**.cpp",
                 "-o",
-                "${workspaceFolder}/build/${workspaceFolderBasename}"
+                "${workspaceFolder}/build/AdventureLog"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"

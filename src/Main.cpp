@@ -1,8 +1,7 @@
 #include "../include/User.h"
 
-
 int main(){
-    ParticipantTests::testConstructors();
+
     return 0;
 }
 

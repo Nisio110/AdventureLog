@@ -41,4 +41,12 @@ public :
     User(string name);
     User(string name, string passwd);
 };
+
+namespace UserTests {
+    void testCaveLogsIO(); // add and remove CaveLog objects
+    void testHikeLogsIO(); // add and remove HikeLog objects
+    void testGenerateID();
+    void testConstructors();
+}
+
 #endif

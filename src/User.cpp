@@ -50,3 +50,8 @@ void User::removeCaveLog(int id){
 void User::removeHikeLog(int id){
     hikeLogs.erase(hikeLogs.begin()+id);
 } // pass in objects id variable 
+
+void UserTests::testCaveLogsIO(){}
+void UserTests::testHikeLogsIO(){}
+void UserTests::testConstructors(){}
+void UserTests::testGenerateID(){}

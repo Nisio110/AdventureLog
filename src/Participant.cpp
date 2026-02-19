@@ -1,4 +1,6 @@
 #include "../include/Participant.h"
+#include <iostream>
+#include <string>
 
 int Participant::numParticipants{0};
 
@@ -23,4 +25,23 @@ int Participant::generateID(){
 Participant::Participant(string name){
     setName(name);
     generateID();
+}
+
+// Tests
+void ParticipantTests::testConstructors(){
+    using namespace Tests;
+    using std::cout;
+
+    Participant p1("John Doe");
+    Participant p2("Mary Jane");
+    Participant p3("Alex Dartmouth");
+    Participant p4("Sarah Bucksworth");
+    
+    cout << div(1) << "TESTING PARTICIPANT CONSTRUCTORS" << div(1) << '\n'
+         << div()
+         << "p1.getID()" << ret << p1.getID() << " " << "p1.getName()" << ret << p1.getName() << '\n'
+         << "p2.getID()" << ret << p2.getID() << " " << "p2.getName()" << ret << p2.getName() << '\n'
+         << "p3.getID()" << ret << p3.getID() << " " << "p3.getName()" << ret << p3.getName() << '\n'
+         << "p4.getID()" << ret << p4.getID() << " " << "p4.getName()" << ret << p4.getName() << '\n'
+         << div() << '\n';
 }

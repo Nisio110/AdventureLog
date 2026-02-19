@@ -2,6 +2,11 @@
 
 
 int main(){
+    ParticipantTests::testConstructors();
+    return 0;
+}
+
+void basicTest(){
     User u1("oisin", "password");
     CaveLog c1 ("Bruce's Pot", "16/02/2026");
     c1.setArea("Fermanagh");
@@ -9,6 +14,4 @@ int main(){
     c1.setCaveLeader(false);
     c1.setRigger(false);
     c1.display();
-
-    return 0;
 }

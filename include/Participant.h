@@ -9,6 +9,8 @@ class Participant{
     string name;
     int id;
     static int numParticipants;
+
+    int generateID(); // private function
 public :
     // Getters
     int getID();
@@ -20,10 +22,11 @@ public :
     void setName(string names);
     void setNumParticipants(int num);
 
-    // General
-    int generateID();
-
     // Constructors
     Participant(string name);
 };
 #endif
+
+namespace ParticipantTests {
+    void testConstructors();
+}

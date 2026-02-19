@@ -8,7 +8,7 @@ using std::cout;
 // Getters
 int Log::getDurationMins() {return durationMins;}
 string Log::getArea() {return area;}
-vector<string> Log::getParticipants() {return participants;}
+vector<Participant> Log::getParticipants() {return participants;}
 string Log::getNote() {return note;}
 string Log::getDate() {return date;}
 int Log::getID(){ return id; }
@@ -17,18 +17,18 @@ int Log::getID(){ return id; }
 void Log::setDurationMins(int dMins){ durationMins = dMins; }
 void Log::setDuration(int hours, int mins){ durationMins = (hours*60) + mins; }
 void Log::setArea(string l){ area = l; }
-void Log::setParticipants(vector<string> ps){ participants = ps; }
+void Log::setParticipants(vector<Participant> p){ participants = p; }
 void Log::setNote(string nt){ note = nt; }
 void Log::setDate(string d){ date = d; }
 void Log::setID(int i){ id = i; }
 
 // General
-void Log::addParticipant(string p){
+void Log::addParticipant(Participant &p){
     participants.push_back(p);
-    participantID = participants.size()-1;
+    p.setID(participants.size()-1);
 }
-void Log::removeParticpant(int pID){
-   participants.erase(participants.begin() + pID);
+void Log::removeParticipant(Participant &p){
+   participants.erase(participants.begin() + p.getID());
 } 
 void Log::display(){
     string small_div = "--- ";
@@ -67,12 +67,12 @@ CaveLog::CaveLog(string nm, string dt, string loc, string nt){
     setArea(loc);
     setNote(nt);
 }
-CaveLog::CaveLog(string nm, string dt, string loc, string nt, vector<string> pts, bool srt, bool leader, bool rig){
+CaveLog::CaveLog(string nm, string dt, string loc, string nt, vector<Participant> part, bool srt, bool leader, bool rig){
     setName(nm);
     setDate(dt);
     setArea(loc);
     setNote(nt);
-    setParticipants(pts);
+    setParticipants(part);
     setSRTCave(srt);
     setCaveLeader(leader);
     setRigger(rig);
@@ -97,7 +97,7 @@ HikeLog::HikeLog(string dt, string nt, int dist){
     setNote(nt);
     setDist(dist);
 }
-HikeLog::HikeLog(string dt, string nt, int dist, string weth, vector<string> part){
+HikeLog::HikeLog(string dt, string nt, int dist, string weth, vector<Participant> part){
     setDate(dt);
     setNote(nt);
     setDist(dist);

@@ -23,6 +23,8 @@ namespace LogTest{
     void testGetSetDate();
     void testGetSetID();
     void testGetSetPID();
+    void testParticipantsIO(); // add and remove participants
+    void testDisplay();
 }
 
 #endif

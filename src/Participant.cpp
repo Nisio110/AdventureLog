@@ -1,6 +1,7 @@
 #include "../include/Participant.h"
 #include <iostream>
 #include <string>
+#include "../include/Tests.h"
 
 int Participant::numParticipants{0};
 

@@ -25,8 +25,9 @@ public :
     // Constructors
     Participant(string name);
 };
-#endif
 
 namespace ParticipantTests {
     void testConstructors();
 }
+
+#endif

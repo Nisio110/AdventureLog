@@ -4,7 +4,9 @@ using std::string;
 using std::cout;
 using std::cin;
 
-bool verifyTest(){
+string Tests::ret = " returns ";
+
+bool Tests::verifyTest(){
     bool response;
     cout << "Was the test successful? [Y/n] ";
     cin >> response;

@@ -2,6 +2,7 @@
 
 int main(){
     ParticipantTests::testConstructors();
+    LogTests::testCaveLogConstructors();
     return 0;
 }
 

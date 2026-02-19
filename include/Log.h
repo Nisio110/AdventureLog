@@ -14,6 +14,7 @@ protected:
     string note;
     string date{"N/A"};
     int id{-1};        // initialised to -1 to make errors obvious
+    static int numLogs;
 public :
     // Getters
     int getDurationMins();
@@ -26,7 +27,7 @@ public :
     // Setters
     void setDurationMins(int duration);
     void setDuration(int hours, int mins);
-    void setArea(string location);
+    void setArea(string area);
     void setNote(string notes);
     void setDate(string date);
     void setID(int id);
@@ -34,19 +35,20 @@ public :
 
     // General
     void display();
+    void generateID();
     void addParticipant(Participant &p);
     void removeParticipant(Participant &p);
 };
 
 class CaveLog : public Log {
-    string name;
+    string name{"N/A"};
     bool srtCave{};
     bool caveLeader{};
     bool rigger{};
 public : 
     // Getters
     string getName();
-    bool wasSRTCave();
+    bool isSRTCave();
     bool wasCaveLeader();
     bool wasRigger();
     // Setters
@@ -59,10 +61,9 @@ public :
     void display();
 
     // Constructors
-    CaveLog();
     CaveLog(string name, string date);
-    CaveLog(string name, string date, string location, string note);
-    CaveLog(string name, string date, string location, string note, vector<Participant> participants, bool srt, bool leader, bool rigger);
+    CaveLog(string name, string date, string area, string note);
+    CaveLog(string name, string date, string area, string note, vector<Participant> participants, bool srt, bool leader, bool rigger);
 };
 
 class HikeLog : public Log {
@@ -80,7 +81,6 @@ public :
     void display();
 
     // Constructors
-    HikeLog();
     HikeLog(string date);
     HikeLog(string date, string note);
     HikeLog(string date, string note, int distance);
@@ -88,7 +88,7 @@ public :
 };
 
 // Log Class Tests
-namespace LogTest{
+namespace LogTests{
     void testCaveLogConstructors();
     void testHikeLogConstructors();
     void testParticipantsIO(); // add and remove participants

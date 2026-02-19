@@ -1,8 +1,11 @@
 #include "../include/Log.h"
 #include <iostream>
 #include <string>
+#include "../include/Tests.h"
 using std::string;
 using std::cout;
+
+int Log::numLogs{0};
 
 // LOG CLASS ========================================= //
 // Getters
@@ -40,7 +43,7 @@ void Log::display(){
 
 // CAVELOG CLASS ========================================= //
 string CaveLog::getName(){ return name; }
-bool CaveLog::wasSRTCave(){ return srtCave; }
+bool CaveLog::isSRTCave(){ return srtCave; }
 bool CaveLog::wasCaveLeader(){ return caveLeader; }
 bool CaveLog::wasRigger(){ return rigger; }
 void CaveLog::setName(string n){ name = n; }
@@ -49,33 +52,39 @@ void CaveLog::setCaveLeader(bool b){ caveLeader = b; }
 void CaveLog::setRigger(bool b){ rigger = b; }
 
 void CaveLog::display(){
-    string small_div = "--- ";
-    cout << small_div << " CAVE LOG " << small_div << '\n'
-    << "Date: " << date << "\n"
-    << "Cave: " << name << "\n"
-    << "Area: " << area << "\n"
-    << small_div << small_div << small_div << '\n';
+    using namespace Tests;
+    cout << div(3) << " CAVE LOG " << getID() << " " << div(3) << '\n'
+         << "Cave        : " << getName()         << "\n"
+         << "Date        : " << getDate()         << "\n"
+         << "SRT Cave    : " << isSRTCave()       << "\n"
+         << "Area        : " << getArea()         << "\n"
+         << "Cavers      : " << "TBC"             << "\n"
+         << "Rigged      : " << wasRigger()       << "\n"
+         << "Cave Leader : " << wasCaveLeader()   << "\n"
+         << div(4)                                << "\n"
+         << "Notes : " << "\n" << getNote()       << "\n"
+         << div(4)                              << "\n\n";
 }
 
-CaveLog::CaveLog(string nm, string dt){
-    setName(nm);
-    setDate(dt);
+CaveLog::CaveLog(string name, string date){
+    setName(name);
+    setDate(date);
 }
-CaveLog::CaveLog(string nm, string dt, string loc, string nt){
-    setName(nm);
-    setDate(dt);
-    setArea(loc);
-    setNote(nt);
+CaveLog::CaveLog(string name, string date, string area, string note){
+    setName(name);
+    setDate(date);
+    setArea(area);
+    setNote(note);
 }
-CaveLog::CaveLog(string nm, string dt, string loc, string nt, vector<Participant> part, bool srt, bool leader, bool rig){
-    setName(nm);
-    setDate(dt);
-    setArea(loc);
-    setNote(nt);
-    setParticipants(part);
-    setSRTCave(srt);
-    setCaveLeader(leader);
-    setRigger(rig);
+CaveLog::CaveLog(string name, string date, string area, string note, vector<Participant> participants, bool didSRT, bool isLeader, bool isRigger){
+    setName(name);
+    setDate(date);
+    setArea(area);
+    setNote(note);
+    setParticipants(participants);
+    setSRTCave(didSRT);
+    setCaveLeader(isLeader);
+    setRigger(isRigger);
 }
 
 // HIKELOG CLASS ========================================= //
@@ -85,22 +94,39 @@ string HikeLog::getWeather(){ return weather; }
 void HikeLog::setDist(int d){ distance = d; }
 void HikeLog::setWeather(string w){ weather = w; }
 
-HikeLog::HikeLog(string dt){
-    setDate(dt);
+HikeLog::HikeLog(string date){
+    setDate(date);
 }
-HikeLog::HikeLog(string dt, string nt){
-    setDate(dt);
-    setNote(nt);
+HikeLog::HikeLog(string date, string note){
+    setDate(date);
+    setNote(note);
 }
-HikeLog::HikeLog(string dt, string nt, int dist){
-    setDate(dt);
-    setNote(nt);
+HikeLog::HikeLog(string date, string note, int dist){
+    setDate(date);
+    setNote(note);
     setDist(dist);
 }
-HikeLog::HikeLog(string dt, string nt, int dist, string weth, vector<Participant> part){
-    setDate(dt);
-    setNote(nt);
+HikeLog::HikeLog(string date, string note, int dist, string weth, vector<Participant> participants){
+    setDate(date);
+    setNote(note);
     setDist(dist);
     setWeather(weth);
-    setParticipants(part);
+    setParticipants(participants);
+}
+
+// TESTING FUNCTIONS ================================================== //
+void LogTests::testCaveLogConstructors(){
+    using namespace Tests;
+    CaveLog c1("Poll na Gollum", "12/01/2026");
+    CaveLog c2("John Thomas","02/12/2025", "Fermanagh", "Went in crawled around, bit mucky");
+    
+    Participant p1("Martha Stewart"), p2("John Pork"), p3("Oran Blackwater");
+    vector<Participant> vp {p1, p2, p3};
+    CaveLog c3("Bruce's Pot", "24/11/2025", "Fermanagh", "Cool SRT over a river required to get to the entrance", vp, true, false, false);
+
+    cout << div(1) << " TESTING CAVE LOG CONSTRUCTORS " << div(1) << "\n";
+    c1.display();
+    c2.display();
+    c3.display();
+    Tests::verifyTest();
 }

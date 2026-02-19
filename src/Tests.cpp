@@ -13,6 +13,7 @@ bool Tests::verifyTest(){
     bool result;
     cout << "Was the test successful? [Y/n] ";
     std::getline(cin, response);
+    cout << "\n";
     switch (response.front()) {
         case  'Y': case 'y':
         return true;

@@ -37,12 +37,13 @@ void ParticipantTests::testConstructors(){
     Participant p2("Mary Jane");
     Participant p3("Alex Dartmouth");
     Participant p4("Sarah Bucksworth");
+    int a{4}, b{1};
     
-    cout << div(1) << "TESTING PARTICIPANT CONSTRUCTORS" << div(1) << '\n'
-         << div()
-         << "p1.getID()" << ret << p1.getID() << " " << "p1.getName()" << ret << p1.getName() << '\n'
-         << "p2.getID()" << ret << p2.getID() << " " << "p2.getName()" << ret << p2.getName() << '\n'
-         << "p3.getID()" << ret << p3.getID() << " " << "p3.getName()" << ret << p3.getName() << '\n'
-         << "p4.getID()" << ret << p4.getID() << " " << "p4.getName()" << ret << p4.getName() << '\n'
-         << div() << '\n';
+    cout << div(b) << " TESTING PARTICIPANT CONSTRUCTORS " << div(b) << '\n'
+         << div(a) << '\n'
+         << "p1.getID()" << ret << p1.getID() << "\t" << "p1.getName()" << ret << p1.getName() << '\n'
+         << "p2.getID()" << ret << p2.getID() << "\t" << "p2.getName()" << ret << p2.getName() << '\n'
+         << "p3.getID()" << ret << p3.getID() << "\t" << "p3.getName()" << ret << p3.getName() << '\n'
+         << "p4.getID()" << ret << p4.getID() << "\t" << "p4.getName()" << ret << p4.getName() << '\n'
+         << div(a) << '\n';
 }

@@ -7,7 +7,7 @@ namespace Tests{
     using std::string;
     bool verifyTest();
     extern string ret;
-    string div() { return "======================== \n"; }
+    string div();
     string div(int x);
 }
 #endif

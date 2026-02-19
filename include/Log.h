@@ -1,9 +1,8 @@
 #ifndef _LOG_
 #define _LOG_
+#include "Participant.h"
 #include <string>
 #include <vector>
-#include "Participants.h"
-
 using std::string;
 using std::vector;
 
@@ -11,17 +10,17 @@ class Log{
 protected:
     int durationMins{}; // will add a setter that takes hours and minutes
     string area{"N/A"};
-    Participants p; 
+    vector<Participant> participants;
     string note;
     string date{"N/A"};
-    int id{-1};                 // initialised to -1 to make errors obvious
-public : 
+    int id{-1};        // initialised to -1 to make errors obvious
+public :
     // Getters
     int getDurationMins();
     string getArea();
     string getNote();
     string getDate();
-    Participants getParticipants();
+    vector<Participant> getParticipants();
     int getID();
 
     // Setters
@@ -31,10 +30,12 @@ public :
     void setNote(string notes);
     void setDate(string date);
     void setID(int id);
-    void setParticipants(Participants p);
+    void setParticipants(vector<Participant> p);
 
     // General
     void display();
+    void addParticipant(Participant &p);
+    void removeParticipant(Participant &p);
 };
 
 class CaveLog : public Log {
@@ -61,7 +62,7 @@ public :
     CaveLog();
     CaveLog(string name, string date);
     CaveLog(string name, string date, string location, string note);
-    CaveLog(string name, string date, string location, string note, vector<string> participants, bool srt, bool leader, bool rigger);
+    CaveLog(string name, string date, string location, string note, vector<Participant> participants, bool srt, bool leader, bool rigger);
 };
 
 class HikeLog : public Log {
@@ -83,6 +84,6 @@ public :
     HikeLog(string date);
     HikeLog(string date, string note);
     HikeLog(string date, string note, int distance);
-    HikeLog(string date, string note, int distance, string weather, vector<string> participants);
+    HikeLog(string date, string note, int distance, string weather, vector<Participant> participants);
 };
 #endif

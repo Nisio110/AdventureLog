@@ -151,7 +151,7 @@ void LogTests::testCaveLogConstructors(){
     vector<Participant> vp {p1, p2, p3};
     CaveLog c3("Bruce's Pot", "24/11/2025", "Fermanagh", "Cool stretch of SRT over a river required to get to the entrance", vp, true, false, false);
 
-    cout << div(1) << " TESTING CAVE LOG CONSTRUCTORS " << div(1) << "\n";
+    cout << div(2) << " TESTING CAVE LOG CONSTRUCTORS " << div(2) << "\n";
     c1.display();
     c2.display();
     c3.display();

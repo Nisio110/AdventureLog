@@ -86,4 +86,13 @@ public :
     HikeLog(string date, string note, int distance);
     HikeLog(string date, string note, int distance, string weather, vector<Participant> participants);
 };
+
+// Log Class Tests
+namespace LogTest{
+    void testCaveLogConstructors();
+    void testHikeLogConstructors();
+    void testParticipantsIO(); // add and remove participants
+    void testDisplay();
+}
+
 #endif

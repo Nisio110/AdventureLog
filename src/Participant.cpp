@@ -13,6 +13,7 @@ void Participant::setNumParticipants(int num){ numParticipants = num; }
 // General
 int Participant::generateID(){
     id = getNumParticipants() + 1;
+    return id;
 }
 
 // Constructors

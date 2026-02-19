@@ -1,5 +1,7 @@
 #include "../include/Participant.h"
 
+int Participant::numParticipants{0};
+
 // Getters
 int Participant::getID(){ return id; }
 string Participant::getName(){ return name; }

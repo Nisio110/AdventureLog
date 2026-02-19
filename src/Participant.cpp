@@ -29,7 +29,7 @@ Participant::Participant(string name){
 }
 
 // Tests
-void ParticipantTests::testConstructors(){
+bool ParticipantTests::testConstructors(){
     using namespace Tests;
     using std::cout;
 
@@ -46,4 +46,5 @@ void ParticipantTests::testConstructors(){
          << "p3.getID()" << ret << p3.getID() << "\t" << "p3.getName()" << ret << p3.getName() << '\n'
          << "p4.getID()" << ret << p4.getID() << "\t" << "p4.getName()" << ret << p4.getName() << '\n'
          << div(a) << '\n';
+    return verifyTest();
 }

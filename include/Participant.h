@@ -27,7 +27,7 @@ public :
 };
 
 namespace ParticipantTests {
-    void testConstructors();
+    bool testConstructors();
 }
 
 #endif

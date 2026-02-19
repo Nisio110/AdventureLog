@@ -35,12 +35,13 @@ public :
 
     // General
     void display();
-    void generateID();
+    void generateID(int &numObject);
     void addParticipant(Participant &p);
     void removeParticipant(Participant &p);
 };
 
 class CaveLog : public Log {
+    static int numCaveLogs;
     string name{"N/A"};
     bool srtCave{};
     bool caveLeader{};
@@ -67,6 +68,7 @@ public :
 };
 
 class HikeLog : public Log {
+    static int numHikeLogs;
     int distance{-1};
     string weather{"N/A"};
 public : 

@@ -1,5 +1,5 @@
 #include "../include/User.h"
-int User::num_users = 0;
+int User::numUsers{0};
 
 // Getters & Setters
 int User::getID(){ return id; }
@@ -15,8 +15,8 @@ void User::setCaveLogs(vector<CaveLog> &cl){caveLogs = cl;}
 void User::setHikeLogs(vector<HikeLog> &hl){hikeLogs = hl;}
 
 void User::generateID(){
-    num_users += 1;
-    id = num_users;
+    numUsers += 1;
+    id = numUsers;
 }
 
 User::User(){

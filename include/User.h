@@ -8,7 +8,7 @@ using std::vector;
 
 class User{
     int id{};
-    static int num_users;
+    static int numUsers;
     string name{"N/A"};
     string passwd;
     vector<CaveLog> caveLogs;

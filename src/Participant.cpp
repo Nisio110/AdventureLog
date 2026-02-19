@@ -14,7 +14,8 @@ void Participant::setNumParticipants(int num){ numParticipants = num; }
 
 // General
 int Participant::generateID(){
-    id = getNumParticipants() + 1;
+    setNumParticipants(numParticipants+1);
+    id = getNumParticipants();
     return id;
 }
 

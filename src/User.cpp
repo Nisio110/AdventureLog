@@ -19,9 +19,6 @@ void User::generateID(){
     id = numUsers;
 }
 
-User::User(){
-    generateID();
-}
 User::User(string n){
     generateID();
     setName(n);

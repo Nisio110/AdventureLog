@@ -1,16 +1,105 @@
-<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>Relation</id><coordinates><x>10</x><y>10</y><w>200</w><h>50</h></coordinates><panel_attributes>lt=[Qualification]&lt;-
-m2=1..5,6
-</panel_attributes><additional_attributes>50;20;180;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>10</x><y>10</y><w>210</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Stereotype&gt;&gt;
-Package::FatClass
-{Some Properties}
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>0</x><y>270</y><w>210</w><h>410</h></coordinates><panel_attributes>User
 --
--id: Long
-_-ClassAttribute: Long_
+-name: string
+-passwd: string
+-caveLogs: vector&lt;CaveLog&gt;
+-hikeLogs: vector&lt;HIkeLog&gt;
 --
-#Operation(i: int): int
-/+AbstractOperation()/
+*/Getters/*
++getID(): int
++getName(): string
++getPasswd(): string
++getCaveLogs(): vector&lt;CaveLog&gt; &amp;
++getHikeLogs(): vector&lt;HikeLog&gt; &amp;
+*/Setters/*
++setID(id: int): void
++setName(name: string): void
++setPasswd(passwd: string): void
++setCaveLogs(caveLogs: vector&lt;CaveLog&gt; &amp;): void
++setHikeLogs(hikeLogs: vector&lt;HikeLog&gt; &amp;): void
+*/General/*
++generateID(): void
++addCaveLog(caveLog: CaveLog &amp;): void
++addHikeLog(hikeLog: HikeLog &amp;): void
++removeCaveLog(id: int): void
++removeHikeLog(id: Int): void
+*/Constructors/*
++User(name: string)
++User(name: string, passwd: string)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>270</y><w>280</w><h>440</h></coordinates><panel_attributes>Log
 --
-Responsibilities
--- Resp1
-*-- Resp2*</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>270</x><y>380</y><w>140</w><h>70</h></coordinates><panel_attributes>Note..
-bg=blue</panel_attributes><additional_attributes></additional_attributes></element></diagram>
+#durationMins: int
+#area: string
+#participants: vector&lt;Participant&gt;
+#note: string
+#date: string
+#id: int
+_#numLogs: int_
+--
+*/Getters/*
++getDurationMins(): int
++getArea(): string
++getNote(): string
++getDate(): string
++getParticipants(): vector&lt;Participant&gt;
++getID(): int
+*/Setters/*
++setDurationMins(duration: int): void
++setDuration(hours: int, mins: int): void
++setArea(area:string): void
++setNote(notes: string): void
++setDate(date: string): void
++setID(id: int): void
++setParticipants(p: vector&lt;Participant&gt;): void 
+*/General/*
++display(): void
++generateID(numObject: int &amp;): void
++addParticipant(p: Participant &amp;): void
++removeParticipant(p: Participant &amp;): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>270</y><w>280</w><h>290</h></coordinates><panel_attributes>HikeLog
+--
+_-numLogs: int_
+-distance: int
+-weather: string
+--
+*/Getters/*
++getDist(): int
++getWeather: string
+*/Setters/*
++setDist(distance: int): void
++setWeather(weather: string): void
+*/General/*
++display(): void
+*/Constructors/*
++HikeLog(date: string)
++HikeLog(date: string, note: string)
++HikeLog(date:string, note: string, distance:int)
++HikeLog(date: string, note: string, distance: int, 
+	...weather: string, p: vector&lt;Participants&gt; &amp;)
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>800</x><y>270</y><w>290</w><h>390</h></coordinates><panel_attributes>CaveLog
+--
+_-numLogs: int_
+-name: string
+-isSRTCave: bool
+-wasCaveLeader: bool
+-wasRigger: bool
+--
+*/Getters/*
++getName: string
++isSRTCave(): bool
++wasCaveLeader(): bool
++wasRigger(): bool
+*/Setters/*
++setName(name: string): void
++setSRTCave(b: bool): void
++setCaveLeader(b: bool): void
++setRigger(b: bool): void
+*/General/*
++display(): void
+*/Constructors/*
++CaveLog(name: string, date: string)
++CaveLog(name: string, date: string, note: string)
++CaveLog(name: string, date: string, note: string, 
+		...p: vector&lt;Participant&gt;, isSRT: bool, wasCL: bool, 
+		...wasRigg: bool)
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>

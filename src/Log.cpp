@@ -6,8 +6,8 @@ using std::string;
 using std::cout;
 
 int Log::numLogs{0};
-int CaveLog::numCaveLogs{0};
-int HikeLog::numHikeLogs{0};
+int CaveLog::numLogs{0};
+int HikeLog::numLogs{0};
 
 // LOG CLASS ========================================= //
 // Getters
@@ -51,13 +51,13 @@ void Log::removeParticipant(Participant &p){
 
 // CAVELOG CLASS ========================================= //
 string CaveLog::getName(){ return name; }
-bool CaveLog::isSRTCave(){ return srtCave; }
-bool CaveLog::wasCaveLeader(){ return caveLeader; }
-bool CaveLog::wasRigger(){ return rigger; }
+bool CaveLog::isSRTCave(){ return isSRT; }
+bool CaveLog::wasCaveLeader(){ return wasCL; }
+bool CaveLog::wasRigger(){ return didRigging; }
 void CaveLog::setName(string n){ name = n; }
-void CaveLog::setSRTCave(bool b){ srtCave = b; }
-void CaveLog::setCaveLeader(bool b){ caveLeader = b; }
-void CaveLog::setRigger(bool b){ rigger = b; }
+void CaveLog::setSRTCave(bool b){ isSRT = b; }
+void CaveLog::setCaveLeader(bool b){ wasCL = b; }
+void CaveLog::setRigger(bool b){ didRigging = b; }
 
 void CaveLog::display(){
     using namespace Tests;
@@ -87,19 +87,19 @@ void CaveLog::display(){
 }
 
 CaveLog::CaveLog(string name, string date){
-    generateID(numCaveLogs);
+    generateID(numLogs);
     setName(name);
     setDate(date);
 }
 CaveLog::CaveLog(string name, string date, string area, string note){
-    generateID(numCaveLogs);
+    generateID(numLogs);
     setName(name);
     setDate(date);
     setArea(area);
     setNote(note);
 }
 CaveLog::CaveLog(string name, string date, string area, string note, vector<Participant> participants, bool didSRT, bool isLeader, bool isRigger){
-    generateID(numCaveLogs);
+    generateID(numLogs);
     setName(name);
     setDate(date);
     setArea(area);
@@ -118,22 +118,22 @@ void HikeLog::setDist(int d){ distance = d; }
 void HikeLog::setWeather(string w){ weather = w; }
 
 HikeLog::HikeLog(string date){
-    generateID(numHikeLogs);
+    generateID(numLogs);
     setDate(date);
 }
 HikeLog::HikeLog(string date, string note){
-    generateID(numHikeLogs);
+    generateID(numLogs);
     setDate(date);
     setNote(note);
 }
 HikeLog::HikeLog(string date, string note, int dist){
-    generateID(numHikeLogs);
+    generateID(numLogs);
     setDate(date);
     setNote(note);
     setDist(dist);
 }
-HikeLog::HikeLog(string date, string note, int dist, string weth, vector<Participant> participants){
-    generateID(numHikeLogs);
+HikeLog::HikeLog(string date, string note, int dist, string weth, vector<Participant> &participants){
+    generateID(numLogs);
     setDate(date);
     setNote(note);
     setDist(dist);

@@ -41,11 +41,11 @@ public :
 };
 
 class CaveLog : public Log {
-    static int numCaveLogs;
+    static int numLogs;
     string name{"N/A"};
-    bool srtCave{};
-    bool caveLeader{};
-    bool rigger{};
+    bool isSRT{};
+    bool wasCL{};
+    bool didRigging{};
 public : 
     // Getters
     string getName();
@@ -64,11 +64,11 @@ public :
     // Constructors
     CaveLog(string name, string date);
     CaveLog(string name, string date, string area, string note);
-    CaveLog(string name, string date, string area, string note, vector<Participant> participants, bool srt, bool leader, bool rigger);
+    CaveLog(string name, string date, string area, string note, vector<Participant> participants, bool isSRT, bool wasCL, bool wasRigg);
 };
 
 class HikeLog : public Log {
-    static int numHikeLogs;
+    static int numLogs;
     int distance{-1};
     string weather{"N/A"};
 public : 
@@ -86,7 +86,7 @@ public :
     HikeLog(string date);
     HikeLog(string date, string note);
     HikeLog(string date, string note, int distance);
-    HikeLog(string date, string note, int distance, string weather, vector<Participant> participants);
+    HikeLog(string date, string note, int distance, string weather, vector<Participant> &participants);
 };
 
 // Log Class Tests

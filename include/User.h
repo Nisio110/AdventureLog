@@ -31,13 +31,12 @@ public :
 
     // General
     void generateID();
-    void addCaveLog(CaveLog& clog);
-    void addHikeLog(HikeLog& hlog);
+    void addCaveLog(CaveLog& caveLog);
+    void addHikeLog(HikeLog& hikeLog);
     void removeCaveLog(int id);
     void removeHikeLog(int id);
 
     // Constructors
-    User();
     User(string name);
     User(string name, string passwd);
 };

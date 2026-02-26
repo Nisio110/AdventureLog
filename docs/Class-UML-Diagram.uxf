@@ -1,4 +1,4 @@
-<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>0</x><y>270</y><w>210</w><h>410</h></coordinates><panel_attributes>User
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>0</x><y>175</y><w>210</w><h>410</h></coordinates><panel_attributes>User
 --
 -name: string
 -passwd: string
@@ -25,7 +25,7 @@
 +removeHikeLog(id: Int): void
 */Constructors/*
 +User(name: string)
-+User(name: string, passwd: string)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>270</y><w>280</w><h>440</h></coordinates><panel_attributes>Log
++User(name: string, passwd: string)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>175</y><w>280</w><h>440</h></coordinates><panel_attributes>Log
 --
 #durationMins: int
 #area: string
@@ -54,7 +54,7 @@ _#numLogs: int_
 +display(): void
 +generateID(numObject: int &amp;): void
 +addParticipant(p: Participant &amp;): void
-+removeParticipant(p: Participant &amp;): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>270</y><w>280</w><h>290</h></coordinates><panel_attributes>HikeLog
++removeParticipant(p: Participant &amp;): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>205</y><w>280</w><h>290</h></coordinates><panel_attributes>HikeLog
 --
 _-numLogs: int_
 -distance: int
@@ -76,7 +76,7 @@ _-numLogs: int_
 	...weather: string, p: vector&lt;Participants&gt; &amp;)
 
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>800</x><y>270</y><w>290</w><h>390</h></coordinates><panel_attributes>CaveLog
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>800</x><y>175</y><w>290</w><h>390</h></coordinates><panel_attributes>CaveLog
 --
 _-numLogs: int_
 -name: string

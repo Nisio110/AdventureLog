@@ -40,7 +40,7 @@ public :
     void removeParticipant(Participant &p);
 };
 
-class CaveLog : public Log {
+class CaveLog : virtual public Log {
     static int numLogs;
     string name{"N/A"};
     bool isSRT{};
@@ -67,7 +67,7 @@ public :
     CaveLog(string name, string date, string area, string note, vector<Participant> participants, bool isSRT, bool wasCL, bool wasRigg);
 };
 
-class HikeLog : public Log {
+class HikeLog : virtual public Log {
     static int numLogs;
     int distance{-1};
     string weather{"N/A"};

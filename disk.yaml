@@ -9,9 +9,24 @@ name: Linda McMahon
 password: pass123
 ---
 object: CaveLog
+owner-id: 1
 id: 1
 date: 28/02/2026
-cave-name: Faunarooska
 area: Near Lisdoonvarna, Clare
 duration-mins: 210
 note: Went along a fence until we reached a gate. We the wall on the right for a time. I was instructed to figure out the cave's location by Ronan, so I got the ITM coordinated from the survey and converted them so I could use them in OSM. Using this we navigated to the entrance of Faunarooska. The climb down was fairly nice. We then traversed through winding corridors for about 90 minutes, then the beginner caver was escorted back out. A group of 4 of us continued on for about half an hour. We found a frog and rescued it. We left the cave with no issues.
+cave-name: Faunarooska
+rigging: false
+cave-leader: false
+srt-cave: false
+---
+object: HikeLog
+owner-id: 1
+id: 2
+date: 22/02/2026
+area: Mourne Mountains
+duration-mins: 190
+note: null
+distance: 16km
+weather: cloudy
+---

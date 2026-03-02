@@ -3,6 +3,9 @@
 #include "Participant.h"
 #include <string>
 #include <vector>
+using std::string;
+using std::vector;
+class User;
 
 class Log{
 protected:
@@ -93,14 +96,14 @@ public :
     // Constructors
     HikeLog(User* u, string date);
     HikeLog(User* u, string date, string note);
-    HikeLog(User* u, string date, string note, int distance);
-    HikeLog(User* u, string date, string note, int distance, string weather, vector<Participant> &participants);
+    HikeLog(User* u, string date, string area, string note, int distance);
+    HikeLog(User* u, string date, string area, string note, int distance, string weather, vector<Participant> &participants);
 };
 
 // Log Class Tests
 namespace LogTests{
-    void testCaveLogConstructors();
-    void testHikeLogConstructors();
+    void testCaveLogConstructors(User* u);
+    void testHikeLogConstructors(User* u);
     void testParticipantsIO(); // add and remove participants
     void testDisplay();
 }

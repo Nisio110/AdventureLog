@@ -9,8 +9,6 @@ int Log::numLogs{0};
 int CaveLog::numLogs{0};
 int HikeLog::numLogs{0};
 
-class User; // forward declaration
-
 // LOG CLASS ========================================= //
 // Getters
 int Log::getDurationMins() { return durationMins; }
@@ -57,7 +55,7 @@ Log::Log(User* u, string date){
     setDate(date);
 }
 Log::Log(User* u, string date, string note){
-    generateID();
+    generateID(numLogs);
     setOwner(u);
     setNote(note);
 }
@@ -135,27 +133,23 @@ void HikeLog::setWeather(string w){ weather = w; }
 
 HikeLog::HikeLog(User* u, string date): Log(u,date){}
 HikeLog::HikeLog(User* u, string date, string note): Log(u,date,note){}
-HikeLog::HikeLog(User* u, string date, string note, int dist): Log(u, date, note){
+HikeLog::HikeLog(User* u, string date, string area, string note, int dist): Log(u, date, area, note){
     setDist(dist);
 }
-HikeLog::HikeLog(string date, string note, int dist, string weth, vector<Participant> &participants){
-    generateID(numLogs);
-    setDate(date);
-    setNote(note);
+HikeLog::HikeLog(User* u, string date, string area, string note, int dist, string weth, vector<Participant> &participants): Log(u,date,area, note,participants){
     setDist(dist);
     setWeather(weth);
-    setParticipants(participants);
 }
 
 // TESTING FUNCTIONS ================================================== //
-void LogTests::testCaveLogConstructors(){
+void LogTests::testCaveLogConstructors(User* u1){
     using namespace Tests;
-    CaveLog c1("Poll na Gollum", "12/01/2026");
-    CaveLog c2("John Thomas","02/12/2025", "Fermanagh", "Went in crawled around, bit mucky");
+    CaveLog c1(u1, "Poll na Gollum", "12/01/2026");
+    CaveLog c2(u1, "John Thomas","02/12/2025", "Fermanagh", "Went in crawled around, bit mucky");
     
     Participant p1("Martha Stewart"), p2("John Pork"), p3("Oran Blackwater");
     vector<Participant> vp {p1, p2, p3};
-    CaveLog c3("Bruce's Pot", "24/11/2025", "Fermanagh", "Cool stretch of SRT over a river required to get to the entrance", vp, true, false, false);
+    CaveLog c3(u1, "Bruce's Pot", "24/11/2025", "Fermanagh", "Cool stretch of SRT over a river required to get to the entrance", vp, true, false, false);
 
     cout << div(2) << " TESTING CAVE LOG CONSTRUCTORS " << div(2) << "\n";
     c1.display();

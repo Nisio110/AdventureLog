@@ -30,4 +30,7 @@ public:
 
 };
 
+namespace IOTests{
+    void readFile();
+}
 #endif

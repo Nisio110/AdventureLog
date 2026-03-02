@@ -39,8 +39,6 @@ public :
     // Constructors
     User(string name);
     User(string name, string passwd);
-
-    // File I/O
 };
 
 namespace UserTests {

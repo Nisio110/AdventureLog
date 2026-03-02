@@ -15,6 +15,9 @@ public:
     // Getters
     std::vector<int> getFileInfo();
 
+    // Setters
+    // Decided against setters for now.
+
     // Constructors
     IO();
 
@@ -24,6 +27,7 @@ public:
     std::vector<User> loadUsers(); 
     std::vector<Log> loadLogs(); // will be called once the user has been selected. will load appropriate logs for the user
     std::vector<Participant> loadParticipants(); // will be called inside loadLogs()
+
 };
 
 #endif

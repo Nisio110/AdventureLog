@@ -9,13 +9,15 @@ int Log::numLogs{0};
 int CaveLog::numLogs{0};
 int HikeLog::numLogs{0};
 
+class User; // forward declaration
+
 // LOG CLASS ========================================= //
 // Getters
-int Log::getDurationMins() {return durationMins;}
-string Log::getArea() {return area;}
-vector<Participant> Log::getParticipants() {return participants;}
-string Log::getNote() {return note;}
-string Log::getDate() {return date;}
+int Log::getDurationMins() { return durationMins; }
+string Log::getArea() { return area; }
+vector<Participant> Log::getParticipants() { return participants; }
+string Log::getNote() { return note; }
+string Log::getDate() { return date; }
 int Log::getID(){ return id; }
 
 // Setters
@@ -26,6 +28,7 @@ void Log::setParticipants(vector<Participant> p){ participants = p; }
 void Log::setNote(string nt){ note = nt; }
 void Log::setDate(string d){ date = d; }
 void Log::setID(int i){ id = i; }
+void Log::setOwner(User *u){ owner = u; }
 
 // General
 void Log::display(){
@@ -48,6 +51,30 @@ void Log::addParticipant(Participant &p){
 void Log::removeParticipant(Participant &p){
    participants.erase(participants.begin() + p.getID());
 } 
+Log::Log(User* u, string date){
+    generateID(numLogs);
+    setOwner(u);
+    setDate(date);
+}
+Log::Log(User* u, string date, string note){
+    generateID();
+    setOwner(u);
+    setNote(note);
+}
+Log::Log(User* u, string date, string area, string note){
+    generateID(numLogs);
+    setOwner(u);
+    setDate(date);
+    setArea(area);
+    setNote(note);
+}
+Log::Log(User* u, string date, string area, string note, vector<Participant> participants){
+    generateID(numLogs);
+    setOwner(u);
+    setDate(date);
+    setArea(area);
+    setNote(note);
+}
 
 // CAVELOG CLASS ========================================= //
 string CaveLog::getName(){ return name; }
@@ -86,25 +113,14 @@ void CaveLog::display(){
          << div(4)                                << "\n\n";
 }
 
-CaveLog::CaveLog(string name, string date){
-    generateID(numLogs);
+CaveLog::CaveLog(User *u, string name, string date): Log(u,date) {
     setName(name);
-    setDate(date);
 }
-CaveLog::CaveLog(string name, string date, string area, string note){
-    generateID(numLogs);
+CaveLog::CaveLog(User *u, string name, string date, string area, string note): Log(u,date,area,note){
     setName(name);
-    setDate(date);
-    setArea(area);
-    setNote(note);
-}
-CaveLog::CaveLog(string name, string date, string area, string note, vector<Participant> participants, bool didSRT, bool isLeader, bool isRigger){
-    generateID(numLogs);
+} 
+CaveLog::CaveLog(User *u, string name, string date, string area, string note, vector<Participant> participants, bool didSRT, bool isLeader, bool isRigger): Log(u,date,area,note,participants){
     setName(name);
-    setDate(date);
-    setArea(area);
-    setNote(note);
-    setParticipants(participants);
     setSRTCave(didSRT);
     setCaveLeader(isLeader);
     setRigger(isRigger);
@@ -117,19 +133,9 @@ string HikeLog::getWeather(){ return weather; }
 void HikeLog::setDist(int d){ distance = d; }
 void HikeLog::setWeather(string w){ weather = w; }
 
-HikeLog::HikeLog(string date){
-    generateID(numLogs);
-    setDate(date);
-}
-HikeLog::HikeLog(string date, string note){
-    generateID(numLogs);
-    setDate(date);
-    setNote(note);
-}
-HikeLog::HikeLog(string date, string note, int dist){
-    generateID(numLogs);
-    setDate(date);
-    setNote(note);
+HikeLog::HikeLog(User* u, string date): Log(u,date){}
+HikeLog::HikeLog(User* u, string date, string note): Log(u,date,note){}
+HikeLog::HikeLog(User* u, string date, string note, int dist): Log(u, date, note){
     setDist(dist);
 }
 HikeLog::HikeLog(string date, string note, int dist, string weth, vector<Participant> &participants){

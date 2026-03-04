@@ -2,20 +2,30 @@
 #include <fstream>
 #include <iostream>
 using std::vector;
+using std::string;
+using std::ifstream;
+using std::cout;
+using std::getline;
 
-vector<int> getFileInfo(){
+
+bool IO::isFileAccessible(){
+    ifstream disk("disk.yaml");
+    return !(!disk);
+}
+
+vector<int>* IO::getFileInfo(){
+    cout << "Result of file open: " << isFileAccessible() << "\n";
 }
 
 void IOTests::readFile(){
-    vector<int>* fi = new vector<int>;
-    *fi = {0,0,0,0};
-    std::string fileContents, ERR;
+    string fileContents, ERR;
     ERR = "[ERROR] ";
-    std::ifstream disk("disk.yaml");
-    if (!disk) std::cout << ERR << "Failed to open file\n";
-    else{
-        while(std::getline(disk,fileContents))
-            std::cout << fileContents << "\n";
-            std::cout << "EOF";
+    ifstream disk("disk.yaml");
+    if (!disk) cout << ERR << "Failed to open file\n";
+    else {
+        while(getline(disk,fileContents)){
+            cout << fileContents << "\n";
+        }
+            cout << "EOF";
     }
 }

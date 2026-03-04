@@ -27,11 +27,10 @@ string Tests::div(){
     return "======================== \n"; 
 } 
 string Tests::div(int x) { // there is no reason to do it this way i just think its fun
-    using namespace std::numbers;
     if(x > 5) return "THE DIV IS TOO STRONG!!! ABORT! ABORT! ABORT! ABORT!";
     else {
         string d;
-        int size = std::round(std::pow(e, x)); 
+        int size = std::round(std::pow(std::numbers::e, x));
         for (int i{}; i < size; ++i) d.append("=");
         return d;
     }

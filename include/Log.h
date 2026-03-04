@@ -13,8 +13,8 @@ protected:
     std::vector<Participant> participants;
     std::string note;
     std::string date{"N/A"};
-    int id{-1};        // initialised to -1 to make errors obvious
     static int numLogs;
+    User* owner;
 public :
     // Getters
     int getDurationMins();
@@ -33,6 +33,7 @@ public :
     void setDate(std::string date);
     void setID(int id);
     void setParticipants(std::vector<Participant> p);
+    void setOwner(User* u);
 
     // General
     void display();
@@ -70,9 +71,9 @@ public :
     void display();
 
     // Constructors
-    CaveLog(std::string name, std::string date);
-    CaveLog(std::string name, std::string date, std::string area, std::string note);
-    CaveLog(std::string name, std::string date, std::string area, std::string note, std::vector<Participant> participants, bool isSRT, bool wasCL, bool wasRigg);
+    CaveLog(User* u, std::string name, std::string date);
+    CaveLog(User* u, std::string name, std::string date, std::string area, std::string note);
+    CaveLog(User* u, std::string name, std::string date, std::string area, std::string note, std::vector<Participant> participants, bool isSRT, bool wasCL, bool wasRigg);
 };
 
 class HikeLog : public Log {
@@ -91,10 +92,10 @@ public :
     void display();
 
     // Constructors
-    HikeLog(std::string date);
-    HikeLog(std::string date, std::string note);
-    HikeLog(std::string date, std::string note, int distance);
-    HikeLog(std::string date, std::string note, int distance, std::string weather, std::vector<Participant> &participants);
+    HikeLog(User* u, std::string date);
+    HikeLog(User* u, std::string date, std::string note);
+    HikeLog(User* u, std::string date, std::string area, std::string note, int distance);
+    HikeLog(User* u, std::string date, std::string area, std::string note, int distance, std::string weather, std::vector<Participant> &participants);
 };
 
 // Log Class Tests

@@ -30,7 +30,6 @@ public:
 };
 
 namespace IOTests{
-
     void readFile();
     void parseFile();
 }

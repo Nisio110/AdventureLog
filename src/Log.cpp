@@ -3,6 +3,7 @@
 #include <string>
 #include "../include/Tests.h"
 using std::string;
+using std::vector;
 using std::cout;
 
 int Log::numLogs{0};

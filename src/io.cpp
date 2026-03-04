@@ -3,7 +3,10 @@
 #include <iostream>
 using std::vector;
 
-vector<int>* getFileInfo(){
+vector<int> getFileInfo(){
+}
+
+void IOTests::readFile(){
     vector<int>* fi = new vector<int>;
     *fi = {0,0,0,0};
     std::string fileContents, ERR;
@@ -15,9 +18,4 @@ vector<int>* getFileInfo(){
             std::cout << fileContents << "\n";
             std::cout << "EOF";
     }
-    return fi;
-}
-
-void IOTests::readFile(){
-    vector<int> fi { *getFileInfo() };
 }

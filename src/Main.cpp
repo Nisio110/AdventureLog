@@ -1,7 +1,7 @@
 #include "../include/io.h"
 
 int main(){
-    IOTests::readFile();
+    IOTests::fileReadTest();
     /*
     User u1("Alex Dario");
     ParticipantTests::testConstructors();

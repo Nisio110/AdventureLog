@@ -13,8 +13,9 @@ bool IO::isFileAccessible(){
     return !(!disk);
 }
 
-vector<int>* IO::getFileInfo(){
+vector<int> IO::getFileInfo(){
     cout << "Result of file open: " << isFileAccessible() << "\n";
+    return {1,2,3,4};
 }
 
 void IOTests::readFile(){

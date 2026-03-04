@@ -3,6 +3,7 @@
 #include "Participant.h"
 #include <string>
 #include <vector>
+class User;
 
 class Log{
 protected:
@@ -40,10 +41,10 @@ public :
     void removeParticipant(Participant &p);
 
     // Constructors
-    Log(User* u, string date);
-    Log(User* u, string date, string note);
-    Log(User* u, string date, string area, string note);
-    Log(User* u, string date, string area, string note, vector<Participant> participants);
+    Log(User* u, std::string date);
+    Log(User* u, std::string date, std::string note);
+    Log(User* u, std::string date, std::string area, std::string note);
+    Log(User* u, std::string date, std::string area, std::string note, std::vector<Participant> participants);
 
 };
 

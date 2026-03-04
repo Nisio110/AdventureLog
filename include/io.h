@@ -12,7 +12,7 @@ class IO{
     // TODO: sort each object type into its own section    
 public:
     // Getters
-    std::vector<int>* getFileInfo();
+    std::vector<int> getFileInfo();
 
     // Setters
     // Decided against setters for now.

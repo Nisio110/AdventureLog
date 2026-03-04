@@ -1,14 +1,19 @@
-#include "../include/User.h"
+#include "../include/io.h"
 
 int main(){
+    IOTests::readFile();
+    /*
+    User u1("Alex Dario");
     ParticipantTests::testConstructors();
-    LogTests::testCaveLogConstructors();
+    LogTests::testCaveLogConstructors(&u1);
+    */
     return 0;
 }
 
 void basicTest(){
     User u1("oisin", "password");
-    CaveLog c1 ("Bruce's Pot", "16/02/2026");
+    //User* u2;
+    CaveLog c1(&u1,"Bruce's Pot", "16/02/2026");
     c1.setArea("Fermanagh");
     c1.setSRTCave(true);
     c1.setCaveLeader(false);

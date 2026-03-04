@@ -3,20 +3,17 @@
 #include "Participant.h"
 #include <string>
 #include <vector>
-using std::string;
-using std::vector;
-class User;
 
 class Log{
 protected:
     int id{-1};        // initialised to -1 to make errors obvious
     int durationMins{}; // will add a setter that takes hours and minutes
+    std::string area{"N/A"};
+    std::vector<Participant> participants;
+    std::string note;
+    std::string date{"N/A"};
+    int id{-1};        // initialised to -1 to make errors obvious
     static int numLogs;
-    string date{"N/A"};
-    string area{"N/A"};
-    string note;
-    User* owner;
-    vector<Participant> participants;
 public :
     // Getters
     int getDurationMins();
@@ -34,8 +31,7 @@ public :
     void setNote(std::string notes);
     void setDate(std::string date);
     void setID(int id);
-    void setParticipants(vector<Participant> p);
-    void setOwner(User *u);
+    void setParticipants(std::vector<Participant> p);
 
     // General
     void display();
@@ -73,9 +69,9 @@ public :
     void display();
 
     // Constructors
-    CaveLog(User* u, string name, string date);
-    CaveLog(User* u, string name, string date, string area, string note);
-    CaveLog(User* u, string name, string date, string area, string note, vector<Participant> participants, bool isSRT, bool wasCL, bool wasRigg);
+    CaveLog(std::string name, std::string date);
+    CaveLog(std::string name, std::string date, std::string area, std::string note);
+    CaveLog(std::string name, std::string date, std::string area, std::string note, std::vector<Participant> participants, bool isSRT, bool wasCL, bool wasRigg);
 };
 
 class HikeLog : public Log {
@@ -94,10 +90,10 @@ public :
     void display();
 
     // Constructors
-    HikeLog(User* u, string date);
-    HikeLog(User* u, string date, string note);
-    HikeLog(User* u, string date, string area, string note, int distance);
-    HikeLog(User* u, string date, string area, string note, int distance, string weather, vector<Participant> &participants);
+    HikeLog(std::string date);
+    HikeLog(std::string date, std::string note);
+    HikeLog(std::string date, std::string note, int distance);
+    HikeLog(std::string date, std::string note, int distance, std::string weather, std::vector<Participant> &participants);
 };
 
 // Log Class Tests

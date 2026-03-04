@@ -1,13 +1,12 @@
-#ifndef _TESTS_
-#define _TESTS_
+#ifndef _TESTS_H
+#define _TESTS_H
 #include <string>
 #include <iostream>
 
 namespace Tests{
-    using std::string;
     bool verifyTest();
-    extern string ret;
-    string div();
-    string div(int x);
+    extern std::string ret;
+    std::string div();
+    std::string div(int x);
 }
 #endif

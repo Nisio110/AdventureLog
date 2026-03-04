@@ -1,33 +1,31 @@
-#ifndef _USER_
-#define _USER_
+#ifndef _USER_H
+#define _USER_H
+
 #include <string>
 #include <vector>
-using std::string;
-using std::vector;
 #include "Log.h"
 
 class User{
     int id{};
     static int numUsers;
-    string name{"N/A"};
-    string passwd;
-    vector<CaveLog> caveLogs;
-    vector<HikeLog> hikeLogs;
-
+    std::string name{"N/A"};
+    std::string passwd;
+    std::vector<CaveLog> caveLogs;
+    std::vector<HikeLog> hikeLogs;
 public :
     // Getters
     int getID();
-    string getName();
-    string getPasswd();
-    vector<CaveLog> &getCaveLogs();
-    vector<HikeLog> &getHikeLogs();
+    std::string getName();
+    std::string getPasswd();
+    std::vector<CaveLog> &getCaveLogs();
+    std::vector<HikeLog> &getHikeLogs();
 
     // Setters
     void setID(int id);
-    void setName(string name);
-    void setPasswd(string passwd);
-    void setCaveLogs(vector<CaveLog> &caveLogs);
-    void setHikeLogs(vector<HikeLog> &hikeLogs);
+    void setName(std::string name);
+    void setPasswd(std::string passwd);
+    void setCaveLogs(std::vector<CaveLog> &caveLogs);
+    void setHikeLogs(std::vector<HikeLog> &hikeLogs);
 
     // General
     void generateID();
@@ -37,8 +35,8 @@ public :
     void removeHikeLog(int id);
 
     // Constructors
-    User(string name);
-    User(string name, string passwd);
+    User(std::string name);
+    User(std::string name, std::string passwd);
 };
 
 namespace UserTests {
@@ -47,5 +45,4 @@ namespace UserTests {
     void testGenerateID();
     void testConstructors();
 }
-
 #endif

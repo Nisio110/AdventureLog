@@ -1,12 +1,9 @@
-#ifndef _PARTICIPANTS_
-#define _PARTICIPANTS_
-#include <vector>
+#ifndef _PARTICIPANTS_H
+#define _PARTICIPANTS_H
 #include <string>
-using std::string;
-using std::vector;
 
 class Participant{
-    string name;
+    std::string name;
     int id;
     static int numParticipants;
 
@@ -14,16 +11,16 @@ class Participant{
 public :
     // Getters
     int getID();
-    string getName();
+    std::string getName();
     int getNumParticipants();
 
     // Setters
     void setID(int id);
-    void setName(string names);
+    void setName(std::string names);
     void setNumParticipants(int num);
 
     // Constructors
-    Participant(string name);
+    Participant(std::string name);
 };
 
 namespace ParticipantTests {

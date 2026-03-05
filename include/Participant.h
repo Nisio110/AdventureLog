@@ -1,5 +1,5 @@
-#ifndef _PARTICIPANTS_H
-#define _PARTICIPANTS_H
+#ifndef PARTICIPANTS_H
+#define PARTICIPANTS_H
 #include <string>
 
 class Participant{

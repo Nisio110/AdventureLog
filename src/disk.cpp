@@ -6,28 +6,30 @@ using std::string;
 using std::ifstream;
 using std::cout;
 
+Disk::Disk(){
+    diskFile = new ifstream;
+    diskFile->open(filename);
+}
+Disk::~Disk(){
+    delete diskFile;
+}
 
-bool Disk::openDisk(){
-    diskFile.open("disk.yaml");
-    return !(!diskFile);
-}
-bool Disk::isFileAccessible(){
-    return !(!diskFile);
-}
+ifstream* Disk::getDiskFile(){ return diskFile; }
+void Disk::openDisk(){ diskFile->open(filename); }
+bool Disk::isFileGood(){ return (diskFile->good()); }
 
 vector<int> Disk::getFileInfo(){
-    cout << "Disk accessible(?) : " << isFileAccessible() << "\n";
-    return {1,2,3,4};
+    return fileInfo;
 }
 
 void IOTests::readFile(){
     string fileContents, ERR;
     Disk d;
-    if (d.isFileAccessible()) cout << "Disk is accessible\n";
+    if (!d.isFileGood()) cout << "Disk is not accessible\n";
     else{
-    while(std::getline(d,fileContents)){
+        while(std::getline(d.getDiskFile(),fileContents)){
             cout << fileContents << "\n";
         }
-            cout << "EOF";
+        cout << "EOF";
     }
 }

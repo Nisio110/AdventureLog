@@ -27,7 +27,7 @@ void IOTests::readFile(){
     Disk d;
     if (!d.isFileGood()) cout << "Disk is not accessible\n";
     else{
-        while(std::getline(d.getDiskFile(),fileContents)){
+        while(std::getline(*d.getDiskFile(),fileContents)){
             cout << fileContents << "\n";
         }
         cout << "EOF";

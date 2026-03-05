@@ -1,9 +1,11 @@
-#ifndef _IO_
-#define _IO_
+#ifndef _DISK_H
+#define _DISK_H
 #include <vector>
+#include <fstream>
 #include "User.h"
 
-class IO{
+class Disk{
+    std::ifstream diskFile;
     int numObjects{}, numUsers{}, numLogs{}, numParticipants{};
     // vectors contain start and end lines for each object in the file.
     std::vector<int> userLocations{}, logLocations{}, participantLocations{}; 
@@ -13,14 +15,16 @@ class IO{
 public:
     // Getters
     std::vector<int> getFileInfo();
+    std::ifstream getDiskFile();
 
     // Setters
     // Decided against setters for now.
 
     // Constructors
-    IO();
+    Disk();
 
     // Read Operations
+    bool openDisk();
     bool isFileAccessible();
     std::vector<int>* readFileInfo(); // will write to fileInfo vector
     std::vector<User>* loadUsers(); 

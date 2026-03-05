@@ -1,5 +1,5 @@
-#ifndef _TESTS_H
-#define _TESTS_H
+#ifndef TESTS_H
+#define TESTS_H
 #include <string>
 #include <iostream>
 

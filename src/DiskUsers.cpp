@@ -1,5 +1,6 @@
 #include "../include/DiskUsers.h"
 #include <sstream>
+#include <iostream>
 
 DiskUsers::DiskUsers(): Disk(){}
 
@@ -10,4 +11,10 @@ void DiskUsers::parseLocations(){
         objectLocations.push_back(i);
     // i might be the goat
     }
+}
+void IOTests::findUserObjectLocations(){
+	DiskUsers du;
+	du.parseLocations();
+	for (const auto& lineNum : du.getObjectLocations())
+		std::cout << "User object found at line: " << lineNum << std::endl;
 }

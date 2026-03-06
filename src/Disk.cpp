@@ -5,6 +5,7 @@ using std::cout;
 
 // Constructors
 Disk::Disk(){
+	setFilePath("disk.yaml");
 	openDisk();
 	if (!isFileGood()) cout << "[ERROR] Disk is not accessible\n";
 }
@@ -12,6 +13,7 @@ Disk::Disk(){
 // Read operations
 void Disk::openDisk(){ diskFile.open(filePath); }
 bool Disk::isFileGood(){ return (diskFile.good()); }
+
 void Disk::readFileContents(){
 	std::string line;
 	if (!isFileGood()) cout << "[ERROR] Disk is not accessible\n";

@@ -34,7 +34,7 @@ public:
 	void readFileContents();
 
 	// Parsing functions
-	virtual void parseObjectNums() = 0; // will write to numObject variables
+	//virtual void parseObjectNums() = 0; // will write to numObject variables
 	virtual void parseLocations() = 0;
 
 	void loadObject();
@@ -43,6 +43,7 @@ public:
 namespace IOTests{
 	void readFile();
 	void parseFile();
+	void findUserObjectLocations();
 }
 
 #endif

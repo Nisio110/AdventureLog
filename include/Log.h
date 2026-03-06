@@ -49,7 +49,7 @@ public :
 
 };
 
-class CaveLog : virtual public Log {
+class CaveLog : public Log {
     static int numLogs;
     std::string name{"N/A"};
     bool isSRT{};
@@ -76,7 +76,7 @@ public :
     CaveLog(User* u, std::string name, std::string date, std::string area, std::string note, std::vector<Participant> participants, bool isSRT, bool wasCL, bool wasRigg);
 };
 
-class HikeLog : virtual public Log {
+class HikeLog : public Log {
     static int numLogs;
     int distance{-1};
     std::string weather{"N/A"};

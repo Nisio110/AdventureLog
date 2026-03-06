@@ -1,12 +1,7 @@
-#include "../include/Disk.h"
 #include "../include/DiskUsers.h"
 #include <iostream>
 
 int main(){
-	DiskUsers du;
-	du.parseLocations();
-	for (auto lineNum : du.getObjectLocations())
-		std::cout << "User object found at line: " << lineNum;
 	return 0;
 }
 

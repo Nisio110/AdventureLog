@@ -1,4 +1,4 @@
-#include "../include/disk.h"
+#include "../include/Disk.h"
 #include <iostream>
 
 using std::vector;
@@ -6,18 +6,21 @@ using std::string;
 using std::ifstream;
 using std::cout;
 
-const string Disk::filename = "disk.yaml";
-ifstream Disk::diskFile(filename);
-
+// Constructors
 Disk::Disk(){
-    diskFile.open(filename);
+    diskFile.open(filePath);
 }
 
+// Getters
 ifstream& Disk::getDiskFile(){ return diskFile; }
-void Disk::openDisk(){ diskFile.open(filename); }
-bool Disk::isFileGood(){ return (diskFile.good()); }
-const vector<int>& Disk::getFileInfo(){ return fileInfo; }
 
+
+// Read operations
+void Disk::openDisk(){ diskFile.open(filePath); }
+bool Disk::isFileGood(){ return (diskFile.good()); }
+
+
+// Test Functions
 void IOTests::readFile(){
     string fileContents, ERR;
     Disk d;

@@ -1,3 +1,5 @@
+#ifndef DISKUSER_H
+#define DISKUSER_H
 #include "Disk.h"
 
 class DiskUsers : virtual public Disk{
@@ -10,3 +12,5 @@ public:
     void parseObjectNums();
     void parseLocations();
 };
+
+#endif

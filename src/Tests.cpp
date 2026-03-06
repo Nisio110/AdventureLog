@@ -10,7 +10,6 @@ string Tests::ret = " : ";
 
 bool Tests::verifyTest(){
     string response;
-    bool result;
     cout << "Was the test successful? [Y/n] ";
     std::getline(cin, response);
     cout << "\n";

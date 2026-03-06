@@ -1,4 +1,4 @@
-#include "../include/disk.h"
+#include "../include/Disk.h"
 
 int main(){
     IOTests::readFile();

@@ -7,28 +7,14 @@ class Log;
 class Participant;
 
 class Disk{
-	// File variables
+protected:
 	std::string filePath;
 	std::ifstream diskFile;
-
-	// Vectors for storing objects 
-	std::vector<User> users;
-	std::vector<CaveLog> caveLogs;
-	std::vector<HikeLog> hikeLogs;
-	std::vector<Participant> participants;
-
-	// Contains object count stats
+	
+	std::vector<std::string> fileContents;
 	int numObjects{};
-	int numUsers{};
-	int numCaveLogs{};
-	int numHikeLogs{};
-	int numParticipants{};
-
-	// the location vectors will contain start and end line nums for each object in the file.
-	std::vector<int> userLocations;
-	std::vector<int> logLocations;
-	std::vector<int> participantLocations; 
-
+	// contains start and end line numbers for each object
+	std::vector<size_t> objectLocations;
 public:
 	// Constructors
 	Disk();
@@ -37,31 +23,21 @@ public:
 	inline std::string getFilePath(){return filePath;}
 	inline const std::ifstream& getDiskFile(){return diskFile;}
 	inline int getNumObjects(){return numObjects;}
-	inline int getNumUsers(){return numUsers;}
-	inline int getNumCaveLogs(){return numCaveLogs;}
-	inline int getNumHikeLogs(){return numHikeLogs;}
-	inline int getNumParticipants(){return numParticipants;}
+	inline std::vector<size_t> getObjectLocations(){return objectLocations;}
 
 	// Setters
 	inline void setFilePath(std::string fp){filePath = fp;}
 
-
 	// File operations
 	void openDisk();
 	bool isFileGood();
+	void readFileContents();
 
 	// Parsing functions
-	void parseFileInfo(); // will write to numObject variables
-	void parseUserLocations();
-	void parseCaveLogLocations();
-	void parseHikeLogLocations();
-	void parseParticipantLocations();
+	virtual void parseObjectNums(); // will write to numObject variables
+	virtual void parseLocations();
 
-	// Object creation functions
-	void loadUsers(); 
-	void loadCaveLogs();
-	void loadHikeLogs();
-	void loadParticipants();
+	void loadObject();
 };
 
 namespace IOTests{

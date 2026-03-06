@@ -8,10 +8,18 @@ void DiskUsers::parseLocations(){
     readFileContents();
     for (size_t i{}; i < fileContents.size(); ++i){
         if (fileContents[i].find("object: User") != std::string::npos)
-        objectLocations.push_back(i);
-    // i might be the goat
+            objectLocations.push_back(i);
     }
+    // if nothing is found find() will return `npos`
+    // npos is the largest integer that size_t can hold
+    // (size of size_t depends on where it's used)
 }
+void DiskUsers::parseObjectBodyRange(){
+    // TODO: implement this next
+}
+
+
+// Testing functions
 void IOTests::findUserObjectLocations(){
 	DiskUsers du;
 	du.parseLocations();

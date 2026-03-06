@@ -2,7 +2,7 @@
 #define DISKUSER_H
 #include "Disk.h"
 
-class DiskUsers : virtual public Disk{
+class DiskUsers : public Disk{
     std::vector<User> users; 
 public:
     DiskUsers();
@@ -11,6 +11,7 @@ public:
     // parsing
     void parseObjectNums();
     void parseLocations();
+    void parseObjectBodyRange();
 };
 
 #endif

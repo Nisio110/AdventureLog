@@ -10,11 +10,12 @@ class Disk{
 protected:
 	std::string filePath;
 	std::ifstream diskFile;
-	
 	std::vector<std::string> fileContents;
 	int numObjects{};
-	// contains start and end line numbers for each object
+	// line numbers for every object definition
 	std::vector<size_t> objectLocations;
+	// Start and end line numbers of an object definitions body
+	std::vector<std::vector<size_t>> rangeObjectBodies;
 public:
 	// Constructors
 	Disk();
@@ -27,6 +28,7 @@ public:
 
 	// Setters
 	inline void setFilePath(std::string fp){filePath = fp;}
+	inline void setNumObjects(int num){numObjects = num;}
 
 	// File operations
 	void openDisk();
@@ -34,8 +36,8 @@ public:
 	void readFileContents();
 
 	// Parsing functions
-	//virtual void parseObjectNums() = 0; // will write to numObject variables
 	virtual void parseLocations() = 0;
+	//virtual void parseObjectBodyRange() = 0;
 
 	void loadObject();
 };

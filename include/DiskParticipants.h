@@ -1,3 +1,5 @@
+#ifndef DISKPARTICIPANTS_H
+#define DISKPARTICIPANTS_H
 #include "Disk.h"
 
 class DiskParticipants : virtual public Disk{
@@ -9,3 +11,5 @@ public:
     void parseObjectNums();
     void parseLocations();
 };
+
+#endif

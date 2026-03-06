@@ -34,8 +34,8 @@ public:
 	void readFileContents();
 
 	// Parsing functions
-	virtual void parseObjectNums(); // will write to numObject variables
-	virtual void parseLocations();
+	virtual void parseObjectNums() = 0; // will write to numObject variables
+	virtual void parseLocations() = 0;
 
 	void loadObject();
 };

@@ -2,6 +2,20 @@
 #include <iostream>
 
 int main(){
+	Disk d;
+	
+	/*
+	std::string targetAttr {"id"};
+	std::string targetValue("1");
+	std::vector<size_t> attrLocs = d.parseAttrLocs(targetAttr);
+	for (int i{};i<size(attrLocs);++i)
+		std::cout << attrLocs[i]+1 << "\n";
+	*/
+	/*
+	du.parseObjectLocs();
+	for (int i{};i<size(du.getObjectLocs()); ++i)
+		std::cout << du.getObjectLocs()[i] << std::endl;
+	*/
 	return 0;
 }
 

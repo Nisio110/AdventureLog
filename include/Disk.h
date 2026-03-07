@@ -39,7 +39,7 @@ public:
 	std::vector<size_t> parseStrLocs(std::string_view targetStr);
 	std::vector<size_t> parseAttrLocs(std::string_view targetAttr);
 	std::vector<size_t> parseAttrLocs(std::string_view targetAttr, std::string_view targetValue);
-	std::string parseAttrValue(std::string_view targetAttr, std::vector<std::string_view> objectBody);
+	std::string parseAttrValue(std::string_view targetAttr, std::vector<std::string> objectBody);
 	size_t parseStrLoc(std::string_view targetStr, std::vector<std::string_view> searchTarget);
 	std::pair<std::string, std::string> parseStr(size_t lineNum); // returns key-value pair
 	std::vector<std::string> parseObjectBody(std::string targetObj, int objID);

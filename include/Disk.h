@@ -13,9 +13,9 @@ protected:
 	std::vector<std::string> fileContents;
 	int numObjects{};
 	// line numbers for every object definition
-	std::vector<size_t> objectLocations;
+	std::vector<size_t> objectLocs;
 	// Start and end line numbers of an object definitions body
-	std::vector<std::vector<size_t>> rangeObjectBodies;
+	const std::string objectType;
 public:
 	// Constructors
 	Disk();
@@ -24,7 +24,7 @@ public:
 	inline std::string getFilePath(){return filePath;}
 	inline const std::ifstream& getDiskFile(){return diskFile;}
 	inline int getNumObjects(){return numObjects;}
-	inline std::vector<size_t> getObjectLocations(){return objectLocations;}
+	inline std::vector<size_t> getObjectLocs(){return objectLocs;}
 
 	// Setters
 	inline void setFilePath(std::string fp){filePath = fp;}
@@ -36,8 +36,13 @@ public:
 	void readFileContents();
 
 	// Parsing functions
-	virtual void parseLocations() = 0;
-	//virtual void parseObjectBodyRange() = 0;
+	std::vector<size_t> parseStrLocs(std::string_view targetStr);
+	std::vector<size_t> parseAttrLocs(std::string_view targetAttr);
+	std::vector<size_t> parseAttrLocs(std::string_view targetAttr, std::string_view targetValue);
+	std::string parseAttrValue(std::string_view targetAttr, std::vector<std::string_view> objectBody);
+	size_t parseStrLoc(std::string_view targetStr, std::vector<std::string_view> searchTarget);
+	std::vector<std::string> parseObjectBody(std::string targetObj, int objID);
+	void parseObjectLocs();
 
 	void loadObject();
 };

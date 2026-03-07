@@ -4,11 +4,14 @@
 
 DiskUsers::DiskUsers(): Disk(){}
 
-void DiskUsers::parseLocations(){
+void DiskUsers::parseObjectLocs(){
+    std::string targetString {"object: "};
+    targetString.append(objectType);
+
     readFileContents();
     for (size_t i{}; i < fileContents.size(); ++i){
-        if (fileContents[i].find("object: User") != std::string::npos)
-            objectLocations.push_back(i);
+        if (fileContents[i].find(targetString) != std::string::npos)
+            objectLocs.push_back(i);
     }
     // if nothing is found find() will return `npos`
     // npos is the largest integer that size_t can hold
@@ -22,7 +25,7 @@ void DiskUsers::parseObjectBodyRange(){
 // Testing functions
 void IOTests::findUserObjectLocations(){
 	DiskUsers du;
-	du.parseLocations();
-	for (const auto& lineNum : du.getObjectLocations())
+	du.parseObjectLocs();
+	for (const auto& lineNum : du.getObjectLocs())
 		std::cout << "User object found at line: " << lineNum << std::endl;
 }

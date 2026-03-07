@@ -3,6 +3,7 @@
 #include "Disk.h"
 
 class DiskUsers : public Disk{
+    const std::string objectType {"User"};
     std::vector<User> users; 
 public:
     DiskUsers();
@@ -10,7 +11,8 @@ public:
 
     // parsing
     void parseObjectNums();
-    void parseLocations();
+    void parseStringLocation();
+    void parseObjectLocs();
     void parseObjectBodyRange();
 };
 

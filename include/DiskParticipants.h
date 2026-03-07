@@ -9,7 +9,7 @@ public:
 
     // parsing
     void parseObjectNums();
-    void parseLocations();
+    void parseObjectLocs();
 };
 */
 #endif

@@ -23,6 +23,10 @@ bool Disk::isFileGood(){ return (diskFile.good()); }
 void Disk::readFileContents(){
 	std::string line;
 	fileContents.clear();
+
+	diskFile.clear(); 
+	diskFile.seekg(0);
+
 	if (!isFileGood()) 
 		cout << "[ERROR] Disk is not accessible\n";
 	else 
@@ -58,7 +62,7 @@ std::vector<size_t> Disk::parseAttrLocs(std::string_view targetAttr, std::string
 	return parseStrLocs(targetStr);
 }
 
-size_t parseStrLoc(std::string_view targetStr, std::vector<std::string_view> searchTarget){
+size_t Disk::parseStrLoc(std::string_view targetStr, std::vector<std::string_view> searchTarget){
 	// In contrast to parseStrLocs, this function assumes only one instance of the target string
 	// is present in the search target, and hence only returns one size_t location variable.
 	size_t lineNum{0};
@@ -69,7 +73,7 @@ size_t parseStrLoc(std::string_view targetStr, std::vector<std::string_view> sea
 	return lineNum;
 }
 
-std::string parseAttrValue(std::string_view targetAttr, std::vector<std::string_view> objectBody){
+std::string Disk::parseAttrValue(std::string_view targetAttr, std::vector<std::string_view> objectBody){
 	std::string assign{": "};
 	std::string _targetAttr;
 	_targetAttr.append(targetAttr).append(assign);

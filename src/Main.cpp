@@ -4,10 +4,6 @@
 int main(){
 	Disk d;
 	std::vector<std::pair<std::string, std::string>> v {d.parseFile()};
-	std::pair<std::string, std::string> p1 {v.at(0)};
-	std::pair<std::string, std::string> p2 {v.at(1)};
-	std::pair<std::string, std::string> p3 {v.at(2)};
-	std::pair<std::string, std::string> p4 {v.at(3)};
 	for (auto pair : v){
 		std::cout << std::get<0>(pair) << " -> " << std::get<1>(pair) << "\n";
 	}

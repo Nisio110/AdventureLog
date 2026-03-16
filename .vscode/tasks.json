@@ -10,7 +10,7 @@
                 "-std=c++26",
                 "${workspaceFolder}/src/**.cpp",
                 "-o",
-                "${workspaceFolder}/AdventureLog"
+                "${workspaceFolder}/build/AdventureLog"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"

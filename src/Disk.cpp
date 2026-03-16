@@ -5,13 +5,19 @@ using std::cout;
 
 // Constructors
 Disk::Disk(){
-	setFilePath("disk.yaml");
+	setFilePath("./disk.yaml");
 	openDisk();
-	if (!isFileGood()) cout << "[ERROR] Disk is not accessible\n";
+	if (!isFileGood()) 
+		cout << "[ERROR] Disk is not accessible\n";
+	readFileContents();
 }
 
 // Read operations
-void Disk::openDisk(){ diskFile.open(filePath); }
+void Disk::openDisk(){ 
+	diskFile.clear();
+	diskFile.open(filePath); 
+}
+
 bool Disk::isFileGood(){ return (diskFile.good()); }
 
 void Disk::readFileContents(){
@@ -25,7 +31,7 @@ void Disk::readFileContents(){
 std::vector<size_t> Disk::parseStrLocs(std::string_view targetStr){
 	std::vector<size_t> lineNums;
 	readFileContents();
-	for (size_t i{}; i < fileContents.size(); ++i){
+	for (size_t i{0}; i < fileContents.size(); ++i){
 		if (fileContents[i].starts_with(targetStr) && fileContents[i].find(targetStr) != std::string::npos)
 			lineNums.push_back(i);
 	}
@@ -53,7 +59,7 @@ size_t parseStrLoc(std::string_view targetStr, std::vector<std::string_view> sea
 	// In contrast to parseStrLocs, this function assumes only one instance of the target string
 	// is present in the search target, and hence only returns one size_t location variable.
 	size_t lineNum;
-	for (size_t i{}; i < searchTarget.size(); ++i){
+	for (size_t i{0}; i < searchTarget.size(); ++i){
 		if (searchTarget[i].starts_with(targetStr) && searchTarget[i].find(targetStr) != std::string::npos)
 			lineNum = i;
 	}
@@ -67,13 +73,45 @@ std::string parseAttrValue(std::string_view targetAttr, std::vector<std::string_
 	
 	size_t attrLoc {parseStrLoc(_targetAttr, objectBody)};
 	return _targetAttr.substr(_targetAttr.size(), objectBody[attrLoc].size() - _targetAttr.size());
-
-
 }
 
-std::vector<std::string> parseObjectBody(std::string targetObj, int objID){
-	std::string attr {"object"};
-	std::vector<size_t> objLocs {parseAttrLocs(attr, targetObj)};
+std::vector<std::string> Disk::parseObjectBody(std::string targetObj, int objID){
+	std::vector<std::string> objBody;
+	std::string attrObject {"object"};
+	// stores locations for each object of that type
+	std::vector<size_t> objLocs {parseAttrLocs(attrObject, targetObj)};
+	// Delete ===
+	for (auto i :  objLocs) std::cout << i << " ";
+		std::cout << '\n';
+	// Delete ---
+	return objBody;
+}
+
+std::pair<std::string, std::string> Disk::parseStr(size_t lineNum){
+	const std::string delimiter {": "};
+	std::string line {fileContents.at(lineNum)};
+	size_t delimPos = line.find(delimiter);
+	std::string key;
+	std::string val;
+
+	if (delimPos == std::string::npos) {
+		if (line.contains("---")) {
+			std::cout << "Divider line reached\n";
+		}
+		key = "---";
+		return {key,val};
+	}
+
+	key = line.substr(0, delimPos);
+	val = line.substr(delimPos + delimiter.length());
+	return {key, val};
+}
+
+std::vector<std::pair<std::string, std::string>> Disk::parseFile(){
+	std::vector<std::pair<std::string, std::string>> parsedVals;
+	for (size_t i{0}; i < fileContents.size(); ++i)
+		parsedVals.push_back(parseStr(i));	
+	return parsedVals;
 }
 
 

@@ -22,9 +22,12 @@ bool Disk::isFileGood(){ return (diskFile.good()); }
 
 void Disk::readFileContents(){
 	std::string line;
-	if (!isFileGood()) cout << "[ERROR] Disk is not accessible\n";
-	else while( std::getline(diskFile >> std::ws, line))
-		fileContents.push_back(line);
+	fileContents.clear();
+	if (!isFileGood()) 
+		cout << "[ERROR] Disk is not accessible\n";
+	else 
+		while( std::getline(diskFile >> std::ws, line))
+			fileContents.push_back(line);
 	// we want to be able to access each line of the file easily.
 }
 
@@ -58,7 +61,7 @@ std::vector<size_t> Disk::parseAttrLocs(std::string_view targetAttr, std::string
 size_t parseStrLoc(std::string_view targetStr, std::vector<std::string_view> searchTarget){
 	// In contrast to parseStrLocs, this function assumes only one instance of the target string
 	// is present in the search target, and hence only returns one size_t location variable.
-	size_t lineNum;
+	size_t lineNum{0};
 	for (size_t i{0}; i < searchTarget.size(); ++i){
 		if (searchTarget[i].starts_with(targetStr) && searchTarget[i].find(targetStr) != std::string::npos)
 			lineNum = i;
@@ -96,9 +99,9 @@ std::pair<std::string, std::string> Disk::parseStr(size_t lineNum){
 
 	if (delimPos == std::string::npos) {
 		if (line.contains("---")) {
-			std::cout << "Divider line reached\n";
+			//std::cout << "Divider line reached\n";
+			key = "---";
 		}
-		key = "---";
 		return {key,val};
 	}
 

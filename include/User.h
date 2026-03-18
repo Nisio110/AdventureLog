@@ -35,6 +35,7 @@ public :
     void removeHikeLog(int id);
 
     // Constructors
+    User();
     User(std::string name);
     User(std::string name, std::string passwd);
 };

@@ -1,7 +1,7 @@
 #ifndef DISKUSER_H
 #define DISKUSER_H
 #include "Disk.h"
-
+/*
 class DiskUsers : public Disk{
     const std::string objectType {"User"};
     std::vector<User> users; 
@@ -15,5 +15,6 @@ public:
     void parseObjectLocs();
     void parseObjectBodyRange();
 };
+*/
 
 #endif

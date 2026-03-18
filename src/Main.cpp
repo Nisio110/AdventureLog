@@ -3,10 +3,14 @@
 
 int main(){
 	Disk d;
+	d.initProgram();
+
+	/*
 	std::vector<std::pair<std::string, std::string>> v {d.parseFile()};
 	for (auto pair : v){
 		std::cout << std::get<0>(pair) << " -> " << std::get<1>(pair) << "\n";
 	}
+	*/
 	//size_t i{3};
 	//d.parseStr(i);
 	

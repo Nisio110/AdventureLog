@@ -1,4 +1,5 @@
 #include "../include/Disk.h"
+#include "../include/constants.h"
 #include <iostream>
 
 using std::cout;
@@ -94,7 +95,8 @@ std::vector<std::string> Disk::parseObjectBody(std::string targetObj, int objID)
 	return objBody;
 }
 
-std::pair<std::string, std::string> Disk::parseStr(size_t lineNum){
+std::pair<std::string, std::string> Disk::parseStr(size_t lineNum)
+{
 	const std::string delimiter {": "};
 	std::string line {fileContents.at(lineNum)};
 	size_t delimPos = line.find(delimiter);
@@ -114,12 +116,96 @@ std::pair<std::string, std::string> Disk::parseStr(size_t lineNum){
 	return {key, val};
 }
 
-std::vector<std::pair<std::string, std::string>> Disk::parseFile(){
+std::vector<std::pair<std::string, std::string>> Disk::parseFile()
+{
 	std::vector<std::pair<std::string, std::string>> parsedVals;
 	for (size_t i{0}; i < fileContents.size(); ++i)
 		parsedVals.push_back(parseStr(i));	
 	return parsedVals;
 }
+
+
+
+
+namespace keys{
+	// keys
+	constexpr short key {0};
+	constexpr short val {1};
+	constexpr std::string_view div {"---"};
+	constexpr std::string_view obj {"object"};
+	constexpr std::string_view id {"id"};
+	constexpr std::string_view name {"name"};
+	constexpr std::string_view passwd {"password"};
+	constexpr std::string_view ownerId {"owner-id"};
+	constexpr std::string_view date {"date"};
+	constexpr std::string_view area {"area"};
+	constexpr std::string_view durMins {"duration-mins"};
+	constexpr std::string_view note {"note"};
+	constexpr std::string_view cName{"cave-name"};
+	constexpr std::string_view rigging {"rigging"};
+	constexpr std::string_view cl {"cave-leader"};
+	constexpr std::string_view srtCave {"srt-cave"};
+	constexpr std::string_view dist {"distance"};
+	constexpr std::string_view weather {"weather"};
+
+	// vals
+	constexpr std::string_view user {"User"};
+	constexpr std::string_view caveLog {"CaveLog"};
+	constexpr std::string_view hikeLog {"HikeLog"};
+	constexpr std::string_view participant {"Participant"};
+}
+
+void Disk::splitByObjects(){
+	for (size_t i{0}; i < attributes.size();){
+		if (std::get<keys::key>(attributes.at(i)) == keys::obj)
+		{
+			std::vector<std::pair<std::string,std::string>> objBody;
+			while (std::get<keys::key>(attributes.at(i)) != keys::div)
+			{
+				objBody.push_back(attributes.at(i));
+				++i;
+			}
+			objects.push_back(objBody);
+			++i;
+		}
+	}
+
+	if (globals::verboseMode){
+		std::cout << "\n=== Printing object bodies =========\n";
+		for (auto objBody : objects){
+			for (auto attribute : objBody){
+				std::cout << std::get<keys::key>(attribute) << ": " << std::get<keys::val>(attribute) << "\n";
+			}
+			std::cout << "= end of object ===\n\n";
+		}
+		std::cout << "=== Done printing =========\n";
+	}
+}
+void Disk::initProgram()
+{
+	parseFile();
+	splitByObjects();
+	
+	for (size_t i{}; i < objects.size(); ++i){
+		std::vector<std::pair<std::string, std::string>> obj {objects.at(i)};
+		std::pair<std::string, std::string> pair = obj.at(i);
+		std::string key {std::get<keys::key>(pair)};
+		std::string val {std::get<keys::val>(pair)};
+
+		if (key == keys::obj){
+			if (val == keys::user)
+				users.push_back(initUser(obj));
+			else if (val == keys::caveLog || val == keys::hikeLog)
+				logs.push_back(initLog(obj));
+			else if (val == keys::caveLog)
+				participants.push_back(initParticipants(obj));
+			else std::cout << "\\,;O;,/"
+		}
+	}
+
+}
+
+
 
 
 // Test Functions

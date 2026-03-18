@@ -11,11 +11,13 @@ protected:
 	std::string filePath;
 	std::ifstream diskFile;
 	std::vector<std::string> fileContents;
-	int numObjects{};
-	// line numbers for every object definition
-	std::vector<size_t> objectLocs;
-	// Start and end line numbers of an object definitions body
-	const std::string objectType;
+	std::vector<std::pair<std::string, std::string>> attributes;
+	std::vector<std::vector<std::pair<std::string,std::string>>> objects;
+	std::vector<User> users;
+	std::vector<Log> logs;
+	std::vector<Participant> participants;
+
+	void splitByObjects();
 public:
 	// Constructors
 	Disk();
@@ -23,12 +25,9 @@ public:
 	// Getters 
 	inline std::string getFilePath(){return filePath;}
 	inline const std::ifstream& getDiskFile(){return diskFile;}
-	inline int getNumObjects(){return numObjects;}
-	inline std::vector<size_t> getObjectLocs(){return objectLocs;}
 
 	// Setters
 	inline void setFilePath(std::string fp){filePath = fp;}
-	inline void setNumObjects(int num){numObjects = num;}
 
 	// File operations
 	void openDisk();
@@ -41,10 +40,18 @@ public:
 	std::vector<size_t> parseAttrLocs(std::string_view targetAttr, std::string_view targetValue);
 	std::string parseAttrValue(std::string_view targetAttr, std::vector<std::string_view> objectBody);
 	size_t parseStrLoc(std::string_view targetStr, std::vector<std::string_view> searchTarget);
-	std::pair<std::string, std::string> parseStr(size_t lineNum); // returns key-value pair
 	std::vector<std::string> parseObjectBody(std::string targetObj, int objID);
-	std::vector<std::pair<std::string, std::string>> parseFile();
 	void parseObjectLocs();
+	// The ones that matter
+	std::pair<std::string, std::string> parseStr(size_t lineNum); // returns key-value pair
+	std::vector<std::pair<std::string, std::string>> parseFile();
+	// The ones that matter
+
+	// Init functions
+	void initProgram();
+	User& initUser(std::vector<std::pair<std::string,std::string>> attr);
+	Log& initLog(std::vector<std::pair<std::string,std::string>> attr);
+	Participant& initParticipants(std::vector<std::pair<std::string,std::string>> attr);
 
 	void loadObject();
 };

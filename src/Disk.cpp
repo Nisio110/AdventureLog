@@ -35,7 +35,7 @@ void Disk::readFileContents(){
 			fileContents.push_back(line);
 	// we want to be able to access each line of the file easily.
 }
-
+/*
 std::vector<size_t> Disk::parseStrLocs(std::string_view targetStr){
 	std::vector<size_t> lineNums;
 	readFileContents();
@@ -93,8 +93,8 @@ std::vector<std::string> Disk::parseObjectBody(std::string targetObj, int objID)
 		std::cout << '\n';
 	// Delete ---
 	return objBody;
-}
-
+} // IGNORE THIS
+*/
 std::pair<std::string, std::string> Disk::parseStr(size_t lineNum)
 {
 	const std::string delimiter {": "};
@@ -128,9 +128,9 @@ std::vector<std::pair<std::string, std::string>> Disk::parseFile()
 
 
 namespace keys{
-	// keys
 	constexpr short key {0};
 	constexpr short val {1};
+	// keys
 	constexpr std::string_view div {"---"};
 	constexpr std::string_view obj {"object"};
 	constexpr std::string_view id {"id"};

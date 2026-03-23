@@ -27,9 +27,9 @@ public:
 	// Getters 
 	inline std::string getFilePath(){return filePath;}
 	inline const std::ifstream& getDiskFile(){return diskFile;}
-	inline const std::vector<User>& getUsers(){return users;}
-	inline const std::vector<Log>& getLogs(){return logs;}
-	inline const std::vector<Participant>& getParticipants(){return participants;}
+	inline const std::vector<User*>& getUsers(){return users;}
+	inline const std::vector<Log*>& getLogs(){return logs;}
+	inline const std::vector<Participant*>& getParticipants(){return participants;}
 
 	// Setters
 	inline void setFilePath(std::string fp){filePath = fp;}

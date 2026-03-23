@@ -13,28 +13,30 @@ protected:
 	std::vector<std::string> fileContents;
 	std::vector<std::pair<std::string, std::string>> attributes;
 	std::vector<std::vector<std::pair<std::string,std::string>>> objects;
-	std::vector<User> users;
-	std::vector<Log> logs;
-	std::vector<Participant> participants;
+
+	std::vector<User*> users;
+	std::vector<Log*> logs;
+	std::vector<Participant*> participants;
 
 	void splitByObjects();
 public:
 	// Constructors
 	Disk();
+	~Disk();
 
 	// Getters 
 	inline std::string getFilePath(){return filePath;}
 	inline const std::ifstream& getDiskFile(){return diskFile;}
-	inline std::vector<User> getUsers(){return users;}
-	inline std::vector<Log> getLogs(){return logs;}
-	inline std::vector<Participant>(){return participants;}
+	inline const std::vector<User>& getUsers(){return users;}
+	inline const std::vector<Log>& getLogs(){return logs;}
+	inline const std::vector<Participant>& getParticipants(){return participants;}
 
 	// Setters
 	inline void setFilePath(std::string fp){filePath = fp;}
 
-	inline void addUser(User& u){users.push_back(u);}
-	inline void addLog(Log& log){logs.push_back(log);}
-	inline void addParticipant(Participant& p){return p;}
+	inline void addUser(User* u){users.push_back(u);}
+	inline void addLog(Log* log){logs.push_back(log);}
+	inline void addParticipant(Participant* p){participants.push_back(p);}
 
 	// File operations
 	void openDisk();
@@ -47,10 +49,11 @@ public:
 
 	// Init functions
 	void initProgram();
-	User& initUser(std::vector<std::pair<std::string,std::string>> attr);
-	Log& initLog(std::vector<std::pair<std::string,std::string>> attr);
-	Participant& initParticipants(std::vector<std::pair<std::string,std::string>> attr);
+	User* initUser(std::vector<std::pair<std::string,std::string>> attr);
+	Log* initLog(std::vector<std::pair<std::string,std::string>> attr);
+	Participant* initParticipant(std::vector<std::pair<std::string,std::string>> attr);
 
+	void printUserDetails(); // for testing
 	void loadObject();
 };
 

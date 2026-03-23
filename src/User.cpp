@@ -21,6 +21,7 @@ void User::generateID(){
     numUsers += 1;
     id = numUsers;
 }
+User::User(){}
 
 User::User(string n){
     generateID();

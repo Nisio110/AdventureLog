@@ -97,13 +97,10 @@ std::vector<std::pair<std::string, std::string>> Disk::parseFile()
 
 void Disk::splitByObjects(){
 	for (size_t i{0}; i < attributes.size();){
-		if (std::get<keys::key>(attributes.at(i)) == keys::obj)
-		{
+		if (std::get<keys::key>(attributes.at(i)) == keys::obj) {
 			std::vector<std::pair<std::string,std::string>> objBody;
-			while (std::get<keys::key>(attributes.at(i)) != keys::div)
-			{
-				objBody.push_back(attributes.at(i));
-				++i;
+			while (std::get<keys::key>(attributes.at(i)) != keys::div){
+				objBody.push_back(attributes.at(i++));
 			}
 			objects.push_back(objBody);
 			++i;
@@ -129,10 +126,11 @@ void Disk::initProgram()
 	splitByObjects();
 	
 	for (size_t i{}; i < objects.size(); ++i){
-		std::vector<std::pair<std::string, std::string>> obj {objects.at(i)};
-		std::pair<std::string, std::string> pair = obj.at(i);
-		std::string key {std::get<keys::key>(pair)};
-		std::string val {std::get<keys::val>(pair)};
+		const short objLineNum {0};
+		const std::vector<std::pair<std::string,std::string>> obj{objects.at(i)};
+		const std::pair<std::string,std::string> pair = obj.at(objLineNum);
+		const std::string key {std::get<keys::key>(pair)};
+		const std::string val {std::get<keys::val>(pair)};
 
 		if (key == keys::obj){
 			if (val == keys::user) addUser(initUser(obj));
@@ -154,22 +152,63 @@ void Disk::printUserDetails(){ // for testing
 				<< "\n";
 	}
 }
+std::string getAttrValue(std::vector<std::pair<std::string,std::string>> attrs, size_t i){
+	return std::get<keys::val>(attrs.at(i));
+}
+unsigned long strToNum(const std::string& id){
+	const short base {10};
+	return std::stoul(id.c_str(),nullptr, base);
+}
 
-User* initUser(std::vector<std::pair<std::string,std::string>> attrs){
+User* Disk::initUser(std::vector<std::pair<std::string,std::string>> attrs){
 	User* u = new User();
 	size_t i {0};
-	int base {10};
-	u->setID	(std::stoul(std::get<keys::val>(attrs.at(i++)),nullptr, base));
-	u->setName	(std::get<keys::val>(attrs.at(i++)));
-	u->setPasswd(std::get<keys::val>(attrs.at(i++)));
+	std::string id 		{getAttrValue(attrs,++i)};
+	std::string name 	{getAttrValue(attrs,++i)};
+	std::string passwd 	{getAttrValue(attrs,++i)};
+
+	u->setID	(strToNum(id));
+	u->setName	(name);
+	u->setPasswd(passwd);
 	// TODO: Figure out how to store the log objects tied to a user.
 	return u; 
 }
 
+Log* initLog(std::vector<std::pair<std::string,std::string>> attrs){
+	std::string id			{getAttrValue(attrs,++i)};
+	std::string ownerId		{getAttrValue(attrs,++i)};
+	std::string date		{getAttrValue(attrs,++i)};
+	std::string area		{getAttrValue(attrs,++i)};
+	std::string durationMins{getAttrValue(attrs,++i)};
+	std::string note		{getAttrValue(attrs,++i)};
 
+	size_t objKeyLineNum {0};
+	size_t i{0};
+	if (getAttrValue(attrs, objKeyLineNum) == keys::caveLog){
+		CaveLog* log = new CaveLog();
+		log->setID(strToNum(id));
+		log->setOwnerId(strToNum(ownerId));
+		log->setDate(date);
+		log->setArea(area);
+		log->setDurationMins(strToNum(durationMins));
+		log->setNote(note);
+	}
+	else if (getAttrValue(attrs, objKeyLineNum) == keys::hikeLog){
+		HikeLog* log = new HikeLog();
+		log->setID(strToNum(id));
+		log->setOwnerId(strToNum(ownerId));
+		log->setDate(date);
+		log->setArea(area);
+		log->setDurationMins(strToNum(durationMins));
+		log->setNote(note);
+	}
+
+
+	return log;
+}
 
 Disk::~Disk(){
-	for (auto uPtr : users) delete uPtr;
+	for (auto uPtr : users) {delete uPtr;}
 	users.clear();
 	/*
 	for (auto lPtr : logs) 	delete lPtr;

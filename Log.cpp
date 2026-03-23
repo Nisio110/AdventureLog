@@ -50,6 +50,7 @@ void Log::addParticipant(Participant &p){
 void Log::removeParticipant(Participant &p){
    participants.erase(participants.begin() + p.getID());
 } 
+Log::Log(){}
 Log::Log(User* u, string date){
     generateID(numLogs);
     setOwner(u);
@@ -112,6 +113,7 @@ void CaveLog::display(){
          << div(4)                                << "\n\n";
 }
 
+CaveLog::CaveLog(){}
 CaveLog::CaveLog(User *u, string name, string date): Log(u,date) {
     setName(name);
 }
@@ -132,6 +134,7 @@ string HikeLog::getWeather(){ return weather; }
 void HikeLog::setDist(int d){ distance = d; }
 void HikeLog::setWeather(string w){ weather = w; }
 
+HikeLog::HikeLog(){}
 HikeLog::HikeLog(User* u, string date): Log(u,date){}
 HikeLog::HikeLog(User* u, string date, string note): Log(u,date,note){}
 HikeLog::HikeLog(User* u, string date, string area, string note, int dist): Log(u, date, area, note){

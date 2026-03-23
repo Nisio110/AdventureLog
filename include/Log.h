@@ -15,6 +15,7 @@ protected:
     std::string date{"N/A"};
     static int numLogs;
     User* owner;
+    int ownerId{};
 public :
     // Getters
     int getDurationMins();
@@ -34,7 +35,7 @@ public :
     void setID(int id);
     void setParticipants(std::vector<Participant> p);
     void setOwner(User* u);
-    void setOwner(int id);
+    inline void setOwnerId(int _id){ownerId = id;}
 
     // General
     void display();
@@ -43,6 +44,7 @@ public :
     void removeParticipant(Participant &p);
 
     // Constructors
+    Log();
     Log(User* u, std::string date);
     Log(User* u, std::string date, std::string note);
     Log(User* u, std::string date, std::string area, std::string note);
@@ -72,6 +74,7 @@ public :
     void display();
 
     // Constructors
+	CaveLog();
     CaveLog(User* u, std::string name, std::string date);
     CaveLog(User* u, std::string name, std::string date, std::string area, std::string note);
     CaveLog(User* u, std::string name, std::string date, std::string area, std::string note, std::vector<Participant> participants, bool isSRT, bool wasCL, bool wasRigg);
@@ -93,6 +96,7 @@ public :
     void display();
 
     // Constructors
+	HikeLog();
     HikeLog(User* u, std::string date);
     HikeLog(User* u, std::string date, std::string note);
     HikeLog(User* u, std::string date, std::string area, std::string note, int distance);

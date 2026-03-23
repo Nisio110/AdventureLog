@@ -4,6 +4,7 @@
 int main(){
 	Disk d;
 	d.initProgram();
+	
 
 	/*
 	std::vector<std::pair<std::string, std::string>> v {d.parseFile()};

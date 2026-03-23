@@ -34,6 +34,7 @@ public :
     void setID(int id);
     void setParticipants(std::vector<Participant> p);
     void setOwner(User* u);
+    void setOwner(int id);
 
     // General
     void display();

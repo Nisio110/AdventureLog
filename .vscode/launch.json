@@ -1,14 +1,13 @@
 {
     "version": "0.2.0",
     "configurations": [
-        
         {
             "name": "Debug AdventureLog",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/AdventureLog",
             "args": [],
-            "stopAtEntry": false,
+            "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,

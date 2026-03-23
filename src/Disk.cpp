@@ -4,6 +4,34 @@
 
 using std::cout;
 
+namespace keys{
+	constexpr short key {0};
+	constexpr short val {1};
+	// keys
+	const std::string_view div {"---"};
+	const std::string_view obj {"object"};
+	const std::string_view id {"id"};
+	const std::string_view name {"name"};
+	const std::string_view passwd {"password"};
+	const std::string_view ownerId {"owner-id"};
+	const std::string_view date {"date"};
+	const std::string_view area {"area"};
+	const std::string_view durMins {"duration-mins"};
+	const std::string_view note {"note"};
+	const std::string_view cName{"cave-name"};
+	const std::string_view rigging {"rigging"};
+	const std::string_view cl {"cave-leader"};
+	const std::string_view srtCave {"srt-cave"};
+	const std::string_view dist {"distance"};
+	const std::string_view weather {"weather"};
+
+	// vals
+	const std::string_view user {"User"};
+	const std::string_view caveLog {"CaveLog"};
+	const std::string_view hikeLog {"HikeLog"};
+	const std::string_view participant {"Participant"};
+}
+
 // Constructors
 Disk::Disk(){
 	setFilePath("../disk.yaml");
@@ -66,33 +94,6 @@ std::vector<std::pair<std::string, std::string>> Disk::parseFile()
 	return parsedVals;
 }
 
-namespace keys{
-	constexpr short key {0};
-	constexpr short val {1};
-	// keys
-	const std::string_view div {"---"};
-	const std::string_view obj {"object"};
-	const std::string_view id {"id"};
-	const std::string_view name {"name"};
-	const std::string_view passwd {"password"};
-	const std::string_view ownerId {"owner-id"};
-	const std::string_view date {"date"};
-	const std::string_view area {"area"};
-	const std::string_view durMins {"duration-mins"};
-	const std::string_view note {"note"};
-	const std::string_view cName{"cave-name"};
-	const std::string_view rigging {"rigging"};
-	const std::string_view cl {"cave-leader"};
-	const std::string_view srtCave {"srt-cave"};
-	const std::string_view dist {"distance"};
-	const std::string_view weather {"weather"};
-
-	// vals
-	const std::string_view user {"User"};
-	const std::string_view caveLog {"CaveLog"};
-	const std::string_view hikeLog {"HikeLog"};
-	const std::string_view participant {"Participant"};
-}
 
 void Disk::splitByObjects(){
 	for (size_t i{0}; i < attributes.size();){
@@ -121,6 +122,7 @@ void Disk::splitByObjects(){
 		std::cout << "=== Done printing object bodies =========\n";
 	}
 }
+
 void Disk::initProgram()
 {
 	attributes = parseFile();
@@ -133,25 +135,48 @@ void Disk::initProgram()
 		std::string val {std::get<keys::val>(pair)};
 
 		if (key == keys::obj){
-			if (val == keys::user);
-				users.push_back(initUser(obj));
-			else if (val == keys::caveLog || val == keys::hikeLog);
-				//logs.push_back(initLog(obj));
-			else if (val == keys::caveLog);
-				//participants.push_back(initParticipants(obj));
+			if (val == keys::user) addUser(initUser(obj));
+			else if (val == keys::caveLog || val == keys::hikeLog); //addLog(initLog(obj));
+			else if (val == keys::caveLog); //addParticipant(initParticipant(obj));
 			else std::cout << "\\,;O;,/" << "\n";
 		}
 	}
 
 }
 
-User& initUser(std::vector<std::pair<std::string,std::string>> attrs){
+void Disk::printUserDetails(){ // for testing
+	for (auto u : users){
+		std::cout << "= Printing user details ===\n"
+				<< " ID: " << u->getID() << "\n"
+				<< " Name: " << u->getName() << "\n"
+				<< " Passwd: " << u->getPasswd() << "\n"
+				<< "===========================\n"
+				<< "\n";
+	}
+}
+
+User* initUser(std::vector<std::pair<std::string,std::string>> attrs){
 	User* u = new User();
 	size_t i {0};
-	u->setID(std::get<keys::val>(attrs.at(i++)));
-	u->setName(std::get<keys::val>(attrs.at(i++)));
+	int base {10};
+	u->setID	(std::stoul(std::get<keys::val>(attrs.at(i++)),nullptr, base));
+	u->setName	(std::get<keys::val>(attrs.at(i++)));
 	u->setPasswd(std::get<keys::val>(attrs.at(i++)));
 	// TODO: Figure out how to store the log objects tied to a user.
+	return u; 
+}
+
+
+
+Disk::~Disk(){
+	for (auto uPtr : users) delete uPtr;
+	users.clear();
+	/*
+	for (auto lPtr : logs) 	delete lPtr;
+	logs.clear();
+	for (auto pPtr : participants) delete pPtr;
+	participants.clear;
+	*/
 }
 
 /*

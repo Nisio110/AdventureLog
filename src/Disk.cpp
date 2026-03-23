@@ -175,6 +175,9 @@ User* Disk::initUser(std::vector<std::pair<std::string,std::string>> attrs){
 }
 
 Log* initLog(std::vector<std::pair<std::string,std::string>> attrs){
+	// I think I need to face reality and seperate this function into
+	// initCaveLog and initHikeLog.
+
 	std::string id			{getAttrValue(attrs,++i)};
 	std::string ownerId		{getAttrValue(attrs,++i)};
 	std::string date		{getAttrValue(attrs,++i)};
@@ -182,7 +185,7 @@ Log* initLog(std::vector<std::pair<std::string,std::string>> attrs){
 	std::string durationMins{getAttrValue(attrs,++i)};
 	std::string note		{getAttrValue(attrs,++i)};
 
-	size_t objKeyLineNum {0};
+	const size_t objKeyLineNum {0};
 	size_t i{0};
 	if (getAttrValue(attrs, objKeyLineNum) == keys::caveLog){
 		CaveLog* log = new CaveLog();

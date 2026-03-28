@@ -1,5 +1,5 @@
-#include "../include/User.h"
-#include "../include/UI.h"
+#include "../include/Disk.h"
+#include <iostream>
 
 int main(){
 	Disk d;

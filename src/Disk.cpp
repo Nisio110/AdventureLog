@@ -32,41 +32,95 @@ namespace keys{
 	const std::string_view participant {"Participant"};
 }
 
+// === Helper functions =======================
+std::string getKey(KeyValue kv){
+	return std::get<keys::key>(kv);
+}
+std::string getVal(KeyValue kv){
+	return std::get<keys::val>(kv);
+}
+
+std::string getAttrValue(KeyValueList attrs, size_t i){
+	return std::get<keys::val>(attrs.at(i));
+}
+std::string getAttrKey(KeyValueList attrs, size_t i){
+	return std::get<keys::key>(attrs.at(i));
+}
+size_t getKeyLocationInObj(const std::string_view key, KeyValueList objKVList){
+	for (size_t i{}; i < objKVList.size(); ++i)
+		{if (getKey(objKVList.at(i)) == key) {return i;}}
+
+	printErr("Key not found in KVL.");
+	return 0;
+}
+unsigned long strToNum(const std::string& id){
+	const short base {10};
+	return std::stoul(id.c_str(),nullptr, base);
+}
+
+void printl(std::string_view str){
+	std::cout << str << '\n';
+}
+
+void printErr(std::string_view errMessage){
+	std::cerr << "[ ERROR ] " << errMessage << std::endl;
+}
+
+void printObject(KeyValueList objKVList){
+	for (auto kv : objKVList)
+		{
+			std::cout << std::get<keys::key>(kv) 
+					  << ": " 
+					  << std::get<keys::val>(kv) 
+					  << '\n';
+		}
+}
+
+void printObjectKVL(ObjectList objects){
+	printl("=== Printing object KV Lists =========");
+	for (auto kvPairs : objects){
+		printl("= printing object ===");
+		printObject(kvPairs);
+		printl("= end of object ===\n");
+	}
+	printl("=== Done printing object bodies =========\n");
+}
+//==============================================
+
 // Constructors
 Disk::Disk(){
-	setFilePath("../disk.yaml");
-	openDisk();
-	if (!isFileGood()) 
-		cout << "[ERROR] Disk is not accessible\n";
-	readFileContents();
+	setFilePath("disk.yaml");
+	readDiskContents(filePath);
 }
 
 // Read operations
-void Disk::openDisk(){ 
+void Disk::openDisk(std::string_view fp){ 
 	diskFile.clear();
-	diskFile.open(filePath); 
-}
-
-bool Disk::isFileGood(){ return (diskFile.good()); }
-
-void Disk::readFileContents(){
-	std::string line;
-	fileContents.clear();
-
-	diskFile.clear(); 
+	diskFile.open(fp); 
 	diskFile.seekg(0);
 
-	if (!isFileGood()) 
-		cout << "[ERROR] Disk is not accessible\n";
-	else 
+	if (!isDiskGood())
+		printErr("Disk is not accessible");
+	else return;
+}
+
+bool Disk::isDiskGood(){ 
+	return (diskFile.good()); 
+}
+
+void Disk::readDiskContents(std::string_view fp){
+	std::string line;
+	if (!diskFile) {openDisk(fp);}
+	diskContents.clear();
+
 		while( std::getline(diskFile >> std::ws, line))
-			fileContents.push_back(line);
+			diskContents.push_back(line);
 	// we want to be able to access each line of the file easily.
 }
-std::pair<std::string, std::string> Disk::parseStr(size_t lineNum)
+
+KeyValue Disk::StrToKVPair(size_t lineNum, std::string_view line)
 {
 	const std::string delimiter {": "};
-	std::string line {fileContents.at(lineNum)};
 	size_t delimPos = line.find(delimiter);
 	std::string key;
 	std::string val;
@@ -85,58 +139,53 @@ std::pair<std::string, std::string> Disk::parseStr(size_t lineNum)
 	return {key, val};
 }
 
-std::vector<std::pair<std::string, std::string>> Disk::parseFile()
+KeyValueList Disk::parseKVL(std::vector<std::string> rawKVList)
 {
-	readFileContents();
-	std::vector<std::pair<std::string, std::string>> parsedVals;
-	for (size_t i{0}; i < fileContents.size(); ++i)
-		parsedVals.push_back(parseStr(i));	
-	return parsedVals;
+	KeyValueList parsedKVL;
+	for (size_t i{0}; i < rawKVList.size(); ++i)
+		{parsedVals.push_back(StrToKVPair(i));}
+	return parsedKVL;
+}
+KeyValueList Disk::parseDisk(std::vector<std::string> rawStrings){
+	readDiskContents();
+	attributes = parseKVList(rawStrings);
+	splitByObjects();
+
 }
 
 
 void Disk::splitByObjects(){
 	for (size_t i{0}; i < attributes.size();){
-		if (std::get<keys::key>(attributes.at(i)) == keys::obj) {
-			std::vector<std::pair<std::string,std::string>> objBody;
-			while (std::get<keys::key>(attributes.at(i)) != keys::div){
+		if (getAttrKey(attributes, i) == keys::obj)
+		{
+			KeyValueList objBody;
+			while (getAttrKey(attributes, i) != keys::div && i < attributes.size())
+			{
 				objBody.push_back(attributes.at(i++));
 			}
 			objects.push_back(objBody);
 			++i;
 		}
 	}
-
-	if (globals::verboseMode){
-		std::cout << "\n=== Printing object bodies =========\n";
-		for (auto objBody : objects){
-			std::cout << "= start of object ===\n";
-			for (auto attribute : objBody){
-				std::cout << std::get<keys::key>(attribute) << ": " << std::get<keys::val>(attribute) << "\n";
-			}
-			std::cout << "= end of object ===\n\n";
-		}
-		std::cout << "=== Done printing object bodies =========\n";
-	}
+	printObjectKVL(objects);
 }
 
 void Disk::initProgram()
 {
-	attributes = parseFile();
-	splitByObjects();
-	
+	parseKVList();
 	for (size_t i{}; i < objects.size(); ++i){
 		const short objLineNum {0};
-		const std::vector<std::pair<std::string,std::string>> obj{objects.at(i)};
-		const std::pair<std::string,std::string> pair = obj.at(objLineNum);
-		const std::string key {std::get<keys::key>(pair)};
-		const std::string val {std::get<keys::val>(pair)};
+		const KeyValueList obj {objects.at(i)};
 
-		if (key == keys::obj){
-			if (val == keys::user) addUser(initUser(obj));
-			else if (val == keys::caveLog || val == keys::hikeLog); //addLog(initLog(obj));
-			else if (val == keys::caveLog); //addParticipant(initParticipant(obj));
-			else std::cout << "\\,;O;,/" << "\n";
+		if (getAttrKey(obj, objLineNum) == keys::obj){
+			if (getAttrValue(obj, objLineNum) == keys::user)
+				{addUser(initUser(obj));}
+			else if ((getAttrValue(obj, objLineNum) == keys::caveLog) || (getAttrValue(obj, objLineNum) == keys::hikeLog))
+				{addLog(initLog(obj));}
+			else if (getAttrValue(obj, objLineNum) == keys::participant) 
+				{/*addParticipant(initParticipant(obj))*/;}
+			else
+				printErr("\\,;O;,/"); // error
 		}
 	}
 
@@ -152,15 +201,8 @@ void Disk::printUserDetails(){ // for testing
 				<< "\n";
 	}
 }
-std::string getAttrValue(std::vector<std::pair<std::string,std::string>> attrs, size_t i){
-	return std::get<keys::val>(attrs.at(i));
-}
-unsigned long strToNum(const std::string& id){
-	const short base {10};
-	return std::stoul(id.c_str(),nullptr, base);
-}
 
-User* Disk::initUser(std::vector<std::pair<std::string,std::string>> attrs){
+User* Disk::initUser(KeyValueList attrs){
 	User* u = new User();
 	size_t i {0};
 	std::string id 		{getAttrValue(attrs,++i)};
@@ -174,31 +216,29 @@ User* Disk::initUser(std::vector<std::pair<std::string,std::string>> attrs){
 	return u; 
 }
 
-Log* initLog(std::vector<std::pair<std::string,std::string>> attrs){
+Log* Disk::initLog(KeyValueList attrs){
 	// I think I need to face reality and seperate this function into
 	// initCaveLog and initHikeLog.
 
 	const size_t objKeyLineNum {0};
+	Log* log {nullptr};
 
 	size_t i {0};
-	std::string id			{getAttrValue(attrs,++i)};
-	std::string ownerId		{getAttrValue(attrs,++i)};
-	std::string date		{getAttrValue(attrs,++i)};
-	std::string area		{getAttrValue(attrs,++i)};
-	std::string durationMins{getAttrValue(attrs,++i)};
-	std::string note		{getAttrValue(attrs,++i)};
+	std::string id				{getAttrValue(attrs,++i)};
+	std::string ownerId			{getAttrValue(attrs,++i)};
+	std::string date			{getAttrValue(attrs,++i)};
+	std::string area			{getAttrValue(attrs,++i)};
+	std::string durationMins	{getAttrValue(attrs,++i)};
+	std::string note			{getAttrValue(attrs,++i)};
 
+	
 	if (getAttrValue(attrs, objKeyLineNum) == keys::caveLog){
-		CaveLog* log = new CaveLog();
-		log->setID(strToNum(id));
-		log->setOwnerId(strToNum(ownerId));
-		log->setDate(date);
-		log->setArea(area);
-		log->setDurationMins(strToNum(durationMins));
-		log->setNote(note);
+		log = new CaveLog();
 	}
 	else if (getAttrValue(attrs, objKeyLineNum) == keys::hikeLog){
-		HikeLog* log = new HikeLog();
+		log = new HikeLog();
+	}
+	if (log){
 		log->setID(strToNum(id));
 		log->setOwnerId(strToNum(ownerId));
 		log->setDate(date);
@@ -206,7 +246,6 @@ Log* initLog(std::vector<std::pair<std::string,std::string>> attrs){
 		log->setDurationMins(strToNum(durationMins));
 		log->setNote(note);
 	}
-
 	return log;
 }
 

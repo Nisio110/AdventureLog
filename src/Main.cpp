@@ -4,6 +4,7 @@
 int main(){
 	Disk d;
 	d.initProgram();
+	d.printLogDetails();
 	//d.printUserDetails();
 }
 

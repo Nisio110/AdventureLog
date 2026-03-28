@@ -7,6 +7,7 @@ class Log;
 class Participant;
 
 using KeyValue     = std::pair<std::string, std::string>;
+using AttrKeyValue = std::pair<std::size_t,std::string>;
 using KeyValueList = std::vector<KeyValue>;
 using ObjectList   = std::vector<KeyValueList>;
 
@@ -25,6 +26,7 @@ namespace DiskHelper {
 	bool doesSubstrExist(std::string_view str, std::string_view queryStr);
 	KeyValue strToKVPair(std::string_view kvStr);
 	KeyValueList StrVecToKVL(const std::vector<std::string>& kvlAsStr);
+	bool strToBool(std::string_view str);
 }
 
 class Disk{
@@ -74,6 +76,7 @@ public:
 	Participant* initParticipant(KeyValueList attr);
 
 	void printUserDetails(); // for testing
+	void printLogDetails(); // for testing
 };
 
 namespace keys{

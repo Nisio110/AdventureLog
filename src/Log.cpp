@@ -18,6 +18,7 @@ vector<Participant> Log::getParticipants() { return participants; }
 string Log::getNote() { return note; }
 string Log::getDate() { return date; }
 int Log::getID(){ return id; }
+int Log::getOwnerId(){ return ownerId; }
 
 // Setters
 void Log::setDurationMins(int dMins){ durationMins = dMins; }
@@ -133,6 +134,19 @@ string HikeLog::getWeather(){ return weather; }
 
 void HikeLog::setDist(int d){ distance = d; }
 void HikeLog::setWeather(string w){ weather = w; }
+
+void HikeLog::display(){
+    using namespace Tests;
+    cout << div(3) << " HIKE LOG #" << getID() << " " << div(3) << '\n'
+         << "Date        : " << getDate()       << "\n"
+         << "Area        : " << getArea()       << "\n"
+         << "Distance    : " << getDist()       << "\n"
+         << "Weather     : " << getWeather()    << "\n"
+         << "Duration    : " << getDurationMins() << " mins" << "\n"
+         << div(4)                              << "\n"
+         << "Notes : " << "\n" << getNote()     << "\n"
+         << div(4)                              << "\n\n";
+}
 
 HikeLog::HikeLog(){}
 HikeLog::HikeLog(User* u, string date): Log(u,date){}

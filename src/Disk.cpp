@@ -19,7 +19,7 @@ namespace DiskHelper{
 		for (size_t i{}; i < objKVList.size(); ++i)
 			{if (getKey(objKVList.at(i)) == key) {return i;}}
 
-		printErr("Key not found in KVL.");
+		printErr("getKeyLocationInObj: Key not found in KVL.");
 		return {};
 	}
 	unsigned long strToNum(const std::string& id)
@@ -32,7 +32,7 @@ namespace DiskHelper{
 		{std::cout << str << '\n';}
 
 	void printErr(std::string_view errMessage)
-		{std::cerr << "[ ERROR ] " << errMessage << std::endl;}
+		{std::cerr << "\033[31m[ ERROR ]\033[0m " << errMessage << std::endl;}
 
 	void printObject(const KeyValueList& objKVList){
 		for (const auto& kv : objKVList)
@@ -90,6 +90,15 @@ namespace DiskHelper{
 
 		return kvl;
 	}
+
+	bool strToBool(std::string_view str){
+		if (str == "false") {return false;}
+		else if (str == "true"){return true;}
+		else { 
+			printErr("strToBool: String does not convert to boolean");
+			return false;
+		}
+	}
 } // End of Namespace
 
 // Constructors
@@ -105,7 +114,7 @@ void Disk::openDisk(std::string_view fp){
 	diskFile.seekg(0);
 
 	if (!isDiskGood())
-		printErr("Disk is not accessible");
+		printErr("openDisk: Disk is not accessible");
 	else return;
 }
 
@@ -115,7 +124,7 @@ bool Disk::isDiskGood(){
 
 std::vector<std::string> Disk::readDiskContents(std::string_view fp){
 	std::string line;
-	if (!diskFile) {openDisk(fp);}
+	if (!diskFile.is_open()) {openDisk(fp);}
 	diskContents.clear();
 
 		while( std::getline(diskFile >> std::ws, line))
@@ -135,7 +144,7 @@ void Disk::parseDisk(std::string_view fp)
 ObjectList Disk::splitByObjects(const KeyValueList& attributes)
 {
 	if (attributes.empty()){
-		printErr("No KV pairs found in attributes");
+		printErr("splitByObjects: No KV pairs found in attributes");
 		return objects;
 	}
 	for (size_t i{0}; i < attributes.size(); ++i){
@@ -152,7 +161,7 @@ ObjectList Disk::splitByObjects(const KeyValueList& attributes)
 void Disk::initProgram()
 {
 	parseDisk();
-	for (size_t i{}; i < objects.size(); ++i){
+	for (size_t i{0}; i < objects.size(); ++i){
 		const short objLineNum {0};
 		const KeyValueList obj {objects.at(i)};
 
@@ -164,7 +173,7 @@ void Disk::initProgram()
 			else if (getAttrValue(obj, objLineNum) == keys::participant) 
 				{/*addParticipant(initParticipant(obj))*/;}
 			else
-				printErr("\\,;O;,/"); // error
+				printErr("splitByObjects: \\,;O;,/"); // error
 		}
 	}
 
@@ -178,6 +187,12 @@ void Disk::printUserDetails(){ // for testing
 				<< " Passwd: " << u->getPasswd() << "\n"
 				<< "===========================\n"
 				<< "\n";
+	}
+}
+
+void Disk::printLogDetails(){ // for testing
+	for (auto l : logs){
+		l->display();
 	}
 }
 
@@ -195,48 +210,81 @@ User* Disk::initUser(KeyValueList attrs){
 	return u; 
 }
 
-Log* Disk::initLog(KeyValueList attrs){
+Log* Disk::initLog(KeyValueList logKVL){
 	// I think I need to face reality and seperate this function into
 	// initCaveLog and initHikeLog.
 
 	const size_t objKeyLineNum {0};
 	Log* log {nullptr};
+	std::string _id;
+	std::string _ownerId;
+	std::string _date;
+	std::string _area;
+	std::string _durMins;
+	std::string _note;
 
-	size_t i {0};
-	enum logAttributes{
-		ID
-		OWNER_ID
-		DATE
-		AREA
-		DURATION_MINS
-		NOTE
-	} logAttrs;
-
-
-	std::string id				{getAttrValue(attrs,++i)};
-	std::string ownerId			{getAttrValue(attrs,++i)};
-	std::string date			{getAttrValue(attrs,++i)};
-	std::string area			{getAttrValue(attrs,++i)};
-	std::string durationMins	{getAttrValue(attrs,++i)};
-	std::string note			{getAttrValue(attrs,++i)};
+	for (auto i : logKVL){
+		if 	( (!_id.empty()) && (getKey(i) == keys::id))
+			{ _id = getVal(i); }
+		else if ( (!_ownerId.empty()) && (getKey(i) == keys::ownerId))
+			{ _ownerId = getVal(i); }
+		else if ( (!_date.empty()) && (getKey(i) == keys::date))
+			{ _date = getVal(i); }
+		else if ( (!_area.empty()) && (getKey(i) == keys::area))
+			{ _area = getVal(i); }
+		else if ( (!_durMins.empty()) && (getKey(i) == keys::durMins))
+			{ _durMins = getVal(i); }
+		else if ( (!_note.empty()) && (getKey(i) == keys::note))
+			{ _note = getVal(i); }
+	}
 
 	
-	if (getAttrValue(attrs, objKeyLineNum) == keys::caveLog){
-		
-		
-		log = new CaveLog();
-		log->setName()
+	if (getAttrValue(logKVL, objKeyLineNum) == keys::caveLog){
+		CaveLog* caveLog = new CaveLog();
+		std::string cName;
+		std::string rigging;
+		std::string cl;
+		std::string srtCave;
+
+		for (auto i : logKVL){
+			if 	( (!cName.empty()) && (getKey(i) == keys::cName))
+				{ cName = getVal(i); }
+			else if ( (!rigging.empty()) && (getKey(i) == keys::rigging))
+				{ rigging = getVal(i); }
+			else if ( (!cl.empty()) && (getKey(i) == keys::cl))
+				{ cl = getVal(i); }
+			else if ( (!srtCave.empty()) && (getKey(i) == keys::srtCave))
+				{ srtCave = getVal(i); }
+		}
+		caveLog->setName(cName);
+		caveLog->setSRTCave(strToBool(srtCave));
+		caveLog->setCaveLeader(strToBool(cl));
+		caveLog->setRigger(strToBool(rigging));
+		log = caveLog;
 	}
-	else if (getAttrValue(attrs, objKeyLineNum) == keys::hikeLog){
-		log = new HikeLog();
+	else if (getAttrValue(logKVL, objKeyLineNum) == keys::hikeLog){
+		HikeLog* hikeLog = new HikeLog();
+		std::string dist;
+		std::string weather;
+
+		for (auto i : logKVL){
+			if 	( (!dist.empty()) && (getKey(i) == keys::dist))
+				{ dist = getVal(i); }
+			else if ( (!weather.empty()) && (getKey(i) == keys::weather))
+				{ weather = getVal(i); }
+		}
+		hikeLog->setDist(strToNum(dist));
+		hikeLog->setWeather(weather);
+
+		log = hikeLog;
 	}
 	if (log){
-		log->setID(strToNum(id));
-		log->setOwnerId(strToNum(ownerId));
-		log->setDate(date);
-		log->setArea(area);
-		log->setDurationMins(strToNum(durationMins));
-		log->setNote(note);
+		log->setID(strToNum(_id));
+		log->setOwnerId(strToNum(_ownerId));
+		log->setDate(_date);
+		log->setArea(_area);
+		log->setDurationMins(strToNum(_durMins));
+		log->setNote(_note);
 	}
 	return log;
 }

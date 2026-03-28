@@ -178,6 +178,9 @@ Log* initLog(std::vector<std::pair<std::string,std::string>> attrs){
 	// I think I need to face reality and seperate this function into
 	// initCaveLog and initHikeLog.
 
+	const size_t objKeyLineNum {0};
+
+	size_t i {0};
 	std::string id			{getAttrValue(attrs,++i)};
 	std::string ownerId		{getAttrValue(attrs,++i)};
 	std::string date		{getAttrValue(attrs,++i)};
@@ -185,8 +188,6 @@ Log* initLog(std::vector<std::pair<std::string,std::string>> attrs){
 	std::string durationMins{getAttrValue(attrs,++i)};
 	std::string note		{getAttrValue(attrs,++i)};
 
-	const size_t objKeyLineNum {0};
-	size_t i{0};
 	if (getAttrValue(attrs, objKeyLineNum) == keys::caveLog){
 		CaveLog* log = new CaveLog();
 		log->setID(strToNum(id));
@@ -205,7 +206,6 @@ Log* initLog(std::vector<std::pair<std::string,std::string>> attrs){
 		log->setDurationMins(strToNum(durationMins));
 		log->setNote(note);
 	}
-
 
 	return log;
 }

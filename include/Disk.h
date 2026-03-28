@@ -6,13 +6,17 @@
 class Log;
 class Participant;
 
+using KeyValue     = std::pair<std::string, std::string>;
+using KeyValueList = std::vector<KeyValue>;
+using ObjectList   = std::vector<KeyValueList>;
+
 class Disk{
 protected:
 	std::string filePath;
 	std::ifstream diskFile;
 	std::vector<std::string> fileContents;
-	std::vector<std::pair<std::string, std::string>> attributes;
-	std::vector<std::vector<std::pair<std::string,std::string>>> objects;
+	KeyValueList attributes;
+	ObjectList objects;
 
 	std::vector<User*> users;
 	std::vector<Log*> logs;
@@ -39,19 +43,19 @@ public:
 	inline void addParticipant(Participant* p){participants.push_back(p);}
 
 	// File operations
-	void openDisk();
-	bool isFileGood();
-	void readFileContents();
+	void openDisk(std::string_view fp);
+	bool isDiskGood();
+	void readDiskContents(std::string_view fp);
 
 	// Parsing functions
-	std::pair<std::string, std::string> parseStr(size_t lineNum); // returns key-value pair
-	std::vector<std::pair<std::string, std::string>> parseFile();
+	KeyValue parseStr(size_t lineNum); // returns key-value pair
+	KeyValueList parseFile();
 
 	// Init functions
 	void initProgram();
-	User* initUser(std::vector<std::pair<std::string,std::string>> attr);
-	Log* initLog(std::vector<std::pair<std::string,std::string>> attr);
-	Participant* initParticipant(std::vector<std::pair<std::string,std::string>> attr);
+	User* initUser(KeyValueList attr);
+	Log* initLog(KeyValueList attr);
+	Participant* initParticipant(KeyValueList attr);
 
 	void printUserDetails(); // for testing
 	void loadObject();

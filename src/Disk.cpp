@@ -110,11 +110,13 @@ Disk::Disk(){
 // Read operations
 void Disk::openDisk(std::string_view fp){ 
 	diskFile.clear();
-	diskFile.open(fp); 
+	diskFile.open(std::string{fp});
 	diskFile.seekg(0);
 
-	if (!isDiskGood())
+	if (!isDiskGood()){
 		printErr("openDisk: Disk is not accessible");
+		return;
+	}
 	else return;
 }
 
@@ -124,8 +126,9 @@ bool Disk::isDiskGood(){
 
 std::vector<std::string> Disk::readDiskContents(std::string_view fp){
 	std::string line;
-	if (!diskFile.is_open()) {openDisk(fp);}
 	diskContents.clear();
+	if (!diskFile.is_open()) {openDisk(fp);}
+	else { diskFile.clear(); diskFile.seekg(0); }
 
 		while( std::getline(diskFile >> std::ws, line))
 			diskContents.push_back(line);
@@ -139,7 +142,6 @@ void Disk::parseDisk(std::string_view fp)
 	attributes = StrVecToKVL(diskContents);
 	objects = splitByObjects(attributes);
 }
-
 
 ObjectList Disk::splitByObjects(const KeyValueList& attributes)
 {
@@ -224,17 +226,17 @@ Log* Disk::initLog(KeyValueList logKVL){
 	std::string _note;
 
 	for (auto i : logKVL){
-		if 	( (!_id.empty()) && (getKey(i) == keys::id))
+		if 	( (_id.empty()) && (getKey(i) == keys::id))
 			{ _id = getVal(i); }
-		else if ( (!_ownerId.empty()) && (getKey(i) == keys::ownerId))
+		else if ( (_ownerId.empty()) && (getKey(i) == keys::ownerId))
 			{ _ownerId = getVal(i); }
-		else if ( (!_date.empty()) && (getKey(i) == keys::date))
+		else if ( (_date.empty()) && (getKey(i) == keys::date))
 			{ _date = getVal(i); }
-		else if ( (!_area.empty()) && (getKey(i) == keys::area))
+		else if ( (_area.empty()) && (getKey(i) == keys::area))
 			{ _area = getVal(i); }
-		else if ( (!_durMins.empty()) && (getKey(i) == keys::durMins))
+		else if ( (_durMins.empty()) && (getKey(i) == keys::durMins))
 			{ _durMins = getVal(i); }
-		else if ( (!_note.empty()) && (getKey(i) == keys::note))
+		else if ( (_note.empty()) && (getKey(i) == keys::note))
 			{ _note = getVal(i); }
 	}
 
@@ -247,13 +249,13 @@ Log* Disk::initLog(KeyValueList logKVL){
 		std::string srtCave;
 
 		for (auto i : logKVL){
-			if 	( (!cName.empty()) && (getKey(i) == keys::cName))
+			if 	( (cName.empty()) && (getKey(i) == keys::cName))
 				{ cName = getVal(i); }
-			else if ( (!rigging.empty()) && (getKey(i) == keys::rigging))
+			else if ( (rigging.empty()) && (getKey(i) == keys::rigging))
 				{ rigging = getVal(i); }
-			else if ( (!cl.empty()) && (getKey(i) == keys::cl))
+			else if ( (cl.empty()) && (getKey(i) == keys::cl))
 				{ cl = getVal(i); }
-			else if ( (!srtCave.empty()) && (getKey(i) == keys::srtCave))
+			else if ( (srtCave.empty()) && (getKey(i) == keys::srtCave))
 				{ srtCave = getVal(i); }
 		}
 		caveLog->setName(cName);
@@ -268,9 +270,9 @@ Log* Disk::initLog(KeyValueList logKVL){
 		std::string weather;
 
 		for (auto i : logKVL){
-			if 	( (!dist.empty()) && (getKey(i) == keys::dist))
+			if 	( (dist.empty()) && (getKey(i) == keys::dist))
 				{ dist = getVal(i); }
-			else if ( (!weather.empty()) && (getKey(i) == keys::weather))
+			else if ( (weather.empty()) && (getKey(i) == keys::weather))
 				{ weather = getVal(i); }
 		}
 		hikeLog->setDist(strToNum(dist));

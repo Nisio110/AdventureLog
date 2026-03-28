@@ -2,90 +2,95 @@
 #include "../include/constants.h"
 #include <iostream>
 
-using std::cout;
+using namespace DiskHelper;
 
-namespace keys{
-	constexpr short key {0};
-	constexpr short val {1};
-	// keys
-	const std::string_view div {"---"};
-	const std::string_view obj {"object"};
-	const std::string_view id {"id"};
-	const std::string_view name {"name"};
-	const std::string_view passwd {"password"};
-	const std::string_view ownerId {"owner-id"};
-	const std::string_view date {"date"};
-	const std::string_view area {"area"};
-	const std::string_view durMins {"duration-mins"};
-	const std::string_view note {"note"};
-	const std::string_view cName{"cave-name"};
-	const std::string_view rigging {"rigging"};
-	const std::string_view cl {"cave-leader"};
-	const std::string_view srtCave {"srt-cave"};
-	const std::string_view dist {"distance"};
-	const std::string_view weather {"weather"};
+namespace DiskHelper{
+	std::string getKey(KeyValue kv)
+		{return std::get<keys::key>(kv);}
+	std::string getVal(KeyValue kv)
+		{return std::get<keys::val>(kv);}
+	std::string getAttrValue(KeyValueList attrs, size_t i)
+		{return std::get<keys::val>(attrs.at(i));}
+	std::string getAttrKey(KeyValueList attrs, size_t i)
+		{return std::get<keys::key>(attrs.at(i));}
 
-	// vals
-	const std::string_view user {"User"};
-	const std::string_view caveLog {"CaveLog"};
-	const std::string_view hikeLog {"HikeLog"};
-	const std::string_view participant {"Participant"};
-}
+	size_t getKeyLocationInObj(const std::string_view key, KeyValueList objKVList)
+	{
+		for (size_t i{}; i < objKVList.size(); ++i)
+			{if (getKey(objKVList.at(i)) == key) {return i;}}
 
-// === Helper functions =======================
-std::string getKey(KeyValue kv){
-	return std::get<keys::key>(kv);
-}
-std::string getVal(KeyValue kv){
-	return std::get<keys::val>(kv);
-}
+		printErr("Key not found in KVL.");
+		return std::A;
+	}
+	unsigned long strToNum(const std::string& id)
+	{
+		const short base {10};
+		return std::stoul(id.c_str(),nullptr, base);
+	}
 
-std::string getAttrValue(KeyValueList attrs, size_t i){
-	return std::get<keys::val>(attrs.at(i));
-}
-std::string getAttrKey(KeyValueList attrs, size_t i){
-	return std::get<keys::key>(attrs.at(i));
-}
-size_t getKeyLocationInObj(const std::string_view key, KeyValueList objKVList){
-	for (size_t i{}; i < objKVList.size(); ++i)
-		{if (getKey(objKVList.at(i)) == key) {return i;}}
+	void printl(std::string_view str)
+		{std::cout << str << '\n';}
 
-	printErr("Key not found in KVL.");
-	return 0;
-}
-unsigned long strToNum(const std::string& id){
-	const short base {10};
-	return std::stoul(id.c_str(),nullptr, base);
-}
+	void printErr(std::string_view errMessage)
+		{std::cerr << "[ ERROR ] " << errMessage << std::endl;}
 
-void printl(std::string_view str){
-	std::cout << str << '\n';
-}
-
-void printErr(std::string_view errMessage){
-	std::cerr << "[ ERROR ] " << errMessage << std::endl;
-}
-
-void printObject(KeyValueList objKVList){
-	for (auto kv : objKVList)
+	void printObject(KeyValueList objKVList){
+		for (auto kv : objKVList)
 		{
 			std::cout << std::get<keys::key>(kv) 
-					  << ": " 
-					  << std::get<keys::val>(kv) 
-					  << '\n';
+					<< ": " 
+					<< std::get<keys::val>(kv) 
+					<< '\n';
 		}
-}
-
-void printObjectKVL(ObjectList objects){
-	printl("=== Printing object KV Lists =========");
-	for (auto kvPairs : objects){
-		printl("= printing object ===");
-		printObject(kvPairs);
-		printl("= end of object ===\n");
 	}
-	printl("=== Done printing object bodies =========\n");
-}
-//==============================================
+
+	void printObjectKVL(ObjectList objects){
+		printl("=== Printing object KV Lists =========");
+		for (auto kvPairs : objects){
+			printl("= printing object ===");
+			printObject(kvPairs);
+			printl("= end of object ===\n");
+		}
+		printl("=== Done printing object bodies =========\n");
+	}
+
+	bool doesSubstrExist(std::string_view str, std::string_view queryStr){
+		// Return true if substring is found
+		return (str.find(queryStr) != std::string::npos);
+	}
+
+	KeyValue strToKVPair(std::string_view kvStr)
+	{
+		const std::string delimiter {": "};
+		const std::string div {"---"};
+		std::string key {};
+		std::string val {};
+
+		// Is this string a div?
+		size_t delimPos {kvStr.find(delimiter)};
+		if (!doesSubstrExist(kvStr, delimiter)) {
+			if (kvStr.contains(div)) 
+				{key = div;}
+			return {key,val};
+		}
+
+		// If it's not a div, then its a KVP
+		key = kvStr.substr(0, delimPos);
+		val = kvStr.substr(delimPos + delimiter.length());
+		return {key, val};
+	}
+
+	KeyValueList StrVecToKVL(std::vector<std::string> kvlAsStr) {
+		KeyValueList kvl;
+		for (size_t i{0}; i < kvlAsStr.size(); ++i)
+		{
+			std::string kvStr {kvlAsStr.at(i)};
+			kvl.push_back(strToKVPair(kvStr));
+		}
+
+		return kvl;
+	}
+} // End of Namespace
 
 // Constructors
 Disk::Disk(){
@@ -108,7 +113,7 @@ bool Disk::isDiskGood(){
 	return (diskFile.good()); 
 }
 
-void Disk::readDiskContents(std::string_view fp){
+std::vector<std::string> Disk::readDiskContents(std::string_view fp){
 	std::string line;
 	if (!diskFile) {openDisk(fp);}
 	diskContents.clear();
@@ -116,63 +121,37 @@ void Disk::readDiskContents(std::string_view fp){
 		while( std::getline(diskFile >> std::ws, line))
 			diskContents.push_back(line);
 	// we want to be able to access each line of the file easily.
+	return diskContents;
 }
 
-KeyValue Disk::StrToKVPair(size_t lineNum, std::string_view line)
+void Disk::parseDisk(std::string_view fp)
 {
-	const std::string delimiter {": "};
-	size_t delimPos = line.find(delimiter);
-	std::string key;
-	std::string val;
-	std::string div {"---"};
-
-	if (delimPos == std::string::npos) {
-		if (line.contains(div)) {
-			//std::cout << "Divider line reached\n";
-			key = "---";
-		}
-		return {key,val};
-	}
-
-	key = line.substr(0, delimPos);
-	val = line.substr(delimPos + delimiter.length());
-	return {key, val};
+	diskContents = readDiskContents(fp);
+	attributes = StrVecToKVL(diskContents);
+	objects = splitByObjects(attributes);
 }
 
-KeyValueList Disk::parseKVL(std::vector<std::string> rawKVList)
+
+ObjectList Disk::splitByObjects(KeyValueList attributes)
 {
-	KeyValueList parsedKVL;
-	for (size_t i{0}; i < rawKVList.size(); ++i)
-		{parsedVals.push_back(StrToKVPair(i));}
-	return parsedKVL;
-}
-KeyValueList Disk::parseDisk(std::vector<std::string> rawStrings){
-	readDiskContents();
-	attributes = parseKVList(rawStrings);
-	splitByObjects();
-
-}
-
-
-void Disk::splitByObjects(){
-	for (size_t i{0}; i < attributes.size();){
-		if (getAttrKey(attributes, i) == keys::obj)
-		{
-			KeyValueList objBody;
-			while (getAttrKey(attributes, i) != keys::div && i < attributes.size())
-			{
-				objBody.push_back(attributes.at(i++));
-			}
-			objects.push_back(objBody);
-			++i;
-		}
+	if (attributes.empty()){
+		printErr("No KV pairs found in attributes");
+		return objects;
 	}
-	printObjectKVL(objects);
+	for (size_t i{0}; i < attributes.size(); ++i){
+		if (getAttrKey(attributes, i) != keys::obj)
+			{continue;}
+		KeyValueList objKVL;
+		for (;(i < attributes.size()) && (getAttrKey(attributes, i) != keys::div); ++i)
+			{objKVL.push_back(attributes.at(i));}
+		objects.push_back(objKVL);
+	}
+	return objects;
 }
 
 void Disk::initProgram()
 {
-	parseKVList();
+	parseDisk();
 	for (size_t i{}; i < objects.size(); ++i){
 		const short objLineNum {0};
 		const KeyValueList obj {objects.at(i)};
@@ -259,29 +238,3 @@ Disk::~Disk(){
 	participants.clear;
 	*/
 }
-
-/*
-Log& initLog(std::vector<std::pair<std::string,std::string>> attr){
-	Log* log = new Log();
-	size_t i{0};
-	log->setID(std::get<keys::val>(attrs.at(i++)));
-	log->setOwn
-
-}
-*/
-
-
-// Test Functions
-/*
-void IOTests::readFile(){
-	string fileContents, ERR;
-	Disk d;
-	if (!d.isFileGood()) cout << "Disk is not accessible\n";
-	else{
-		while(std::getline(d.getDiskFile(),fileContents)){
-			cout << fileContents << "\n";
-		}
-		cout << "EOF";
-	}
-}
-*/

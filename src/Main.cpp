@@ -1,4 +1,4 @@
-#include "../include/DiskUsers.h"
+#include "../include/Disk.h"
 #include <iostream>
 
 int main(){

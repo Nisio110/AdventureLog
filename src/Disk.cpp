@@ -203,6 +203,16 @@ Log* Disk::initLog(KeyValueList attrs){
 	Log* log {nullptr};
 
 	size_t i {0};
+	enum logAttributes{
+		ID
+		OWNER_ID
+		DATE
+		AREA
+		DURATION_MINS
+		NOTE
+	} logAttrs;
+
+
 	std::string id				{getAttrValue(attrs,++i)};
 	std::string ownerId			{getAttrValue(attrs,++i)};
 	std::string date			{getAttrValue(attrs,++i)};
@@ -212,7 +222,10 @@ Log* Disk::initLog(KeyValueList attrs){
 
 	
 	if (getAttrValue(attrs, objKeyLineNum) == keys::caveLog){
+		
+		
 		log = new CaveLog();
+		log->setName()
 	}
 	else if (getAttrValue(attrs, objKeyLineNum) == keys::hikeLog){
 		log = new HikeLog();

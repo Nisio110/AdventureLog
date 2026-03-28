@@ -24,6 +24,7 @@ public :
     std::string getDate();
     std::vector<Participant> getParticipants();
     int getID();
+    int getOwnerId();
     User* getOwner();
 
     // Setters
@@ -38,13 +39,14 @@ public :
     inline void setOwnerId(int _id){ownerId = id;}
 
     // General
-    void display();
+    virtual void display();
     void generateID(int &numObject);
     void addParticipant(Participant &p);
     void removeParticipant(Participant &p);
 
-    // Constructors
+    // Constructors & Destructor
     Log();
+    virtual ~Log() = default;
     Log(User* u, std::string date);
     Log(User* u, std::string date, std::string note);
     Log(User* u, std::string date, std::string area, std::string note);
@@ -71,7 +73,7 @@ public :
     void setRigger(bool b);
 
     // General
-    void display();
+    void display() override;
 
     // Constructors
 	CaveLog();
@@ -93,7 +95,7 @@ public :
     void setWeather(std::string weather);
 
     // General
-    void display();
+    void display() override;
 
     // Constructors
 	HikeLog();

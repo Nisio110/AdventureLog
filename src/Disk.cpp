@@ -5,22 +5,22 @@
 using namespace DiskHelper;
 
 namespace DiskHelper{
-	std::string getKey(KeyValue kv)
+	std::string getKey(const KeyValue& kv)
 		{return std::get<keys::key>(kv);}
-	std::string getVal(KeyValue kv)
+	std::string getVal(const KeyValue& kv)
 		{return std::get<keys::val>(kv);}
-	std::string getAttrValue(KeyValueList attrs, size_t i)
+	std::string getAttrValue(const KeyValueList& attrs, size_t i)
 		{return std::get<keys::val>(attrs.at(i));}
-	std::string getAttrKey(KeyValueList attrs, size_t i)
+	std::string getAttrKey(const KeyValueList& attrs, size_t i)
 		{return std::get<keys::key>(attrs.at(i));}
 
-	size_t getKeyLocationInObj(const std::string_view key, KeyValueList objKVList)
+	size_t getKeyLocationInObj(const std::string_view key, const KeyValueList& objKVList)
 	{
 		for (size_t i{}; i < objKVList.size(); ++i)
 			{if (getKey(objKVList.at(i)) == key) {return i;}}
 
 		printErr("Key not found in KVL.");
-		return std::A;
+		return {};
 	}
 	unsigned long strToNum(const std::string& id)
 	{
@@ -34,8 +34,8 @@ namespace DiskHelper{
 	void printErr(std::string_view errMessage)
 		{std::cerr << "[ ERROR ] " << errMessage << std::endl;}
 
-	void printObject(KeyValueList objKVList){
-		for (auto kv : objKVList)
+	void printObject(const KeyValueList& objKVList){
+		for (const auto& kv : objKVList)
 		{
 			std::cout << std::get<keys::key>(kv) 
 					<< ": " 
@@ -44,9 +44,9 @@ namespace DiskHelper{
 		}
 	}
 
-	void printObjectKVL(ObjectList objects){
+	void printObjectKVL(const ObjectList& objects){
 		printl("=== Printing object KV Lists =========");
-		for (auto kvPairs : objects){
+		for (const auto& kvPairs : objects){
 			printl("= printing object ===");
 			printObject(kvPairs);
 			printl("= end of object ===\n");
@@ -80,7 +80,7 @@ namespace DiskHelper{
 		return {key, val};
 	}
 
-	KeyValueList StrVecToKVL(std::vector<std::string> kvlAsStr) {
+	KeyValueList StrVecToKVL(const std::vector<std::string>& kvlAsStr) {
 		KeyValueList kvl;
 		for (size_t i{0}; i < kvlAsStr.size(); ++i)
 		{
@@ -132,7 +132,7 @@ void Disk::parseDisk(std::string_view fp)
 }
 
 
-ObjectList Disk::splitByObjects(KeyValueList attributes)
+ObjectList Disk::splitByObjects(const KeyValueList& attributes)
 {
 	if (attributes.empty()){
 		printErr("No KV pairs found in attributes");
@@ -231,10 +231,8 @@ Log* Disk::initLog(KeyValueList attrs){
 Disk::~Disk(){
 	for (auto uPtr : users) {delete uPtr;}
 	users.clear();
-	/*
-	for (auto lPtr : logs) 	delete lPtr;
+	for (auto lPtr : logs) {delete lPtr;}
 	logs.clear();
-	for (auto pPtr : participants) delete pPtr;
-	participants.clear;
-	*/
+	for (auto pPtr : participants) {delete pPtr;}
+	participants.clear();
 }

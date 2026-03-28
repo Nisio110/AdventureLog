@@ -12,19 +12,19 @@ using ObjectList   = std::vector<KeyValueList>;
 
 namespace DiskHelper {
 	// Helper functions
-	std::string getKey(KeyValue kv);
-	std::string getVal(KeyValue kv);
-	std::string getAttrValue(KeyValueList attrs, size_t i);
-	std::string getAttrKey(KeyValueList attrs, size_t i);
-	size_t getKeyLocationInObj(std::string_view key, KeyValueList objKVList);
+	std::string getKey(const KeyValue& kv);
+	std::string getVal(const KeyValue& kv);
+	std::string getAttrValue(const KeyValueList& attrs, size_t i);
+	std::string getAttrKey(const KeyValueList& attrs, size_t i);
+	size_t getKeyLocationInObj(std::string_view key, const KeyValueList& objKVList);
 	unsigned long strToNum(const std::string& id);
 	void printl(std::string_view str);
 	void printErr(std::string_view errMessage);
-	void printObject(KeyValueList objKVList);
-	void printObjectKVL(ObjectList objects);
+	void printObject(const KeyValueList& objKVList);
+	void printObjectKVL(const ObjectList& objects);
 	bool doesSubstrExist(std::string_view str, std::string_view queryStr);
 	KeyValue strToKVPair(std::string_view kvStr);
-	KeyValueList StrVecToKVL(std::vector<std::string> kvlAsStr);
+	KeyValueList StrVecToKVL(const std::vector<std::string>& kvlAsStr);
 }
 
 class Disk{
@@ -39,7 +39,7 @@ protected:
 	std::vector<Log*> logs;
 	std::vector<Participant*> participants;
 
-	ObjectList splitByObjects(KeyValueList kvl);
+	ObjectList splitByObjects(const KeyValueList& kvl);
 public:
 	// Constructors
 	Disk();
@@ -65,7 +65,6 @@ public:
 	std::vector<std::string> readDiskContents(std::string_view fp = filePath);
 
 	// Parsing functions
-	KeyValue parseStr(size_t lineNum); // returns key-value pair
 	void parseDisk(std::string_view fp = filePath);
 
 	// Init functions
@@ -75,7 +74,6 @@ public:
 	Participant* initParticipant(KeyValueList attr);
 
 	void printUserDetails(); // for testing
-	void loadObject();
 };
 
 namespace keys{

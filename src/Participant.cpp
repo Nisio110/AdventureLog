@@ -7,7 +7,7 @@ using std::string;
 int Participant::numParticipants{0};
 
 // Getters
-int Participant::getID(){ return id; }
+int Participant::getId(){ return id; }
 string Participant::getName(){ return name; }
 int Participant::getNumParticipants(){ return numParticipants; }
 
@@ -18,7 +18,7 @@ void Participant::setNumParticipants(int num){ numParticipants = num; }
 
 // General
 void Participant::print(){
-    std::cout << getID() << ") " << getName() << "\n";
+    std::cout << getId() << ") " << getName() << "\n";
 }
 
 int Participant::generateID(){
@@ -32,15 +32,15 @@ Participant::Participant(std::string name){
     setName(name);
     generateID();
 }
-Participant::Participant(std::string name, int logID){
+Participant::Participant(std::string name, int logId){
     setName(name);
-    setLogID(logID);
+    setLogID(logId);
     generateID();
 }
 
-Participant::Participant(std::string name, int logID, int id){
+Participant::Participant(std::string name, int logId, int id){
     setName(name);
-    setLogID(logID);
+    setLogID(logId);
     setID(id);
 }
 
@@ -57,10 +57,10 @@ bool ParticipantTests::testConstructors(){
     
     cout << div(b) << " TESTING PARTICIPANT CONSTRUCTORS " << div(b) << '\n'
          << div(a) << '\n'
-         << "p1.getID()" << ret << p1.getID() << "\t" << "p1.getName()" << ret << p1.getName() << '\n'
-         << "p2.getID()" << ret << p2.getID() << "\t" << "p2.getName()" << ret << p2.getName() << '\n'
-         << "p3.getID()" << ret << p3.getID() << "\t" << "p3.getName()" << ret << p3.getName() << '\n'
-         << "p4.getID()" << ret << p4.getID() << "\t" << "p4.getName()" << ret << p4.getName() << '\n'
+         << "p1.getId()" << ret << p1.getId() << "\t" << "p1.getName()" << ret << p1.getName() << '\n'
+         << "p2.getId()" << ret << p2.getId() << "\t" << "p2.getName()" << ret << p2.getName() << '\n'
+         << "p3.getId()" << ret << p3.getId() << "\t" << "p3.getName()" << ret << p3.getName() << '\n'
+         << "p4.getId()" << ret << p4.getId() << "\t" << "p4.getName()" << ret << p4.getName() << '\n'
          << div(a) << '\n';
     return verifyTest();
 }

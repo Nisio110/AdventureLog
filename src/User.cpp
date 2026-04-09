@@ -6,7 +6,7 @@ using std::vector;
 int User::numUsers{0};
 
 // Getters & Setters
-int User::getID(){ return id; }
+int User::getId(){ return id; }
 string User::getName(){return name;}
 string User::getPasswd(){return passwd;}
 vector<Log*> User::getLogs(){return logs;}

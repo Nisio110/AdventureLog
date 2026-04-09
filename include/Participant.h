@@ -5,14 +5,14 @@
 class Participant{
     std::string name;
     int id;
-    int logID{0};
+    int logId{0};
     static int numParticipants;
 
     int generateID(); // private function
 public :
     // Getters
-    int getID();
-    inline int getLogID() {return logID;}
+    int getId();
+    inline int getLogId() {return logId;}
     std::string getName();
     int getNumParticipants();
 
@@ -21,7 +21,7 @@ public :
 
     // Setters
     void setID(int id);
-    inline void setLogID(int id) { logID = id;}
+    inline void setLogID(int id) { logId = id;}
     void setName(std::string names);
     void setNumParticipants(int num);
 

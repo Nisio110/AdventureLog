@@ -27,6 +27,9 @@ namespace DiskHelper {
 	KeyValue strToKVPair(std::string_view kvStr);
 	KeyValueList StrVecToKVL(const std::vector<std::string>& kvlAsStr);
 	bool strToBool(std::string_view str);
+	std::string intToStr(int x);
+	std::string boolToStr(bool x);
+	void openDiskForWriting(std::ofstream& file, std::string path);
 }
 
 class Disk{
@@ -40,6 +43,9 @@ protected:
 	std::vector<User*> users;
 	std::vector<Log*> logs;
 	std::vector<Participant*> participants;
+
+	std::vector<std::string> writeBuffer; 
+	std::ofstream writeFile;
 
 	ObjectList splitByObjects(const KeyValueList& kvl);
 public:
@@ -80,6 +86,13 @@ public:
 	void printLogDetails(); // for testing
 	void printParticipantDetails(); // for testing
 	void printAll();
+
+	// Writing
+	std::vector<std::string> userToStr(User* u);
+	std::vector<std::string> logToStr(Log* log);
+	std::vector<std::string> partToStr(Participant* p);
+	std::vector<std::string> createBuffer(std::vector<std::string> vec1, std::vector<std::string> vec2, std::vector<std::string> vec3);
+	void writeToDisk(std::vector<std::string> buffer);
 };
 
 namespace keys{

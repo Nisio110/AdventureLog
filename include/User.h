@@ -13,7 +13,7 @@ class User{
     std::vector<Log*> logs;
 public :
     // Getters
-    int getID();
+    int getId();
     std::string getName();
     std::string getPasswd();
     std::vector<Log*> getLogs();

@@ -164,38 +164,48 @@ ObjectList Disk::splitByObjects(const KeyValueList& attributes)
 void Disk::initProgram()
 {
 	parseDisk();
+	const short objLineNum {0};
+
+	// Pass 1: Load participants
 	for (size_t i{0}; i < objects.size(); ++i){
-		const short objLineNum {0};
+		const KeyValueList obj {objects.at(i)};
+
+		if (getAttrKey(obj, objLineNum) == keys::obj){
+			if (getAttrValue(obj, objLineNum) == keys::participant) 
+				{ addParticipant(initParticipant(obj)); }
+		}
+	}
+
+	// Pass 2: Load logs
+	for (size_t i{0}; i < objects.size(); ++i){
+		const KeyValueList obj {objects.at(i)};
+
+		if (getAttrKey(obj, objLineNum) == keys::obj){
+			if ((getAttrValue(obj, objLineNum) == keys::caveLog) || (getAttrValue(obj, objLineNum) == keys::hikeLog))
+				{addLog(initLog(obj));}
+		}
+	}
+	
+	// Pass 3: Load users
+	for (size_t i{0}; i < objects.size(); ++i){
 		const KeyValueList obj {objects.at(i)};
 
 		if (getAttrKey(obj, objLineNum) == keys::obj){
 			if (getAttrValue(obj, objLineNum) == keys::user)
 				{addUser(initUser(obj));}
-			else if ((getAttrValue(obj, objLineNum) == keys::caveLog) || (getAttrValue(obj, objLineNum) == keys::hikeLog))
-				{addLog(initLog(obj));}
-			else if (getAttrValue(obj, objLineNum) == keys::participant) 
-				{ addParticipant(initParticipant(obj)); }
-			else
-				printErr("splitByObjects: \\,;O;,/"); // error
 		}
 	}
-
 }
 
 void Disk::printUserDetails(){ // for testing
 	for (auto u : users){
-		std::cout << "= Printing user details ===\n"
-				<< " ID: " << u->getID() << "\n"
-				<< " Name: " << u->getName() << "\n"
-				<< " Passwd: " << u->getPasswd() << "\n"
-				<< "===========================\n"
-				<< "\n";
+		u->print();
 	}
 }
 
 void Disk::printLogDetails(){ // for testing
 	for (auto l : logs){
-		l->display();
+		l->print();
 	}
 }
 
@@ -307,7 +317,7 @@ Log* Disk::initLog(KeyValueList logKVL){
 	// Assign the generic attributes to the object
 	if (log){
 		log->setID(strToNum(_id));
-		log->setOwnerId(strToNum(_ownerId));
+		log->setUserId(strToNum(_ownerId));
 		log->setDate(_date);
 		log->setArea(_area);
 		log->setDurationMins(strToNum(_durMins));
@@ -317,7 +327,7 @@ Log* Disk::initLog(KeyValueList logKVL){
 
 	// Find and assign associated participants
 	for (auto p : participants){
-		if (p->getLogID() == log->getID()) { addParticipant(p); }
+		if (p->getLogID() == log->getID()) { log->addParticipant(*p); }
 	}
 
 	// Return the object
@@ -329,15 +339,19 @@ Participant* Disk::initParticipant(KeyValueList PartKVL){
 	// Initialise attribute vars
 	std::string name;
 	std::string id;
+	std::string logID;
 
 	for (auto i : PartKVL){
 		if ((name.empty()) && (getKey(i) == keys::name))
 			{ name = getVal(i); }
 		else if ((id.empty()) && (getKey(i) == keys::id))
 			{ id = getVal(i); }
+		else if ((logID.empty()) && (getKey(i) == keys::pLogID))
+			{ logID = getVal(i); }
 	}
 	p = new Participant(name);
 	p->setID(stoi(id));
+	p->setLogID(stoi(logID));
 	return p;
 }
 

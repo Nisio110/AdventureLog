@@ -14,8 +14,7 @@ protected:
     std::string note;
     std::string date{"N/A"};
     static int numLogs;
-    User* owner;
-    int ownerId{};
+    int userId{};
 public :
     // Getters
     int getDurationMins();
@@ -24,8 +23,7 @@ public :
     std::string getDate();
     std::vector<Participant> getParticipants();
     int getID();
-    int getOwnerId();
-    User* getOwner();
+    int getUserID();
 
     // Setters
     void setDurationMins(int duration);
@@ -35,11 +33,10 @@ public :
     void setDate(std::string date);
     void setID(int id);
     void setParticipants(std::vector<Participant> p);
-    void setOwner(User* u);
-    inline void setOwnerId(int _id){ownerId = id;}
+    inline void setUserId(int _id){userId = _id;}
 
     // General
-    virtual void display();
+    virtual void print();
     void generateID(int &numObject);
     void addParticipant(Participant &p);
     void removeParticipant(Participant &p);
@@ -47,10 +44,10 @@ public :
     // Constructors & Destructor
     Log();
     virtual ~Log() = default;
-    Log(User* u, std::string date);
-    Log(User* u, std::string date, std::string note);
-    Log(User* u, std::string date, std::string area, std::string note);
-    Log(User* u, std::string date, std::string area, std::string note, std::vector<Participant> participants);
+    Log(int uid, std::string date);
+    Log(int uid, std::string date, std::string note);
+    Log(int uid, std::string date, std::string area, std::string note);
+    Log(int uid, std::string date, std::string area, std::string note, std::vector<Participant> participants);
 
 };
 
@@ -73,13 +70,13 @@ public :
     void setRigger(bool b);
 
     // General
-    void display() override;
+    void print() override;
 
     // Constructors
 	CaveLog();
-    CaveLog(User* u, std::string name, std::string date);
-    CaveLog(User* u, std::string name, std::string date, std::string area, std::string note);
-    CaveLog(User* u, std::string name, std::string date, std::string area, std::string note, std::vector<Participant> participants, bool isSRT, bool wasCL, bool wasRigg);
+    CaveLog(int uid, std::string name, std::string date);
+    CaveLog(int uid, std::string name, std::string date, std::string area, std::string note);
+    CaveLog(int uid, std::string name, std::string date, std::string area, std::string note, std::vector<Participant> participants, bool isSRT, bool wasCL, bool wasRigg);
 };
 
 class HikeLog : public Log {
@@ -95,20 +92,20 @@ public :
     void setWeather(std::string weather);
 
     // General
-    void display() override;
+    void print() override;
 
     // Constructors
 	HikeLog();
-    HikeLog(User* u, std::string date);
-    HikeLog(User* u, std::string date, std::string note);
-    HikeLog(User* u, std::string date, std::string area, std::string note, int distance);
-    HikeLog(User* u, std::string date, std::string area, std::string note, int distance, std::string weather, std::vector<Participant> &participants);
+    HikeLog(int uid, std::string date);
+    HikeLog(int uid, std::string date, std::string note);
+    HikeLog(int uid, std::string date, std::string area, std::string note, int distance);
+    HikeLog(int uid, std::string date, std::string area, std::string note, int distance, std::string weather, std::vector<Participant> &participants);
 };
 
 // Log Class Tests
 namespace LogTests{
-    void testCaveLogConstructors(User* u);
-    void testHikeLogConstructors(User* u);
+    void testCaveLogConstructors(int uid);
+    void testHikeLogConstructors(int uid);
     void testParticipantsIO(); // add and remove participants
     void testDisplay();
 }

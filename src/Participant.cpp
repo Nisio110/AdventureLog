@@ -18,11 +18,7 @@ void Participant::setNumParticipants(int num){ numParticipants = num; }
 
 // General
 void Participant::print(){
-    std::cout << "= Printing participant details ===\n"
-              << " ID: " << getID() << "\n"
-              << " Name: " << getName() << "\n"
-              << "==================================\n"
-              << "\n";
+    std::cout << getID() << ") " << getName() << "\n";
 }
 
 int Participant::generateID(){

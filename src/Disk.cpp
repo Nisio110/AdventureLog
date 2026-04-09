@@ -215,6 +215,12 @@ void Disk::printParticipantDetails(){ // for testing
 	}
 }
 
+void Disk::printAll(){
+	for (auto u : users){
+		u->printAll();
+	}
+}
+
 User* Disk::initUser(KeyValueList attrs){
 	User* u = new User();
 	size_t i {0};
@@ -225,6 +231,12 @@ User* Disk::initUser(KeyValueList attrs){
 	u->setID	(strToNum(id));
 	u->setName	(name);
 	u->setPasswd(passwd);
+
+
+	for (auto l : logs){
+		if (l->getUserId() == u->getID()) { u->addLog(l); }
+	}
+
 	// TODO: Figure out how to store the log objects tied to a user.
 	return u; 
 }

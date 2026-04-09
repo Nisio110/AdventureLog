@@ -23,7 +23,7 @@ public :
     std::string getDate();
     std::vector<Participant> getParticipants();
     int getID();
-    int getUserID();
+    int getUserId();
 
     // Setters
     void setDurationMins(int duration);
@@ -31,9 +31,9 @@ public :
     void setArea(std::string area);
     void setNote(std::string notes);
     void setDate(std::string date);
-    void setID(int id);
+    void setID(int _id);
     void setParticipants(std::vector<Participant> p);
-    inline void setUserId(int _id){userId = _id;}
+    void setUserId(int _uid);
 
     // General
     virtual void print();

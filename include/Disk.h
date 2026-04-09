@@ -75,9 +75,11 @@ public:
 	Log* initLog(KeyValueList attr);
 	Participant* initParticipant(KeyValueList attr);
 
+	// Display
 	void printUserDetails(); // for testing
 	void printLogDetails(); // for testing
 	void printParticipantDetails(); // for testing
+	void printAll();
 };
 
 namespace keys{

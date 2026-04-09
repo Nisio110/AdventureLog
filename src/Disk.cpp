@@ -311,8 +311,21 @@ Log* Disk::initLog(KeyValueList logKVL){
 	return log;
 }
 
-Participant* Disk::initParticipant(KeyValueList attr){
-	Participant* u = new Participant();
+Participant* Disk::initParticipant(KeyValueList PartKVL){
+	Participant* u {nullptr};
+	// Initialise attribute vars
+	std::string name;
+	std::string id;
+
+	for (auto i : PartKVL){
+		if ((name.empty()) && (getKey(i) == keys::name))
+			{ name = getVal(i); }
+		else if ((id.empty()) && (getKey(i) == keys::id))
+			{ id = getVal(i); }
+	}
+	u = new Participant(name);
+	u->setID(stoi(id));
+	return u;
 }
 
 Disk::~Disk(){

@@ -30,3 +30,11 @@ note: null
 distance: 16km
 weather: cloudy
 ---
+object: Participant
+id: 1
+name: Ronan Gallagher
+---
+object: Participant
+id: 2
+name: Ciara Brennan
+---

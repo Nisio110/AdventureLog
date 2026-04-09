@@ -1,4 +1,5 @@
 #include "../include/Disk.h"
+#include "../include/Participant.h"
 #include "../include/constants.h"
 #include <iostream>
 
@@ -195,6 +196,16 @@ void Disk::printUserDetails(){ // for testing
 void Disk::printLogDetails(){ // for testing
 	for (auto l : logs){
 		l->display();
+	}
+}
+
+void Disk::printParticipantDetails(){ // for testing
+	for (auto p : participants){
+		std::cout << "= Printing participant details ===\n"
+				<< " ID: " << p->getID() << "\n"
+				<< " Name: " << p->getName() << "\n"
+				<< "==================================\n"
+				<< "\n";
 	}
 }
 

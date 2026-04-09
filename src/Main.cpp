@@ -4,8 +4,9 @@
 int main(){
 	Disk d;
 	d.initProgram();
+	d.printAll();
 	//d.printLogDetails();
-	d.printUserDetails();
+	//d.printUserDetails();
 	//d.printParticipantDetails();
 }
 

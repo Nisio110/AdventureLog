@@ -18,7 +18,7 @@ vector<Participant> Log::getParticipants() { return participants; }
 string Log::getNote() { return note; }
 string Log::getDate() { return date; }
 int Log::getID(){ return id; }
-int Log::getUserID(){ return userId; }
+int Log::getUserId(){ return userId; }
 
 // Setters
 void Log::setDurationMins(int dMins){ durationMins = dMins; }
@@ -28,6 +28,7 @@ void Log::setParticipants(vector<Participant> p){ participants = p; }
 void Log::setNote(string nt){ note = nt; }
 void Log::setDate(string d){ date = d; }
 void Log::setID(int i){ id = i; }
+void Log::setUserId(int uid){ userId = uid; }
 
 // General
 void Log::print(){
@@ -105,7 +106,7 @@ void CaveLog::print(){
     else _srtCave = neg;
 
 
-    cout << div(3) << " CAVE LOG #" << getID() << " " << div(3) << '\n'
+    cout << div(1) << " Cave Log #" << getID() << " " << div(2) << '\n'
          << "Cave        : " << getName()         << "\n"
          << "Date        : " << getDate()         << "\n"
          << "SRT Cave    : " << _srtCave          << "\n"
@@ -121,9 +122,9 @@ void CaveLog::print(){
             p.print(); 
         }
 
-    cout << div(4)                                << "\n"
+    cout << div(3)                                << "\n"
          << "Notes : " << "\n" << getNote()       << "\n"
-         << div(4)                                << "\n\n";
+         << div(3)                                << "\n\n";
 }
 
 CaveLog::CaveLog(){}
@@ -149,7 +150,7 @@ void HikeLog::setWeather(string w){ weather = w; }
 
 void HikeLog::print(){
     using namespace Tests;
-    cout << div(3) << " HIKE LOG #" << getID() << " " << div(3) << '\n'
+    cout << div(1) << " Hike Log #" << getID() << " " << div(2) << '\n'
          << "Date        : " << getDate()         << "\n"
          << "Area        : " << getArea()         << "\n"
          << "Distance    : " << getDist()         << "\n"
@@ -160,9 +161,9 @@ void HikeLog::print(){
     for (auto p : getParticipants())
         { p.print(); }
 
-    cout << div(4)                                << "\n"
+    cout << div(3)                                << "\n"
          << "Notes : " << "\n" << getNote()       << "\n"
-         << div(4)                                << "\n\n";
+         << div(3)                                << "\n\n";
 }
 
 HikeLog::HikeLog(){}

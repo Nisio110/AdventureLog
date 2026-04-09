@@ -8,14 +8,12 @@ int User::numUsers{0};
 int User::getID(){ return id; }
 string User::getName(){return name;}
 string User::getPasswd(){return passwd;}
-vector<CaveLog> &User::getCaveLogs(){return caveLogs;}
-vector<HikeLog> &User::getHikeLogs(){return hikeLogs;}
+vector<Log*> User::getLogs(){return logs;}
 
 void User::setID(int i){id = i;}
 void User::setName(string n){name = n;}
 void User::setPasswd(string p){passwd = p;}
-void User::setCaveLogs(vector<CaveLog> &cl){caveLogs = cl;}
-void User::setHikeLogs(vector<HikeLog> &hl){hikeLogs = hl;}
+void User::setLogs(vector<Log*> l){logs = l;}
 
 void User::generateID(){
     numUsers += 1;
@@ -35,34 +33,22 @@ User::User(string n, string p){
 
 // General
 void User::print(){
-    std::cout << " User: " << getName() << "\n";
+    std::cout << "User: " << getName() << "\n";
 }
 void User::printAll(){
     print();
-    std::cout << "=== CAVE LOGS =========" << "\n";
-    for (auto cl : caveLogs)
-        { cl.print(); }
-    std::cout << "=== HIKE LOGS =========" << "\n";
-    for (auto hl : hikeLogs)
-        { hl.print(); }
+    std::cout << "=== LOGS =========" << "\n";
+    for (auto log : logs)
+        { log->print(); }
 }
 
-void User::addCaveLog(CaveLog& c){
-    caveLogs.push_back(c);
-    c.setID(caveLogs.size()-1);
+void User::addLog(Log* log){
+    logs.push_back(log);
 }
-void User::addHikeLog(HikeLog &h){
-    hikeLogs.push_back(h);
-    h.setID(hikeLogs.size()-1);
-    // logic here
-    // temp: object will have id variable
-}
-void User::removeCaveLog(int id){
-    caveLogs.erase(caveLogs.begin()+id);
-} // pass in objects id variable 
-
-void User::removeHikeLog(int id){
-    hikeLogs.erase(hikeLogs.begin()+id);
+void User::removeLog(int id){
+    for (size_t i{0}; i < logs.size(); ++i){
+        if (logs.at(i)->getID() == id) logs.erase(logs.begin() + i);
+    }
 } // pass in objects id variable 
 
 void UserTests::testCaveLogsIO(){}

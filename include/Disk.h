@@ -77,6 +77,7 @@ public:
 
 	void printUserDetails(); // for testing
 	void printLogDetails(); // for testing
+	void printParticipantDetails(); // for testing
 };
 
 namespace keys{

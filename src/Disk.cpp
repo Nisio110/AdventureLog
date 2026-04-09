@@ -213,11 +213,10 @@ User* Disk::initUser(KeyValueList attrs){
 }
 
 Log* Disk::initLog(KeyValueList logKVL){
-	// I think I need to face reality and seperate this function into
-	// initCaveLog and initHikeLog.
-
+	// Constants
 	const size_t objKeyLineNum {0};
 	Log* log {nullptr};
+	// Initialise attribute variables
 	std::string _id;
 	std::string _ownerId;
 	std::string _date;
@@ -225,6 +224,7 @@ Log* Disk::initLog(KeyValueList logKVL){
 	std::string _durMins;
 	std::string _note;
 
+	// Assign the generic values to the attributes
 	for (auto i : logKVL){
 		if 	( (_id.empty()) && (getKey(i) == keys::id))
 			{ _id = getVal(i); }
@@ -241,13 +241,17 @@ Log* Disk::initLog(KeyValueList logKVL){
 	}
 
 	
+	// CaveLog
 	if (getAttrValue(logKVL, objKeyLineNum) == keys::caveLog){
 		CaveLog* caveLog = new CaveLog();
+		
+		// Initialise the attribute vars
 		std::string cName;
 		std::string rigging;
 		std::string cl;
 		std::string srtCave;
 
+		// Assign values to the attribute vars
 		for (auto i : logKVL){
 			if 	( (cName.empty()) && (getKey(i) == keys::cName))
 				{ cName = getVal(i); }
@@ -258,28 +262,42 @@ Log* Disk::initLog(KeyValueList logKVL){
 			else if ( (srtCave.empty()) && (getKey(i) == keys::srtCave))
 				{ srtCave = getVal(i); }
 		}
+
+		// Assign the attribute values to the class object
 		caveLog->setName(cName);
 		caveLog->setSRTCave(strToBool(srtCave));
 		caveLog->setCaveLeader(strToBool(cl));
 		caveLog->setRigger(strToBool(rigging));
+
+		// Assign the child object to the return object
 		log = caveLog;
 	}
+
+	// HikeLog
 	else if (getAttrValue(logKVL, objKeyLineNum) == keys::hikeLog){
 		HikeLog* hikeLog = new HikeLog();
+
+		// Initialise the attribute vars
 		std::string dist;
 		std::string weather;
 
+		// Assign values to the attribute vars
 		for (auto i : logKVL){
 			if 	( (dist.empty()) && (getKey(i) == keys::dist))
 				{ dist = getVal(i); }
 			else if ( (weather.empty()) && (getKey(i) == keys::weather))
 				{ weather = getVal(i); }
 		}
+
+		// Assign the attribute values to the objects
 		hikeLog->setDist(strToNum(dist));
 		hikeLog->setWeather(weather);
 
+		// Assign the child object to the return object
 		log = hikeLog;
 	}
+
+	// Assign the generic attributes to the object
 	if (log){
 		log->setID(strToNum(_id));
 		log->setOwnerId(strToNum(_ownerId));
@@ -288,7 +306,13 @@ Log* Disk::initLog(KeyValueList logKVL){
 		log->setDurationMins(strToNum(_durMins));
 		log->setNote(_note);
 	}
+
+	// Return the object
 	return log;
+}
+
+Participant* Disk::initParticipant(KeyValueList attr){
+	Participant* u = new Participant();
 }
 
 Disk::~Disk(){

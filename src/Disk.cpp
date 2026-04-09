@@ -201,11 +201,7 @@ void Disk::printLogDetails(){ // for testing
 
 void Disk::printParticipantDetails(){ // for testing
 	for (auto p : participants){
-		std::cout << "= Printing participant details ===\n"
-				<< " ID: " << p->getID() << "\n"
-				<< " Name: " << p->getName() << "\n"
-				<< "==================================\n"
-				<< "\n";
+		p->print();
 	}
 }
 
@@ -316,6 +312,12 @@ Log* Disk::initLog(KeyValueList logKVL){
 		log->setArea(_area);
 		log->setDurationMins(strToNum(_durMins));
 		log->setNote(_note);
+	}
+
+
+	// Find and assign associated participants
+	for (auto p : participants){
+		if (p->getLogID() == log->getID()) { addParticipant(p); }
 	}
 
 	// Return the object

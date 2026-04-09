@@ -17,6 +17,14 @@ void Participant::setName(string n){ name = n; }
 void Participant::setNumParticipants(int num){ numParticipants = num; }
 
 // General
+void Participant::print(){
+    std::cout << "= Printing participant details ===\n"
+              << " ID: " << getID() << "\n"
+              << " Name: " << getName() << "\n"
+              << "==================================\n"
+              << "\n";
+}
+
 int Participant::generateID(){
     setNumParticipants(numParticipants+1);
     id = getNumParticipants();
@@ -24,9 +32,20 @@ int Participant::generateID(){
 }
 
 // Constructors
-Participant::Participant(string name){
+Participant::Participant(std::string name){
     setName(name);
     generateID();
+}
+Participant::Participant(std::string name, int logID){
+    setName(name);
+    setLogID(logID);
+    generateID();
+}
+
+Participant::Participant(std::string name, int logID, int id){
+    setName(name);
+    setLogID(logID);
+    setID(id);
 }
 
 // Tests

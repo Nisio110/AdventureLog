@@ -106,7 +106,7 @@ void CaveLog::print(){
     else _srtCave = neg;
 
 
-    cout << div(1) << " Cave Log #" << getID() << " " << div(2) << '\n'
+    cout << div(1) << " Log #" << getID() << " - Cave " << div(2) << '\n'
          << "Cave        : " << getName()         << "\n"
          << "Date        : " << getDate()         << "\n"
          << "SRT Cave    : " << _srtCave          << "\n"
@@ -150,7 +150,7 @@ void HikeLog::setWeather(string w){ weather = w; }
 
 void HikeLog::print(){
     using namespace Tests;
-    cout << div(1) << " Hike Log #" << getID() << " " << div(2) << '\n'
+    cout << div(1) << " Log #" << getID() << " - Hike " << div(2) << '\n'
          << "Date        : " << getDate()         << "\n"
          << "Area        : " << getArea()         << "\n"
          << "Distance    : " << getDist()         << "\n"

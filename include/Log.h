@@ -10,7 +10,7 @@ protected:
     int id{-1};        // initialised to -1 to make errors obvious
     int durationMins{}; // will add a setter that takes hours and minutes
     std::string area{"N/A"};
-    std::vector<Participant> participants;
+    std::vector<Participant*> participants;
     std::string note;
     std::string date{"N/A"};
     static int numLogs;
@@ -21,8 +21,8 @@ public :
     std::string getArea();
     std::string getNote();
     std::string getDate();
-    std::vector<Participant> getParticipants();
-    int getID();
+    std::vector<Participant*> getParticipants();
+    int getId();
     int getUserId();
 
     // Setters
@@ -32,14 +32,14 @@ public :
     void setNote(std::string notes);
     void setDate(std::string date);
     void setID(int _id);
-    void setParticipants(std::vector<Participant> p);
+    void setParticipants(std::vector<Participant*> p);
     void setUserId(int _uid);
 
     // General
     virtual void print();
     void generateID(int &numObject);
-    void addParticipant(Participant &p);
-    void removeParticipant(Participant &p);
+    void addParticipant(Participant* p);
+    void removeParticipant(Participant* p);
 
     // Constructors & Destructor
     Log();
@@ -47,7 +47,7 @@ public :
     Log(int uid, std::string date);
     Log(int uid, std::string date, std::string note);
     Log(int uid, std::string date, std::string area, std::string note);
-    Log(int uid, std::string date, std::string area, std::string note, std::vector<Participant> participants);
+    Log(int uid, std::string date, std::string area, std::string note, std::vector<Participant*> participants);
 
 };
 
@@ -76,7 +76,7 @@ public :
 	CaveLog();
     CaveLog(int uid, std::string name, std::string date);
     CaveLog(int uid, std::string name, std::string date, std::string area, std::string note);
-    CaveLog(int uid, std::string name, std::string date, std::string area, std::string note, std::vector<Participant> participants, bool isSRT, bool wasCL, bool wasRigg);
+    CaveLog(int uid, std::string name, std::string date, std::string area, std::string note, std::vector<Participant*> participants, bool isSRT, bool wasCL, bool wasRigg);
 };
 
 class HikeLog : public Log {
@@ -99,7 +99,7 @@ public :
     HikeLog(int uid, std::string date);
     HikeLog(int uid, std::string date, std::string note);
     HikeLog(int uid, std::string date, std::string area, std::string note, int distance);
-    HikeLog(int uid, std::string date, std::string area, std::string note, int distance, std::string weather, std::vector<Participant> &participants);
+    HikeLog(int uid, std::string date, std::string area, std::string note, int distance, std::string weather, std::vector<Participant*> &participants);
 };
 
 // Log Class Tests

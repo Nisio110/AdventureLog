@@ -14,17 +14,17 @@ int HikeLog::numLogs{0};
 // Getters
 int Log::getDurationMins() { return durationMins; }
 string Log::getArea() { return area; }
-vector<Participant> Log::getParticipants() { return participants; }
+vector<Participant*> Log::getParticipants() { return participants; }
 string Log::getNote() { return note; }
 string Log::getDate() { return date; }
-int Log::getID(){ return id; }
+int Log::getId(){ return id; }
 int Log::getUserId(){ return userId; }
 
 // Setters
 void Log::setDurationMins(int dMins){ durationMins = dMins; }
 void Log::setDuration(int hours, int mins){ durationMins = (hours*60) + mins; }
 void Log::setArea(string l){ area = l; }
-void Log::setParticipants(vector<Participant> p){ participants = p; }
+void Log::setParticipants(vector<Participant*> p){ participants = p; }
 void Log::setNote(string nt){ note = nt; }
 void Log::setDate(string d){ date = d; }
 void Log::setID(int i){ id = i; }
@@ -38,7 +38,7 @@ void Log::print(){
     << "Area: " << area << "\n"
     << "Participants: " << small_div;
     for (auto p : getParticipants()){
-        p.print();
+        p->print();
     }
     cout << small_div << small_div << small_div << small_div << small_div << '\n';
 }
@@ -49,12 +49,11 @@ void Log::generateID(int &numObject){
     ++numLogs;
     setID(++numObject);
 }
-void Log::addParticipant(Participant &p){
+void Log::addParticipant(Participant* p){
     participants.push_back(p);
-    p.setID(participants.size()-1);
 }
-void Log::removeParticipant(Participant &p){
-   participants.erase(participants.begin() + p.getID());
+void Log::removeParticipant(Participant* p){
+   participants.erase(participants.begin() + p->getId());
 } 
 Log::Log(){}
 Log::Log(int uid, string date){
@@ -74,7 +73,7 @@ Log::Log(int uid, string date, string area, string note){
     setArea(area);
     setNote(note);
 }
-Log::Log(int uid, string date, string area, string note, vector<Participant> participants){
+Log::Log(int uid, string date, string area, string note, vector<Participant*> participants){
     generateID(numLogs);
     setUserId(uid);
     setDate(date);
@@ -106,7 +105,7 @@ void CaveLog::print(){
     else _srtCave = neg;
 
 
-    cout << div(1) << " Log #" << getID() << " - Cave " << div(2) << '\n'
+    cout << div(1) << " Log #" << getId() << " - Cave " << div(2) << '\n'
          << "Cave        : " << getName()         << "\n"
          << "Date        : " << getDate()         << "\n"
          << "SRT Cave    : " << _srtCave          << "\n"
@@ -119,7 +118,7 @@ void CaveLog::print(){
     for (auto p : getParticipants())
         {
             cout << "  ";
-            p.print(); 
+            p->print();
         }
 
     cout << div(3)                                << "\n"
@@ -134,7 +133,7 @@ CaveLog::CaveLog(int uid, string name, string date): Log(uid,date) {
 CaveLog::CaveLog(int uid, string name, string date, string area, string note): Log(uid,date,area,note){
     setName(name);
 } 
-CaveLog::CaveLog(int uid, string name, string date, string area, string note, vector<Participant> participants, bool didSRT, bool isLeader, bool isRigger): Log(uid,date,area,note,participants){
+CaveLog::CaveLog(int uid, string name, string date, string area, string note, vector<Participant*> participants, bool didSRT, bool isLeader, bool isRigger): Log(uid,date,area,note,participants){
     setName(name);
     setSRTCave(didSRT);
     setCaveLeader(isLeader);
@@ -150,7 +149,7 @@ void HikeLog::setWeather(string w){ weather = w; }
 
 void HikeLog::print(){
     using namespace Tests;
-    cout << div(1) << " Log #" << getID() << " - Hike " << div(2) << '\n'
+    cout << div(1) << " Log #" << getId() << " - Hike " << div(2) << '\n'
          << "Date        : " << getDate()         << "\n"
          << "Area        : " << getArea()         << "\n"
          << "Distance    : " << getDist()         << "\n"
@@ -159,7 +158,7 @@ void HikeLog::print(){
          << "Participants: " << "\n";
 
     for (auto p : getParticipants())
-        { p.print(); }
+        { p->print(); }
 
     cout << div(3)                                << "\n"
          << "Notes : " << "\n" << getNote()       << "\n"
@@ -172,7 +171,7 @@ HikeLog::HikeLog(int uid, string date, string note): Log(uid,date,note){}
 HikeLog::HikeLog(int uid, string date, string area, string note, int dist): Log(uid, date, area, note){
     setDist(dist);
 }
-HikeLog::HikeLog(int uid, string date, string area, string note, int dist, string weth, vector<Participant> &participants): Log(uid,date,area, note,participants){
+HikeLog::HikeLog(int uid, string date, string area, string note, int dist, string weth, vector<Participant*> &participants): Log(uid,date,area, note,participants){
     setDist(dist);
     setWeather(weth);
 }
@@ -184,7 +183,7 @@ void LogTests::testCaveLogConstructors(int uid){
     CaveLog c2(uid, "John Thomas","02/12/2025", "Fermanagh", "Went in crawled around, bit mucky");
     
     Participant p1("Martha Stewart"), p2("John Pork"), p3("Oran Blackwater");
-    vector<Participant> vp {p1, p2, p3};
+    vector<Participant*> vp {&p1, &p2, &p3};
     CaveLog c3(uid, "Bruce's Pot", "24/11/2025", "Fermanagh", "Cool stretch of SRT over a river required to get to the entrance", vp, true, false, false);
 
     cout << div(2) << " TESTING CAVE LOG CONSTRUCTORS " << div(2) << "\n";

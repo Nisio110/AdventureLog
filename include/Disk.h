@@ -89,6 +89,7 @@ namespace keys{
 	inline constexpr std::string_view id {"id"};
 	inline constexpr std::string_view name {"name"};
 	inline constexpr std::string_view passwd {"password"};
+	inline constexpr std::string_view pLogID {"log-id"};
 	inline constexpr std::string_view ownerId {"owner-id"};
 	inline constexpr std::string_view date {"date"};
 	inline constexpr std::string_view area {"area"};

@@ -18,7 +18,7 @@ vector<Participant> Log::getParticipants() { return participants; }
 string Log::getNote() { return note; }
 string Log::getDate() { return date; }
 int Log::getID(){ return id; }
-int Log::getOwnerId(){ return ownerId; }
+int Log::getUserID(){ return userId; }
 
 // Setters
 void Log::setDurationMins(int dMins){ durationMins = dMins; }
@@ -28,14 +28,18 @@ void Log::setParticipants(vector<Participant> p){ participants = p; }
 void Log::setNote(string nt){ note = nt; }
 void Log::setDate(string d){ date = d; }
 void Log::setID(int i){ id = i; }
-void Log::setOwner(User *u){ owner = u; }
 
 // General
-void Log::display(){
+void Log::print(){
     string small_div = "--- ";
-    cout << small_div << "LOG" << small_div << '\n'
+    cout << small_div << "LOG" << small_div << small_div << small_div << '\n'
     << "Date: " << date << "\n"
-    << "Area: " << area << "\n";
+    << "Area: " << area << "\n"
+    << "Participants: " << small_div;
+    for (auto p : getParticipants()){
+        p.print();
+    }
+    cout << small_div << small_div << small_div << small_div << small_div << '\n';
 }
 void Log::generateID(int &numObject){
 // By dereferencing the pointer to numObject
@@ -52,26 +56,26 @@ void Log::removeParticipant(Participant &p){
    participants.erase(participants.begin() + p.getID());
 } 
 Log::Log(){}
-Log::Log(User* u, string date){
+Log::Log(int uid, string date){
+    setUserId(uid);
     generateID(numLogs);
-    setOwner(u);
     setDate(date);
 }
-Log::Log(User* u, string date, string note){
+Log::Log(int uid, string date, string note){
     generateID(numLogs);
-    setOwner(u);
+    setUserId(uid);
     setNote(note);
 }
-Log::Log(User* u, string date, string area, string note){
+Log::Log(int uid, string date, string area, string note){
     generateID(numLogs);
-    setOwner(u);
+    setUserId(uid);
     setDate(date);
     setArea(area);
     setNote(note);
 }
-Log::Log(User* u, string date, string area, string note, vector<Participant> participants){
+Log::Log(int uid, string date, string area, string note, vector<Participant> participants){
     generateID(numLogs);
-    setOwner(u);
+    setUserId(uid);
     setDate(date);
     setArea(area);
     setNote(note);
@@ -87,7 +91,7 @@ void CaveLog::setSRTCave(bool b){ isSRT = b; }
 void CaveLog::setCaveLeader(bool b){ wasCL = b; }
 void CaveLog::setRigger(bool b){ didRigging = b; }
 
-void CaveLog::display(){
+void CaveLog::print(){
     using namespace Tests;
     string pos{"Yes"},neg{"No"};
     string _rigger;
@@ -109,19 +113,27 @@ void CaveLog::display(){
          << "Cavers      : " << "TBC"             << "\n"
          << "Rigged      : " << _rigger           << "\n"
          << "Cave Leader : " << _caveLeader       << "\n"
-         << div(4)                                << "\n"
+         << "Participants: " << "\n";
+
+    for (auto p : getParticipants())
+        {
+            cout << "  ";
+            p.print(); 
+        }
+
+    cout << div(4)                                << "\n"
          << "Notes : " << "\n" << getNote()       << "\n"
          << div(4)                                << "\n\n";
 }
 
 CaveLog::CaveLog(){}
-CaveLog::CaveLog(User *u, string name, string date): Log(u,date) {
+CaveLog::CaveLog(int uid, string name, string date): Log(uid,date) {
     setName(name);
 }
-CaveLog::CaveLog(User *u, string name, string date, string area, string note): Log(u,date,area,note){
+CaveLog::CaveLog(int uid, string name, string date, string area, string note): Log(uid,date,area,note){
     setName(name);
 } 
-CaveLog::CaveLog(User *u, string name, string date, string area, string note, vector<Participant> participants, bool didSRT, bool isLeader, bool isRigger): Log(u,date,area,note,participants){
+CaveLog::CaveLog(int uid, string name, string date, string area, string note, vector<Participant> participants, bool didSRT, bool isLeader, bool isRigger): Log(uid,date,area,note,participants){
     setName(name);
     setSRTCave(didSRT);
     setCaveLeader(isLeader);
@@ -135,43 +147,48 @@ string HikeLog::getWeather(){ return weather; }
 void HikeLog::setDist(int d){ distance = d; }
 void HikeLog::setWeather(string w){ weather = w; }
 
-void HikeLog::display(){
+void HikeLog::print(){
     using namespace Tests;
     cout << div(3) << " HIKE LOG #" << getID() << " " << div(3) << '\n'
-         << "Date        : " << getDate()       << "\n"
-         << "Area        : " << getArea()       << "\n"
-         << "Distance    : " << getDist()       << "\n"
-         << "Weather     : " << getWeather()    << "\n"
+         << "Date        : " << getDate()         << "\n"
+         << "Area        : " << getArea()         << "\n"
+         << "Distance    : " << getDist()         << "\n"
+         << "Weather     : " << getWeather()      << "\n"
          << "Duration    : " << getDurationMins() << " mins" << "\n"
-         << div(4)                              << "\n"
-         << "Notes : " << "\n" << getNote()     << "\n"
-         << div(4)                              << "\n\n";
+         << "Participants: " << "\n";
+
+    for (auto p : getParticipants())
+        { p.print(); }
+
+    cout << div(4)                                << "\n"
+         << "Notes : " << "\n" << getNote()       << "\n"
+         << div(4)                                << "\n\n";
 }
 
 HikeLog::HikeLog(){}
-HikeLog::HikeLog(User* u, string date): Log(u,date){}
-HikeLog::HikeLog(User* u, string date, string note): Log(u,date,note){}
-HikeLog::HikeLog(User* u, string date, string area, string note, int dist): Log(u, date, area, note){
+HikeLog::HikeLog(int uid, string date): Log(uid,date){}
+HikeLog::HikeLog(int uid, string date, string note): Log(uid,date,note){}
+HikeLog::HikeLog(int uid, string date, string area, string note, int dist): Log(uid, date, area, note){
     setDist(dist);
 }
-HikeLog::HikeLog(User* u, string date, string area, string note, int dist, string weth, vector<Participant> &participants): Log(u,date,area, note,participants){
+HikeLog::HikeLog(int uid, string date, string area, string note, int dist, string weth, vector<Participant> &participants): Log(uid,date,area, note,participants){
     setDist(dist);
     setWeather(weth);
 }
 
 // TESTING FUNCTIONS ================================================== //
-void LogTests::testCaveLogConstructors(User* u1){
+void LogTests::testCaveLogConstructors(int uid){
     using namespace Tests;
-    CaveLog c1(u1, "Poll na Gollum", "12/01/2026");
-    CaveLog c2(u1, "John Thomas","02/12/2025", "Fermanagh", "Went in crawled around, bit mucky");
+    CaveLog c1(uid, "Poll na Gollum", "12/01/2026");
+    CaveLog c2(uid, "John Thomas","02/12/2025", "Fermanagh", "Went in crawled around, bit mucky");
     
     Participant p1("Martha Stewart"), p2("John Pork"), p3("Oran Blackwater");
     vector<Participant> vp {p1, p2, p3};
-    CaveLog c3(u1, "Bruce's Pot", "24/11/2025", "Fermanagh", "Cool stretch of SRT over a river required to get to the entrance", vp, true, false, false);
+    CaveLog c3(uid, "Bruce's Pot", "24/11/2025", "Fermanagh", "Cool stretch of SRT over a river required to get to the entrance", vp, true, false, false);
 
     cout << div(2) << " TESTING CAVE LOG CONSTRUCTORS " << div(2) << "\n";
-    c1.display();
-    c2.display();
-    c3.display();
+    c1.print();
+    c2.print();
+    c3.print();
     Tests::verifyTest();
 }

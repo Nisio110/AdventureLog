@@ -32,9 +32,11 @@ weather: cloudy
 ---
 object: Participant
 id: 1
+log-id: 1
 name: Ronan Gallagher
 ---
 object: Participant
 id: 2
+log-id: 1
 name: Ciara Brennan
 ---

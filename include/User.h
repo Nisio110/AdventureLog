@@ -17,8 +17,8 @@ public :
     int getID();
     std::string getName();
     std::string getPasswd();
-    std::vector<CaveLog> &getCaveLogs();
-    std::vector<HikeLog> &getHikeLogs();
+    std::vector<CaveLog>& getCaveLogs();
+    std::vector<HikeLog>& getHikeLogs();
 
     // Setters
     void setID(int id);
@@ -28,6 +28,8 @@ public :
     void setHikeLogs(std::vector<HikeLog> &hikeLogs);
 
     // General
+    void print();
+    void printAll();
     void generateID();
     void addCaveLog(CaveLog& caveLog);
     void addHikeLog(HikeLog& hikeLog);

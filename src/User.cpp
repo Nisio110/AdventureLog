@@ -1,4 +1,5 @@
 #include "../include/User.h"
+#include <iostream>
 using std::string;
 using std::vector;
 int User::numUsers{0};
@@ -33,6 +34,19 @@ User::User(string n, string p){
 }
 
 // General
+void User::print(){
+    std::cout << " User: " << getName() << "\n";
+}
+void User::printAll(){
+    print();
+    std::cout << "=== CAVE LOGS =========" << "\n";
+    for (auto cl : caveLogs)
+        { cl.print(); }
+    std::cout << "=== HIKE LOGS =========" << "\n";
+    for (auto hl : hikeLogs)
+        { hl.print(); }
+}
+
 void User::addCaveLog(CaveLog& c){
     caveLogs.push_back(c);
     c.setID(caveLogs.size()-1);

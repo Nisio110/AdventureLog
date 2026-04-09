@@ -38,7 +38,7 @@ void User::print(){
 }
 void User::printAll(){
     print();
-    std::cout << "=== LOGS =========" << "\n";
+    std::cout << "=== LOGS ==================" << "\n";
     for (auto log : logs)
         { log->print(); }
 }

@@ -173,7 +173,7 @@ void Disk::initProgram()
 			else if ((getAttrValue(obj, objLineNum) == keys::caveLog) || (getAttrValue(obj, objLineNum) == keys::hikeLog))
 				{addLog(initLog(obj));}
 			else if (getAttrValue(obj, objLineNum) == keys::participant) 
-				{/*addParticipant(initParticipant(obj))*/;}
+				{ addParticipant(initParticipant(obj)); }
 			else
 				printErr("splitByObjects: \\,;O;,/"); // error
 		}
@@ -312,7 +312,7 @@ Log* Disk::initLog(KeyValueList logKVL){
 }
 
 Participant* Disk::initParticipant(KeyValueList PartKVL){
-	Participant* u {nullptr};
+	Participant* p {nullptr};
 	// Initialise attribute vars
 	std::string name;
 	std::string id;
@@ -323,9 +323,9 @@ Participant* Disk::initParticipant(KeyValueList PartKVL){
 		else if ((id.empty()) && (getKey(i) == keys::id))
 			{ id = getVal(i); }
 	}
-	u = new Participant(name);
-	u->setID(stoi(id));
-	return u;
+	p = new Participant(name);
+	p->setID(stoi(id));
+	return p;
 }
 
 Disk::~Disk(){

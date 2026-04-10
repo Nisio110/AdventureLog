@@ -14,6 +14,8 @@ public:
     void addUser(User* u);
     void removeUser(User* u);
 
+    void initProgram();
+    void printAll();
     void save(Disk& d);
     void save();
 };

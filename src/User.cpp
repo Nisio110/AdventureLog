@@ -41,6 +41,7 @@ void User::printAll(){
     std::cout << "=== LOGS ==================" << "\n";
     for (auto log : logs)
         { log->print(); }
+    std::cout << "\n";
 }
 
 void User::addLog(Log* log){

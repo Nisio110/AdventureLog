@@ -1,5 +1,86 @@
 object: User
 id: 1
+name: Oisin
+password: pass123
+---
+object: User
+id: 2
+name: Adam
+password: pass123
+---
+object: User
+id: 1
 name: Oliver Tree
 password: 
+---
+object: CaveLog
+id: 1
+duration-mins: 210
+area: Near Lisdoonvarna, Clare
+note: Went along a fence until we reached a gate. We the wall on the right for a time. I was instructed to figure out the cave's location by Ronan, so I got the ITM coordinated from the survey and converted them so I could use them in OSM. Using this we navigated to the entrance of Faunarooska. The climb down was fairly nice. We then traversed through winding corridors for about 90 minutes, then the beginner caver was escorted back out. A group of 4 of us continued on for about half an hour. We found a frog and rescued it. We left the cave with no issues.
+date: 28/02/2026
+owner-id: 1
+cave-name: Faunarooska
+srt-cave: false
+cave-leader: false
+rigging: false
+---
+object: HikeLog
+id: 2
+duration-mins: 190
+area: Mourne Mountains
+note: null
+date: 22/02/2026
+owner-id: 1
+distance: 16
+weather: cloudy
+---
+object: CaveLog
+id: 2
+duration-mins: 30
+area: Fermanagh, Near Upper Crade
+note: Searched for the entrance as a group for about an hour. Callout time was close so we only got to explore the entrance for about 30 minutes. The climb down was quite sketchy so only some of us actually went in and checked it out.
+date: 05/04/2026
+owner-id: 1
+cave-name: Mastadon
+srt-cave: false
+cave-leader: false
+rigging: false
+---
+object: CaveLog
+id: 3
+duration-mins: 30
+area: Fermanagh, Near Upper Crade
+note: Strong hail when approaching the entrance, we found the cave after searching for a while, was long and windy, and I lead the cave for the first 40 minutes or so. When we got out the winds were crazy strong.
+date: 04/04/2026
+owner-id: 1
+cave-name: Carrickcoppan
+srt-cave: false
+cave-leader: true
+rigging: false
+---
+object: Participant
+name: Adam
+id: 1
+log-id: 1
+---
+object: Participant
+name: Sean
+id: 2
+log-id: 1
+---
+object: Participant
+name: Jamie
+id: 3
+log-id: 1
+---
+object: Participant
+name: Giovanni
+id: 4
+log-id: 1
+---
+object: Participant
+name: Ronan
+id: 5
+log-id: 1
 ---

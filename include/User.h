@@ -28,6 +28,7 @@ public :
     void print();
     void printAll();
     void generateID();
+    static void seedIdCounter(int n);
     void addLog(Log* log);
     void removeLog(int id);
 

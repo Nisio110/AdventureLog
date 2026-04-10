@@ -9,8 +9,18 @@ name: Adam
 password: pass123
 ---
 object: User
-id: 1
-name: Oliver Tree
+id: 3
+name: Wow
+password: 
+---
+object: User
+id: 4
+name: YAY
+password: 
+---
+object: User
+id: 5
+name: PENIS!!!!!!!!!!!!
 password: 
 ---
 object: CaveLog

@@ -5,7 +5,13 @@ int main(){
 	State s;
 	Disk d;
 	s.initProgram();
-	User u("Oliver Tree");
+	
+	// Add a new user
+	std::string name;
+	std::cout << "Enter a username: ";
+	std::cin >> name;
+	User u(name);
+	Log l1(u.getId(),"10/04/2026", "This is a test!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	s.addUser(&u);
 	s.printAll();
 	s.save();

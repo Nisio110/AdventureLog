@@ -19,6 +19,7 @@ void User::generateID(){
     numUsers += 1;
     id = numUsers;
 }
+void User::seedIdCounter(int n){ numUsers = n; }
 User::User(){}
 
 User::User(string n){

@@ -7,8 +7,6 @@ using std::vector;
 using std::cout;
 using std::vector;
 int Log::numLogs{0};
-int CaveLog::numLogs{0};
-int HikeLog::numLogs{0};
 
 // LOG CLASS ========================================= //
 // Getters
@@ -44,11 +42,12 @@ void Log::print(){
 }
 void Log::generateID(int &numObject){
 // By dereferencing the pointer to numObject
-// I am able to modify the static numObject value 
+// I am able to modify the static numObject value
 // stored in the class
     ++numLogs;
     setID(++numObject);
 }
+void Log::seedIdCounter(int n){ numLogs = n; }
 void Log::addParticipant(Participant* p){
     participants.push_back(p);
 }

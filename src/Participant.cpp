@@ -25,6 +25,7 @@ int Participant::generateID(){
     id = getNumParticipants();
     return id;
 }
+void Participant::seedIdCounter(int n){ numParticipants = n; }
 
 // Constructors
 Participant::Participant(std::string name){

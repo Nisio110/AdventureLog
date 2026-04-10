@@ -201,6 +201,22 @@ void Disk::initProgram()
 				{addUser(initUser(obj));}
 		}
 	}
+
+	// Seed id counters so newly-created objects don't collide with loaded ids
+	int maxUserId{0};
+	for (auto* u : users)
+		if (u->getId() > maxUserId) maxUserId = u->getId();
+	User::seedIdCounter(maxUserId);
+
+	int maxLogId{0};
+	for (auto* l : logs)
+		if (l->getId() > maxLogId) maxLogId = l->getId();
+	Log::seedIdCounter(maxLogId);
+
+	int maxPartId{0};
+	for (auto* p : participants)
+		if (p->getId() > maxPartId) maxPartId = p->getId();
+	Participant::seedIdCounter(maxPartId);
 }
 
 void Disk::printUserDetails(){ // for testing
@@ -527,7 +543,7 @@ std::vector<std::string> Disk::partToStr(Participant* p){
 }
 
 void DiskHelper::openDiskForWriting(std::ofstream& file, std::string path){
-	file.open(path,std::ios::trunc);
+	file.open(path,std::ios::out | std::ios::trunc);
 	if (!file.good()) printErr("openDiskForWriting: Failed to open disk for writing");
 	else return;
 }

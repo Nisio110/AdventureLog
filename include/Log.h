@@ -38,6 +38,7 @@ public :
     // General
     virtual void print();
     void generateID(int &numObject);
+    static void seedIdCounter(int n);
     void addParticipant(Participant* p);
     void removeParticipant(Participant* p);
 
@@ -52,7 +53,6 @@ public :
 };
 
 class CaveLog : public Log {
-    static int numLogs;
     std::string name{"N/A"};
     bool isSRT{};
     bool wasCL{};
@@ -80,7 +80,6 @@ public :
 };
 
 class HikeLog : public Log {
-    static int numLogs;
     int distance{-1};
     std::string weather{"N/A"};
 public : 

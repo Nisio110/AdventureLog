@@ -1,10 +1,14 @@
-#include "../include/Disk.h"
+#include "../include/State.h"
 #include <iostream>
 
 int main(){
+	State s;
 	Disk d;
 	d.initProgram();
 	d.printAll();
+	User u("Oliver Tree");
+	s.addUser(&u);
+	s.save(d);
 	//d.printLogDetails();
 	//d.printUserDetails();
 	//d.printParticipantDetails();

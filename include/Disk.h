@@ -91,7 +91,6 @@ public:
 	std::vector<std::string> userToStr(User* u);
 	std::vector<std::string> logToStr(Log* log);
 	std::vector<std::string> partToStr(Participant* p);
-	std::vector<std::string> createBuffer(std::vector<std::string> vec1, std::vector<std::string> vec2, std::vector<std::string> vec3);
 	void writeToDisk(std::vector<std::string> buffer);
 };
 
@@ -99,12 +98,14 @@ namespace keys{
 	constexpr short key {0};
 	constexpr short val {1};
 	// keys
+	inline constexpr std::string_view sep {": "};
 	inline constexpr std::string_view div {"---"};
 	inline constexpr std::string_view obj {"object"};
 	inline constexpr std::string_view id {"id"};
 	inline constexpr std::string_view name {"name"};
 	inline constexpr std::string_view passwd {"password"};
-	inline constexpr std::string_view pLogID {"log-id"};
+	inline constexpr std::string_view pLogId {"log-id"};
+	inline constexpr std::string_view pUid {"user-id"};
 	inline constexpr std::string_view ownerId {"owner-id"};
 	inline constexpr std::string_view date {"date"};
 	inline constexpr std::string_view area {"area"};

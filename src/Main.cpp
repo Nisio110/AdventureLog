@@ -4,11 +4,11 @@
 int main(){
 	State s;
 	Disk d;
-	d.initProgram();
-	d.printAll();
+	s.initProgram();
 	User u("Oliver Tree");
 	s.addUser(&u);
-	s.save(d);
+	s.printAll();
+	s.save();
 	//d.printLogDetails();
 	//d.printUserDetails();
 	//d.printParticipantDetails();

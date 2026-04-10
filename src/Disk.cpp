@@ -101,6 +101,11 @@ namespace DiskHelper{
 			return false;
 		}
 	}
+
+	std::string boolToStr(bool x){
+		if (x) return "true";
+		else return "false";
+	}
 } // End of Namespace
 
 // Constructors
@@ -359,7 +364,7 @@ Participant* Disk::initParticipant(KeyValueList PartKVL){
 			{ name = getVal(i); }
 		else if ((id.empty()) && (getKey(i) == keys::id))
 			{ id = getVal(i); }
-		else if ((logId.empty()) && (getKey(i) == keys::pLogID))
+		else if ((logId.empty()) && (getKey(i) == keys::pLogId))
 			{ logId = getVal(i); }
 	}
 	p = new Participant(name);
@@ -379,21 +384,29 @@ Disk::~Disk(){
 
 std::vector<std::string> Disk::userToStr(User* u){
 	std::vector<std::string> vecStr;
-	std::stringstream idBuf;
 
-	std::string id;
-	std::string name;
-	std::string passwd;
+	std::string obj{keys::obj};
+	std::string id{keys::id};
+	std::string name{keys::name};
+	std::string passwd{keys::passwd};
 
-	idBuf << u->getId();
-	getline(idBuf, id);
-	name = u->getName();
-	passwd = u->getPasswd();
+	obj.append(keys::sep);
+	id.append(keys::sep);
+	name.append(keys::sep);
+	passwd.append(keys::sep);
 
+	obj.append(keys::user);
+	id.append(intToStr(u->getId()));
+	name.append(u->getName());
+	passwd.append(u->getPasswd());
+
+	vecStr.push_back(obj);
 	vecStr.push_back(id);
 	vecStr.push_back(name);
 	vecStr.push_back(passwd);
 
+	std::string div{keys::div};
+	vecStr.push_back(div);
 	return vecStr;
 }
 
@@ -407,83 +420,110 @@ std::string DiskHelper::intToStr(int x){
 
 std::vector<std::string> Disk::logToStr(Log* log){
 	std::vector<std::string> vecStr;	
+	std::string obj{keys::obj};
+	std::string id{keys::id};
+	std::string durMins{keys::durMins};
+	std::string area{keys::area};
+	std::string note{keys::note};
+	std::string date{keys::date};
+	std::string uid{keys::ownerId};
 
-	std::string id;
-	std::string area;
-	std::string note;
-	std::string date;
-	std::string uid;
+	obj.append(keys::sep);
+	id.append(keys::sep);
+	durMins.append(keys::sep);
+	area.append(keys::sep);
+	note.append(keys::sep);
+	date.append(keys::sep);
+	uid.append(keys::sep);
 
-	id = intToStr(log->getId());
-	area = log->getArea();
-	note = log->getNote();
-	date = log->getDate();
-	uid = log->getUserId();
+	id.append(intToStr(log->getId()));
+	durMins.append(intToStr(log->getDurationMins()));
+	area.append(log->getArea());
+	note.append(log->getNote());
+	date.append(log->getDate());
+	uid.append(intToStr(log->getUserId()));
 
-	vecStr.push_back(id);
-	vecStr.push_back(area);
-	vecStr.push_back(note);
-	vecStr.push_back(date);
-	vecStr.push_back(uid);
 
 	if (auto cave = dynamic_cast<CaveLog*>(log)){
-		std::string name;
-		std::string isSrt;
-		std::string wasCL;
-		std::string didRigging;
+		std::string name{keys::cName};
+		std::string isSrt{keys::srtCave};
+		std::string wasCL{keys::cl};
+		std::string didRigging{keys::rigging};
 
-		name = cave->getName();
-		isSrt = boolToStr(cave->isSRTCave());
-		wasCL = boolToStr(cave->wasCaveLeader());
-		didRigging = boolToStr(cave->wasRigger());
+		name.append(keys::sep);
+		isSrt.append(keys::sep);
+		wasCL.append(keys::sep);
+		didRigging.append(keys::sep);
+
+		obj.append(keys::caveLog);
+		name.append(cave->getName());
+		isSrt.append(boolToStr(cave->isSRTCave()));
+		wasCL.append(boolToStr(cave->wasCaveLeader()));
+		didRigging.append(boolToStr(cave->wasRigger()));
 		
+		vecStr.push_back(obj);
+		vecStr.push_back(id);
+		vecStr.push_back(durMins);
+		vecStr.push_back(area);
+		vecStr.push_back(note);
+		vecStr.push_back(date);
+		vecStr.push_back(uid);
 		vecStr.push_back(name);
 		vecStr.push_back(isSrt);
 		vecStr.push_back(wasCL);
 		vecStr.push_back(didRigging);
 	}
 	else if (auto hike = dynamic_cast<HikeLog*>(log)){
-		std::string distance;
-		std::string weather;
+		std::string distance{keys::dist};
+		std::string weather{keys::weather};
 
-		distance = intToStr(hike->getDist());
-		weather = hike->getWeather();
+		distance.append(keys::sep);
+		weather.append(keys::sep);
 
+		obj.append(keys::hikeLog);
+		distance.append(intToStr(hike->getDist()));
+		weather.append(hike->getWeather());
+
+		vecStr.push_back(obj);
+		vecStr.push_back(id);
+		vecStr.push_back(durMins);
+		vecStr.push_back(area);
+		vecStr.push_back(note);
+		vecStr.push_back(date);
+		vecStr.push_back(uid);
 		vecStr.push_back(distance);
 		vecStr.push_back(weather);
 	}
+	std::string div{keys::div};
+	vecStr.push_back(div);
+	return vecStr;
 }
 
 std::vector<std::string> Disk::partToStr(Participant* p){
 	std::vector<std::string> vecStr;
-	std::string name;
-	std::string id;
-	std::string logId;
+	std::string obj{keys::obj};
+	std::string name{keys::name};
+	std::string id{keys::id};
+	std::string logId{keys::pLogId};
 
-	name = p->getName();
-	id = intToStr(p->getId());
-	logId = intToStr(p->getLogId());
+	obj.append(keys::sep);
+	name.append(keys::sep);
+	id.append(keys::sep);
+	logId.append(keys::sep);
 
+	obj.append(keys::participant);
+	name.append(p->getName());
+	id.append(intToStr(p->getId()));
+	logId.append(intToStr(p->getLogId()));
+
+	vecStr.push_back(obj);
 	vecStr.push_back(name);
 	vecStr.push_back(id);
 	vecStr.push_back(logId);
 
+	std::string div{keys::div};
+	vecStr.push_back(div);
 	return vecStr;
-}
-
-
-std::vector<std::string> Disk::createBuffer(std::vector<std::string> vec1, std::vector<std::string> vec2, std::vector<std::string> vec3){
-	std::vector<std::string> buffer;
-	for (auto str : vec1){
-		buffer.push_back(str);
-	}
-	for (auto str : vec2){
-		buffer.push_back(str);
-	}
-	for (auto str : vec3){
-		buffer.push_back(str);
-	}
-	return buffer;
 }
 
 void DiskHelper::openDiskForWriting(std::ofstream& file, std::string path){
@@ -495,6 +535,6 @@ void DiskHelper::openDiskForWriting(std::ofstream& file, std::string path){
 void Disk::writeToDisk(std::vector<std::string> buffer){
 	openDiskForWriting(writeFile, filePath);
 	for (auto str : buffer) {
-		writeFile << str;
+		writeFile << str << "\n";
 	}
 }

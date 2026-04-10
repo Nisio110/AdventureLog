@@ -48,7 +48,7 @@ void User::addLog(Log* log){
 }
 void User::removeLog(int id){
     for (size_t i{0}; i < logs.size(); ++i){
-        if (logs.at(i)->getID() == id) logs.erase(logs.begin() + i);
+        if (logs.at(i)->getId() == id) logs.erase(logs.begin() + i);
     }
 } // pass in objects id variable 
 

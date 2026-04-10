@@ -1,5 +1,5 @@
-#ifndef _USER_H
-#define _USER_H
+#ifndef USER_H
+#define USER_H
 
 #include <string>
 #include <vector>
@@ -10,31 +10,30 @@ class User{
     static int numUsers;
     std::string name{"N/A"};
     std::string passwd;
-    std::vector<CaveLog> caveLogs;
-    std::vector<HikeLog> hikeLogs;
+    std::vector<Log*> logs;
 public :
     // Getters
-    int getID();
+    int getId();
     std::string getName();
     std::string getPasswd();
-    std::vector<CaveLog> &getCaveLogs();
-    std::vector<HikeLog> &getHikeLogs();
+    std::vector<Log*> getLogs();
 
     // Setters
     void setID(int id);
     void setName(std::string name);
     void setPasswd(std::string passwd);
-    void setCaveLogs(std::vector<CaveLog> &caveLogs);
-    void setHikeLogs(std::vector<HikeLog> &hikeLogs);
+    void setLogs(std::vector<Log*> logs);
 
     // General
+    void print();
+    void printAll();
     void generateID();
-    void addCaveLog(CaveLog& caveLog);
-    void addHikeLog(HikeLog& hikeLog);
-    void removeCaveLog(int id);
-    void removeHikeLog(int id);
+    static void seedIdCounter(int n);
+    void addLog(Log* log);
+    void removeLog(int id);
 
     // Constructors
+    User();
     User(std::string name);
     User(std::string name, std::string passwd);
 };

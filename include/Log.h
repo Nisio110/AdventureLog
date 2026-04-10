@@ -1,26 +1,29 @@
-#ifndef _LOG_H
-#define _LOG_H
+#ifndef LOG_H
+#define LOG_H
 #include "Participant.h"
 #include <string>
 #include <vector>
+class User;
 
 class Log{
 protected:
+    int id{-1};        // initialised to -1 to make errors obvious
     int durationMins{}; // will add a setter that takes hours and minutes
     std::string area{"N/A"};
-    std::vector<Participant> participants;
+    std::vector<Participant*> participants;
     std::string note;
     std::string date{"N/A"};
-    int id{-1};        // initialised to -1 to make errors obvious
     static int numLogs;
+    int userId{};
 public :
     // Getters
     int getDurationMins();
     std::string getArea();
     std::string getNote();
     std::string getDate();
-    std::vector<Participant> getParticipants();
-    int getID();
+    std::vector<Participant*> getParticipants();
+    int getId();
+    int getUserId();
 
     // Setters
     void setDurationMins(int duration);
@@ -28,18 +31,28 @@ public :
     void setArea(std::string area);
     void setNote(std::string notes);
     void setDate(std::string date);
-    void setID(int id);
-    void setParticipants(std::vector<Participant> p);
+    void setID(int _id);
+    void setParticipants(std::vector<Participant*> p);
+    void setUserId(int _uid);
 
     // General
-    void display();
+    virtual void print();
     void generateID(int &numObject);
-    void addParticipant(Participant &p);
-    void removeParticipant(Participant &p);
+    static void seedIdCounter(int n);
+    void addParticipant(Participant* p);
+    void removeParticipant(Participant* p);
+
+    // Constructors & Destructor
+    Log();
+    virtual ~Log() = default;
+    Log(int uid, std::string date);
+    Log(int uid, std::string date, std::string note);
+    Log(int uid, std::string date, std::string area, std::string note);
+    Log(int uid, std::string date, std::string area, std::string note, std::vector<Participant*> participants);
+
 };
 
-class CaveLog : virtual public Log {
-    static int numLogs;
+class CaveLog : public Log {
     std::string name{"N/A"};
     bool isSRT{};
     bool wasCL{};
@@ -57,16 +70,16 @@ public :
     void setRigger(bool b);
 
     // General
-    void display();
+    void print() override;
 
     // Constructors
-    CaveLog(std::string name, std::string date);
-    CaveLog(std::string name, std::string date, std::string area, std::string note);
-    CaveLog(std::string name, std::string date, std::string area, std::string note, std::vector<Participant> participants, bool isSRT, bool wasCL, bool wasRigg);
+	CaveLog();
+    CaveLog(int uid, std::string name, std::string date);
+    CaveLog(int uid, std::string name, std::string date, std::string area, std::string note);
+    CaveLog(int uid, std::string name, std::string date, std::string area, std::string note, std::vector<Participant*> participants, bool isSRT, bool wasCL, bool wasRigg);
 };
 
-class HikeLog : virtual public Log {
-    static int numLogs;
+class HikeLog : public Log {
     int distance{-1};
     std::string weather{"N/A"};
 public : 
@@ -78,19 +91,20 @@ public :
     void setWeather(std::string weather);
 
     // General
-    void display();
+    void print() override;
 
     // Constructors
-    HikeLog(std::string date);
-    HikeLog(std::string date, std::string note);
-    HikeLog(std::string date, std::string note, int distance);
-    HikeLog(std::string date, std::string note, int distance, std::string weather, std::vector<Participant> &participants);
+	HikeLog();
+    HikeLog(int uid, std::string date);
+    HikeLog(int uid, std::string date, std::string note);
+    HikeLog(int uid, std::string date, std::string area, std::string note, int distance);
+    HikeLog(int uid, std::string date, std::string area, std::string note, int distance, std::string weather, std::vector<Participant*> &participants);
 };
 
 // Log Class Tests
 namespace LogTests{
-    void testCaveLogConstructors();
-    void testHikeLogConstructors();
+    void testCaveLogConstructors(int uid);
+    void testHikeLogConstructors(int uid);
     void testParticipantsIO(); // add and remove participants
     void testDisplay();
 }

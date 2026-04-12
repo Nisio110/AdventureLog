@@ -1,6 +1,5 @@
 #include "../include/Disk.h"
 #include "../include/Participant.h"
-#include "../include/constants.h"
 #include <iostream>
 #include <sstream>
 

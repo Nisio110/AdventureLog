@@ -30,7 +30,7 @@ public :
     void generateID();
     static void seedIdCounter(int n);
     void addLog(Log* log);
-    void removeLog(int id);
+    void removeLog(Log* log);
 
     // Constructors
     User();

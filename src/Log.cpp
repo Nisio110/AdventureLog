@@ -52,7 +52,13 @@ void Log::addParticipant(Participant* p){
     participants.push_back(p);
 }
 void Log::removeParticipant(Participant* p){
-   participants.erase(participants.begin() + p->getId());
+        for (size_t i{0}; i < participants.size(); ++i){
+        auto participant = participants.at(i);
+        if (participant->getId() == p->getId()) {
+            delete participant;
+            participants.erase(participants.begin() + i);
+        }
+    }
 } 
 Log::Log(){}
 Log::Log(int uid, string date){

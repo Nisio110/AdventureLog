@@ -20,10 +20,11 @@ void State::printAll(){
 }
 
 void State::removeUser(User* u){
-    for (size_t i{0}; i < users.size(); ++i){
-        if (users.at(i)->getId() == u->getId()){
+        for (size_t i{0}; i < users.size(); ++i){
+        auto user = users.at(i);
+        if (user->getId() == u->getId()) {
+            delete user;
             users.erase(users.begin() + i);
-            return;
         }
     }
 }

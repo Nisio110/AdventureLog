@@ -18,11 +18,6 @@ id: 4
 name: YAY
 password: 
 ---
-object: User
-id: 5
-name: PENIS!!!!!!!!!!!!
-password: 
----
 object: CaveLog
 id: 1
 duration-mins: 210

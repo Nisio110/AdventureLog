@@ -3,14 +3,14 @@
         {
             "type": "cppbuild",
             "label": "C/C++: g++ build active project",
-            "command": "/usr/bin/g++",
+            "command": "C:\\Program Files\\CodeBlocks\\MinGW\\bin\\g++.exe",
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
                 "-std=c++26",
-                "${workspaceFolder}/src/**.cpp",
+                "${workspaceFolder}\\src\\**.cpp",
                 "-o",
-                "${workspaceFolder}/build/AdventureLog"
+                "${workspaceFolder}\\build\\AdventureLog"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"

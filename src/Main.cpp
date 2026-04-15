@@ -1,8 +1,10 @@
 #include "../include/User.h"
+#include "../include/UI.h"
 
 int main(){
-    ParticipantTests::testConstructors();
-    LogTests::testCaveLogConstructors();
+    ui();
+    //ParticipantTests::testConstructors();
+    //LogTests::testCaveLogConstructors();
     return 0;
 }
 

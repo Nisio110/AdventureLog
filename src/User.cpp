@@ -1,4 +1,6 @@
 #include "../include/User.h"
+using std::string;
+using std::vector;
 int User::numUsers{0};
 
 // Getters & Setters

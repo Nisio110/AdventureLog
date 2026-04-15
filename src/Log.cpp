@@ -4,7 +4,7 @@
 #include "../include/Tests.h"
 using std::string;
 using std::cout;
-
+using std::vector;
 int Log::numLogs{0};
 int CaveLog::numLogs{0};
 int HikeLog::numLogs{0};

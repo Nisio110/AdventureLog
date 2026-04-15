@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include "../include/Tests.h"
-
+using std::string;
 int Participant::numParticipants{0};
 
 // Getters

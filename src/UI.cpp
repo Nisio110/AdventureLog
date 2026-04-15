@@ -5,9 +5,9 @@ using namespace std;
 
 int ui(){
     int choice=-1;
-    int loop=-1;
+    bool loop=1;
     int menu=0;
-    while (loop=-1) {
+    while (loop==1) {
         switch (menu) {
             case 0:
                 cout << "Welcome to the Adventure Log System" << endl 

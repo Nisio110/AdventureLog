@@ -1,12 +1,5 @@
 #include "../include/State.h"
 #include <iostream>
-<<<<<<< HEAD
-#include "../include/UI.h"
-
-int main(){
-	ui();
-	return 0;
-=======
 
 int main(){
 	State s;
@@ -25,7 +18,6 @@ int main(){
 	//d.printLogDetails();
 	//d.printUserDetails();
 	//d.printParticipantDetails();
->>>>>>> origin/main
 }
 
 

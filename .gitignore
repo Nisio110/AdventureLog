@@ -1,9 +1,5 @@
 build/
 .DS_Store
 .vscode/
-<<<<<<< HEAD
 .claude/
 .cache/
-=======
-.claude/
->>>>>>> origin/main

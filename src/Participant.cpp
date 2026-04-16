@@ -3,10 +3,6 @@
 #include <string>
 #include "../include/Tests.h"
 using std::string;
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/main
 int Participant::numParticipants{0};
 
 // Getters

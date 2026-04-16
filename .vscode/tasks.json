@@ -41,6 +41,7 @@
         {
             "type": "cppbuild",
 <<<<<<< HEAD
+<<<<<<< HEAD
             "label": "C/C++: g++ build active project",
             "command": "C:\\Program Files\\CodeBlocks\\MinGW\\bin\\g++.exe",
             "args": [
@@ -79,6 +80,8 @@
         },
         {
             "type": "cppbuild",
+=======
+>>>>>>> origin/main
 =======
 >>>>>>> origin/main
             "label": "C/C++: g++ build active file",

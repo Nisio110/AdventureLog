@@ -2,6 +2,10 @@
 #include <iostream>
 using std::string;
 using std::vector;
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
 int User::numUsers{0};
 
 // Getters & Setters

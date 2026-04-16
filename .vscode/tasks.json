@@ -2,7 +2,45 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "CMake: configure",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S",
+                ".",
+                "-B",
+                "build",
+                "-DCMAKE_BUILD_TYPE=Debug"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "CMake: build",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": "CMake: configure",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
             "type": "cppbuild",
+<<<<<<< HEAD
             "label": "C/C++: g++ build active project",
             "command": "C:\\Program Files\\CodeBlocks\\MinGW\\bin\\g++.exe",
             "args": [
@@ -41,6 +79,8 @@
         },
         {
             "type": "cppbuild",
+=======
+>>>>>>> origin/main
             "label": "C/C++: g++ build active file",
             "command": "/usr/bin/g++",
             "args": [

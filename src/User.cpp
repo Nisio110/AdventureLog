@@ -2,7 +2,6 @@
 #include <iostream>
 using std::string;
 using std::vector;
-
 int User::numUsers{0};
 
 // Getters & Setters
@@ -48,11 +47,15 @@ void User::printAll(){
 void User::addLog(Log* log){
     logs.push_back(log);
 }
-void User::removeLog(int id){
+void User::removeLog(Log* l){
     for (size_t i{0}; i < logs.size(); ++i){
-        if (logs.at(i)->getId() == id) logs.erase(logs.begin() + i);
+        auto log = logs.at(i);
+        if (log->getId() == l->getId()) {
+            delete log;
+            logs.erase(logs.begin() + i);
+        }
     }
-} // pass in objects id variable 
+}
 
 void UserTests::testCaveLogsIO(){}
 void UserTests::testHikeLogsIO(){}

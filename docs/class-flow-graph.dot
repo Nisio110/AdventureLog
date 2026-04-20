@@ -1,0 +1,222 @@
+// Adventure Log — per-class flow graph
+// Shows each class's internal method flow and the calls that cross
+// class boundaries (dashed red edges).
+//
+// Render: dot -Tpng class-flow-graph.dot -o class-flow-graph.png
+//         dot -Tsvg class-flow-graph.dot -o class-flow-graph.svg
+
+digraph AdventureLogClasses {
+    rankdir=LR;
+    compound=true;
+    fontname="Helvetica";
+    node [fontname="Helvetica", shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica"];
+
+    // ------------------------------------------------------------
+    // main() entry point
+    // ------------------------------------------------------------
+    subgraph cluster_main {
+        label="main() — Main.cpp";
+        style="rounded,filled"; fillcolor="#F5F5F5"; color="#616161";
+        node [fillcolor="#E0E0E0", color="#616161"];
+
+        m_start    [label="start", shape=oval, fillcolor="#C8E6C9", color="#2E7D32"];
+        m_mkState  [label="State s"];
+        m_init     [label="s.initProgram()"];
+        m_mkUser   [label="User u(name)"];
+        m_mkLog    [label="Log l1(uid, date, note)"];
+        m_addUser  [label="s.addUser(&u)"];
+        m_print    [label="s.printAll()"];
+        m_save     [label="s.save()"];
+        m_end      [label="exit", shape=oval, fillcolor="#FFCDD2", color="#B71C1C"];
+
+        m_start -> m_mkState -> m_init -> m_mkUser -> m_mkLog
+                -> m_addUser -> m_print -> m_save -> m_end;
+    }
+
+    // ------------------------------------------------------------
+    // State
+    // ------------------------------------------------------------
+    subgraph cluster_state {
+        label="State";
+        style="rounded,filled"; fillcolor="#E3F2FD"; color="#1565C0";
+        node [fillcolor="#BBDEFB", color="#1565C0"];
+
+        s_init     [label="initProgram()"];
+        s_addUser  [label="addUser(User*)"];
+        s_remUser  [label="removeUser(User*)"];
+        s_printAll [label="printAll()"];
+        s_save     [label="save()"];
+
+        s_init     -> s_addUser [style=invis];
+        s_addUser  -> s_remUser [style=invis];
+        s_remUser  -> s_printAll [style=invis];
+        s_printAll -> s_save    [style=invis];
+    }
+
+    // ------------------------------------------------------------
+    // Disk
+    // ------------------------------------------------------------
+    subgraph cluster_disk {
+        label="Disk";
+        style="rounded,filled"; fillcolor="#FFF3E0"; color="#E65100";
+        node [fillcolor="#FFE0B2", color="#E65100"];
+
+        // load path
+        d_init     [label="initProgram()"];
+        d_open     [label="openDisk(fp)"];
+        d_good     [label="isDiskGood()"];
+        d_read     [label="readDiskContents(fp)"];
+        d_parse    [label="parseDisk(fp)"];
+        d_split    [label="splitByObjects(kvl)"];
+        d_initU    [label="initUser(attr)"];
+        d_initL    [label="initLog(attr)"];
+        d_initP    [label="initParticipant(attr)"];
+
+        // save path
+        d_uStr     [label="userToStr(User*)"];
+        d_lStr     [label="logToStr(Log*)"];
+        d_pStr     [label="partToStr(Participant*)"];
+        d_write    [label="writeToDisk(buf)"];
+
+        // print
+        d_printAll [label="printAll()"];
+        d_pU       [label="printUserDetails()"];
+        d_pL       [label="printLogDetails()"];
+        d_pP       [label="printParticipantDetails()"];
+
+        d_init  -> d_open  -> d_good;
+        d_init  -> d_read  -> d_parse -> d_split;
+        d_split -> d_initU;
+        d_split -> d_initL;
+        d_split -> d_initP;
+        d_printAll -> d_pU;
+        d_printAll -> d_pL;
+        d_printAll -> d_pP;
+        d_write    -> d_uStr [style=invis];
+    }
+
+    // ------------------------------------------------------------
+    // User
+    // ------------------------------------------------------------
+    subgraph cluster_user {
+        label="User";
+        style="rounded,filled"; fillcolor="#E8F5E9"; color="#2E7D32";
+        node [fillcolor="#C8E6C9", color="#2E7D32"];
+
+        u_ctor     [label="User(name[, passwd])"];
+        u_genId    [label="generateID()"];
+        u_addLog   [label="addLog(Log*)"];
+        u_remLog   [label="removeLog(Log*)"];
+        u_print    [label="print()"];
+        u_printAll [label="printAll()"];
+
+        u_ctor -> u_genId;
+        u_ctor -> u_addLog [style=invis];
+        u_printAll -> u_print;
+    }
+
+    // ------------------------------------------------------------
+    // Log (+ CaveLog / HikeLog)
+    // ------------------------------------------------------------
+    subgraph cluster_log {
+        label="Log  (base)  ←  CaveLog / HikeLog";
+        style="rounded,filled"; fillcolor="#F3E5F5"; color="#6A1B9A";
+        node [fillcolor="#E1BEE7", color="#6A1B9A"];
+
+        l_ctor     [label="Log(uid, date, ...)"];
+        l_genId    [label="generateID(numLogs)"];
+        l_setDur   [label="setDuration(h, m)"];
+        l_addP     [label="addParticipant(Participant*)"];
+        l_remP     [label="removeParticipant(Participant*)"];
+        l_print    [label="print()  [virtual]"];
+
+        cl_ctor    [label="CaveLog(...)"];
+        cl_print   [label="CaveLog::print()  override"];
+
+        hl_ctor    [label="HikeLog(...)"];
+        hl_print   [label="HikeLog::print()  override"];
+
+        l_ctor -> l_genId;
+        l_ctor -> l_setDur [style=invis];
+        cl_ctor -> l_ctor  [label="base init", style=dashed, color="#6A1B9A"];
+        hl_ctor -> l_ctor  [label="base init", style=dashed, color="#6A1B9A"];
+        cl_print -> l_print [style=dotted, label="overrides", color="#6A1B9A"];
+        hl_print -> l_print [style=dotted, label="overrides", color="#6A1B9A"];
+    }
+
+    // ------------------------------------------------------------
+    // Participant
+    // ------------------------------------------------------------
+    subgraph cluster_part {
+        label="Participant";
+        style="rounded,filled"; fillcolor="#FFFDE7"; color="#F57F17";
+        node [fillcolor="#FFF9C4", color="#F57F17"];
+
+        p_ctor  [label="Participant(name[, logId[, id]])"];
+        p_gen   [label="generateID()  [private]"];
+        p_setL  [label="setLogID(id)"];
+        p_print [label="print()"];
+
+        p_ctor -> p_gen;
+    }
+
+    // ------------------------------------------------------------
+    // Cross-class flow (dashed red = method in class A calls class B)
+    // ------------------------------------------------------------
+    edge [style=dashed, color="#C62828", fontcolor="#C62828"];
+
+    // main -> State / User / Log
+    m_mkState -> s_init     [lhead=cluster_state, label="ctor"];
+    m_init    -> s_init;
+    m_mkUser  -> u_ctor     [lhead=cluster_user];
+    m_mkLog   -> l_ctor     [lhead=cluster_log];
+    m_addUser -> s_addUser;
+    m_print   -> s_printAll;
+    m_save    -> s_save;
+
+    // State -> Disk
+    s_init     -> d_init     [label="disk.initProgram()"];
+    s_init     -> d_initU    [label="users = disk.getUsers()", style=dotted];
+    s_save     -> d_uStr     [label="userToStr"];
+    s_save     -> d_lStr     [label="logToStr"];
+    s_save     -> d_pStr     [label="partToStr"];
+    s_save     -> d_write    [label="writeToDisk"];
+
+    // State -> User
+    s_printAll -> u_printAll [label="u->printAll()"];
+    s_save     -> u_addLog   [label="iterate u->getLogs()", style=dotted];
+
+    // Disk -> User / Log / Participant  (constructs + reads during load)
+    d_initU -> u_ctor [label="new User"];
+    d_initL -> cl_ctor [label="new CaveLog"];
+    d_initL -> hl_ctor [label="new HikeLog"];
+    d_initP -> p_ctor  [label="new Participant"];
+    d_initL -> u_addLog [label="attach to owner", style=dotted];
+    d_initP -> l_addP   [label="attach to log",  style=dotted];
+
+    // Disk print delegates
+    d_pU -> u_print [label="u->print()"];
+    d_pL -> l_print [label="log->print()"];
+    d_pP -> p_print [label="p->print()"];
+
+    // User -> Log  (aggregation lifetime)
+    u_addLog -> l_ctor [label="stores Log*",     style=dotted];
+    u_remLog -> l_ctor [label="deletes Log*",    style=dotted];
+
+    // Log -> Participant  (aggregation lifetime)
+    l_addP -> p_ctor   [label="stores Participant*", style=dotted];
+    l_remP -> p_ctor   [label="deletes Participant*", style=dotted];
+
+    // ------------------------------------------------------------
+    // Legend
+    // ------------------------------------------------------------
+    subgraph cluster_legend {
+        label="Legend"; style="rounded"; color="#616161"; fontsize=10;
+        node [shape=plaintext, fillcolor=white, color=white];
+        lg1 [label="solid blue/orange/... = intra-class flow"];
+        lg2 [label="dashed red         = cross-class call"];
+        lg3 [label="dotted             = data/reference relationship"];
+        lg1 -> lg2 -> lg3 [style=invis];
+    }
+}

@@ -1,0 +1,243 @@
+@startuml AdventureLog
+
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+' ──────────────── Classes ────────────────
+
+class Participant {
+    - name : string
+    - id : int
+    - logId : int = 0
+    - {static} numParticipants : int
+    - generateID() : int
+    + getId() : int
+    + getLogId() : int
+    + getName() : string
+    + getNumParticipants() : int
+    + print() : void
+    + setID(id : int) : void
+    + setLogID(id : int) : void
+    + setName(names : string) : void
+    + setNumParticipants(num : int) : void
+    + {static} seedIdCounter(n : int) : void
+    + Participant(_name : string)
+    + Participant(_name : string, _logID : int)
+    + Participant(_name : string, _logID : int, _id : int)
+}
+
+class Log {
+    # id : int = -1
+    # durationMins : int
+    # area : string = "N/A"
+    # participants : vector<Participant*>
+    # note : string
+    # date : string = "N/A"
+    # {static} numLogs : int
+    # userId : int
+    + getDurationMins() : int
+    + getArea() : string
+    + getNote() : string
+    + getDate() : string
+    + getParticipants() : vector<Participant*>
+    + getId() : int
+    + getUserId() : int
+    + setDurationMins(duration : int) : void
+    + setDuration(hours : int, mins : int) : void
+    + setArea(area : string) : void
+    + setNote(notes : string) : void
+    + setDate(date : string) : void
+    + setID(_id : int) : void
+    + setParticipants(p : vector<Participant*>) : void
+    + setUserId(_uid : int) : void
+    + {abstract} print() : void
+    + generateID(numObject : int&) : void
+    + {static} seedIdCounter(n : int) : void
+    + addParticipant(p : Participant*) : void
+    + removeParticipant(p : Participant*) : void
+    + Log()
+    + {abstract} ~Log()
+    + Log(uid : int, date : string)
+    + Log(uid : int, date : string, note : string)
+    + Log(uid : int, date : string, area : string, note : string)
+    + Log(uid : int, date : string, area : string, note : string, participants : vector<Participant*>)
+}
+
+class CaveLog {
+    - name : string = "N/A"
+    - isSRT : bool
+    - wasCL : bool
+    - didRigging : bool
+    + getName() : string
+    + isSRTCave() : bool
+    + wasCaveLeader() : bool
+    + wasRigger() : bool
+    + setName(name : string) : void
+    + setSRTCave(b : bool) : void
+    + setCaveLeader(b : bool) : void
+    + setRigger(b : bool) : void
+    + print() : void
+    + CaveLog()
+    + CaveLog(uid : int, name : string, date : string)
+    + CaveLog(uid : int, name : string, date : string, area : string, note : string)
+    + CaveLog(uid : int, name : string, date : string, area : string, note : string, participants : vector<Participant*>, isSRT : bool, wasCL : bool, wasRigg : bool)
+}
+
+class HikeLog {
+    - distance : int = -1
+    - weather : string = "N/A"
+    + getDist() : int
+    + getWeather() : string
+    + setDist(distance : int) : void
+    + setWeather(weather : string) : void
+    + print() : void
+    + HikeLog()
+    + HikeLog(uid : int, date : string)
+    + HikeLog(uid : int, date : string, note : string)
+    + HikeLog(uid : int, date : string, area : string, note : string, distance : int)
+    + HikeLog(uid : int, date : string, area : string, note : string, distance : int, weather : string, participants : vector<Participant*>&)
+}
+
+class User {
+    - id : int
+    - {static} numUsers : int
+    - name : string = "N/A"
+    - passwd : string
+    - logs : vector<Log*>
+    + getId() : int
+    + getName() : string
+    + getPasswd() : string
+    + getLogs() : vector<Log*>
+    + setID(id : int) : void
+    + setName(name : string) : void
+    + setPasswd(passwd : string) : void
+    + setLogs(logs : vector<Log*>) : void
+    + print() : void
+    + printAll() : void
+    + generateID() : void
+    + {static} seedIdCounter(n : int) : void
+    + addLog(log : Log*) : void
+    + removeLog(log : Log*) : void
+    + User()
+    + User(name : string)
+    + User(name : string, passwd : string)
+}
+
+class Disk {
+    # {static} filePath : string
+    # diskFile : ifstream
+    # diskContents : vector<string>
+    # attributes : KeyValueList
+    # objects : ObjectList
+    # users : vector<User*>
+    # logs : vector<Log*>
+    # participants : vector<Participant*>
+    # writeBuffer : vector<string>
+    # writeFile : ofstream
+    # splitByObjects(kvl : const KeyValueList&) : ObjectList
+    + Disk()
+    + ~Disk()
+    + getFilePath() : string
+    + getDiskFile() : ifstream&
+    + getUsers() : vector<User*>&
+    + getLogs() : vector<Log*>&
+    + getParticipants() : vector<Participant*>&
+    + setFilePath(fp : string) : void
+    + addUser(u : User*) : void
+    + addLog(log : Log*) : void
+    + addParticipant(p : Participant*) : void
+    + openDisk(fp : string_view) : void
+    + isDiskGood() : bool
+    + readDiskContents(fp : string_view) : vector<string>
+    + parseDisk(fp : string_view) : void
+    + initProgram() : void
+    + initUser(attr : KeyValueList) : User*
+    + initLog(attr : KeyValueList) : Log*
+    + initParticipant(attr : KeyValueList) : Participant*
+    + printUserDetails() : void
+    + printLogDetails() : void
+    + printParticipantDetails() : void
+    + printAll() : void
+    + userToStr(u : User*) : vector<string>
+    + logToStr(log : Log*) : vector<string>
+    + partToStr(p : Participant*) : vector<string>
+    + writeToDisk(buffer : vector<string>) : void
+}
+
+class State {
+    - users : vector<User*>
+    - disk : Disk
+    + getUsers() : vector<User*>
+    + setUsers(users : vector<User*>) : void
+    + addUser(u : User*) : void
+    + removeUser(u : User*) : void
+    + initProgram() : void
+    + printAll() : void
+    + save(d : Disk&) : void
+    + save() : void
+}
+
+' ──────────────── Namespaces (as stereotyped classes) ────────────────
+
+class DiskHelper <<(N,#DDDDDD) namespace>> {
+    + {static} getKey(kv : const KeyValue&) : string
+    + {static} getVal(kv : const KeyValue&) : string
+    + {static} getAttrValue(attrs : const KeyValueList&, i : size_t) : string
+    + {static} getAttrKey(attrs : const KeyValueList&, i : size_t) : string
+    + {static} getKeyLocationInObj(key : string_view, objKVList : const KeyValueList&) : size_t
+    + {static} strToNum(id : const string&) : unsigned long
+    + {static} printl(str : string_view) : void
+    + {static} printErr(errMessage : string_view) : void
+    + {static} printObject(objKVList : const KeyValueList&) : void
+    + {static} printObjectKVL(objects : const ObjectList&) : void
+    + {static} doesSubstrExist(str : string_view, queryStr : string_view) : bool
+    + {static} strToKVPair(kvStr : string_view) : KeyValue
+    + {static} StrVecToKVL(kvlAsStr : const vector<string>&) : KeyValueList
+    + {static} strToBool(str : string_view) : bool
+    + {static} intToStr(x : int) : string
+    + {static} boolToStr(x : bool) : string
+    + {static} openDiskForWriting(file : ofstream&, path : string) : void
+}
+
+class Tests <<(N,#DDDDDD) namespace>> {
+    + {static} verifyTest() : bool
+    + {static} ret : string
+    + {static} div() : string
+    + {static} div(x : int) : string
+}
+
+class LogTests <<(N,#DDDDDD) namespace>> {
+    + {static} testCaveLogConstructors(uid : int) : void
+    + {static} testHikeLogConstructors(uid : int) : void
+    + {static} testParticipantsIO() : void
+    + {static} testDisplay() : void
+}
+
+class UserTests <<(N,#DDDDDD) namespace>> {
+    + {static} testCaveLogsIO() : void
+    + {static} testHikeLogsIO() : void
+    + {static} testGenerateID() : void
+    + {static} testConstructors() : void
+}
+
+class ParticipantTests <<(N,#DDDDDD) namespace>> {
+    + {static} testConstructors() : bool
+}
+
+' ──────────────── Relationships ────────────────
+
+CaveLog --|> Log : extends
+HikeLog --|> Log : extends
+
+Log "1" o-- "0..*" Participant : participants
+
+User "1" o-- "0..*" Log : logs
+
+State "1" *-- "1" Disk : disk
+State "1" o-- "0..*" User : users
+
+Disk "1" o-- "0..*" User : users
+Disk "1" o-- "0..*" Log : logs
+Disk "1" o-- "0..*" Participant : participants
+
+@enduml

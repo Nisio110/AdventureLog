@@ -1,6 +1,5 @@
 #ifndef STATE_H
 #define STATE_H
-
 #include "Disk.h"
 
 class State{
@@ -14,10 +13,15 @@ public:
     void addUser(User* u);
     void removeUser(User* u);
 
-    void initProgram();
+    void loadSave();
+    void loadSave(std::string diskPath);
     void printAll();
     void save(Disk& d);
     void save();
+
+    ~State();
+    State();
+    State(std::string diskPath);
 };
 
 #endif

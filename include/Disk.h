@@ -35,6 +35,7 @@ namespace DiskHelper {
 class Disk{
 protected:
 	static inline std::string filePath;
+	const static inline std::string defaultDiskPath {"../disk.yaml"};
 	std::ifstream diskFile;
 	std::vector<std::string> diskContents;
 	KeyValueList attributes;
@@ -48,9 +49,10 @@ protected:
 	std::ofstream writeFile;
 
 	ObjectList splitByObjects(const KeyValueList& kvl);
+	const size_t objLineNum {0};
 public:
 	// Constructors
-	Disk();
+	Disk(std::string diskPath = defaultDiskPath);
 	~Disk();
 
 	// Getters 
@@ -67,19 +69,34 @@ public:
 	inline void addLog(Log* log){logs.push_back(log);}
 	inline void addParticipant(Participant* p){participants.push_back(p);}
 
+	void removeUser(User* u);
+
 	// File operations
-	void openDisk(std::string_view fp);
-	bool isDiskGood();
-	std::vector<std::string> readDiskContents(std::string_view fp = filePath);
+	void openFile(std::string_view fp);
+	bool isFileGood();
+	std::vector<std::string> readFileContents(std::string_view fp = filePath);
 
 	// Parsing functions
-	void parseDisk(std::string_view fp = filePath);
+	void parseDisk(std::string_view fp = defaultDiskPath);
 
 	// Init functions
-	void initProgram();
 	User* initUser(KeyValueList attr);
 	Log* initLog(KeyValueList attr);
 	Participant* initParticipant(KeyValueList attr);
+
+	// Load parsed strings into program memory
+	// (Facilitates object creation)
+	// Each object load function requires the last! 
+	// 		Participants -> Logs -> Users
+	std::vector<Participant*> loadParticipants(size_t objLineNum);
+	std::vector<Log*> loadLogs(size_t objLineNum, std::vector<Participant*> participants);
+	std::vector<User*> loadUsers(size_t objLineNum, std::vector<Log*> logs);
+	void loadFromDisk(std::string diskPath = defaultDiskPath);
+
+	// Update max id reached
+	size_t updateMaxId(std::vector<Participant*>);
+	size_t updateMaxId(std::vector<Log*>);
+	size_t updateMaxId(std::vector<User*>);
 
 	// Display
 	void printUserDetails(); // for testing

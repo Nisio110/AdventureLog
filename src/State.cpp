@@ -1,11 +1,16 @@
 #include "../include/State.h"
+#include "UI.h"
 
 void State::setUsers(std::vector<User*> u){
     users = u;
 }
 
-void State::initProgram(){
-    disk.initProgram();
+void State::loadSave(){
+    disk.loadFromDisk();
+    users = disk.getUsers();
+}
+void State::loadSave(std::string diskPath){
+    disk.loadFromDisk(diskPath);
     users = disk.getUsers();
 }
 
@@ -20,13 +25,12 @@ void State::printAll(){
 }
 
 void State::removeUser(User* u){
-        for (size_t i{0}; i < users.size(); ++i){
-        auto user = users.at(i);
-        if (user->getId() == u->getId()) {
-            delete user;
+    for (size_t i{0}; i < users.size(); ++i){
+        if (users.at(i)->getId() == u->getId()) {
             users.erase(users.begin() + i);
         }
     }
+    disk.removeUser(u);
 }
 
 void State::save(Disk& disk){
@@ -72,6 +76,25 @@ void State::save(){
         }
 	}
 
+    // Error checking
+    if (disk.getUsers().size() != users.size()){
+        DiskHelper::printErr("State: Disk-State Mismatch");
+    }
+    else for(size_t i{0}; i < disk.getUsers().size(); ++i){
+        if (disk.getUsers().at(i)->getLogs().size() != this->users.at(i)->getLogs().size()){
+            DiskHelper::printErr("State: Disk-State Mismatch");
+        }
+    }
+    for (size_t i{0}; i < disk.getUsers().size(); ++i){
+        auto logs {disk.getUsers().at(i)->getLogs()};
+        for (size_t j{0}; j < logs.size(); ++j){
+            if (disk.getUsers().at(i)->getLogs().at(j)->getParticipants().size() != 
+                    this->users.at(i)->getLogs().at(j)->getParticipants().size()) {
+                DiskHelper::printErr("State: Disk-State Mismatch");
+            }
+        }
+    }
+
 
 	std::vector<std::string> buffer;
 	for (auto vec : _users)
@@ -82,4 +105,18 @@ void State::save(){
 		buffer.insert(buffer.end(), vec.begin(), vec.end());
 
 	disk.writeToDisk(buffer);
+}
+
+State::State(){
+    loadSave();
+    ui(*this);
+}
+
+State::State(std::string diskPath){
+    loadSave(diskPath);
+    ui(*this);
+}
+
+State::~State(){
+    save();
 }

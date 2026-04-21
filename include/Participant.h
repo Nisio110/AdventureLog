@@ -23,8 +23,7 @@ public :
     void setID(int id);
     inline void setLogID(int id) { logId = id;}
     void setName(std::string names);
-    void setNumParticipants(int num);
-    static void seedIdCounter(int n);
+    static void setNumParticipants(int n);
 
     // Constructors
     Participant(std::string _name);

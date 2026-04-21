@@ -47,7 +47,7 @@ void Log::generateID(int &numObject){
     ++numLogs;
     setID(++numObject);
 }
-void Log::seedIdCounter(int n){ numLogs = n; }
+void Log::setNumLogs(int n){ numLogs = n; }
 void Log::addParticipant(Participant* p){
     participants.push_back(p);
 }
@@ -61,6 +61,10 @@ void Log::removeParticipant(Participant* p){
     }
 } 
 Log::Log(){}
+Log::~Log(){
+    for (auto p : participants) { delete p; }
+    participants.clear();
+}
 Log::Log(int uid, string date){
     setUserId(uid);
     generateID(numLogs);
@@ -70,6 +74,7 @@ Log::Log(int uid, string date, string note){
     generateID(numLogs);
     setUserId(uid);
     setNote(note);
+    setDate(date);
 }
 Log::Log(int uid, string date, string area, string note){
     generateID(numLogs);
@@ -84,6 +89,15 @@ Log::Log(int uid, string date, string area, string note, vector<Participant*> pa
     setDate(date);
     setArea(area);
     setNote(note);
+    setParticipants(participants);
+}
+
+//Sorting
+bool Log::sortByID(Log* log1, Log* log2){
+    return (log1->getId() > log2->getId());
+}
+bool Log::sortByDuration(Log* log1, Log* log2){
+    return (log1->getDurationMins() > log2->getDurationMins());
 }
 
 // CAVELOG CLASS ========================================= //

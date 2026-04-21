@@ -108,32 +108,32 @@ namespace DiskHelper{
 } // End of Namespace
 
 // Constructors
-Disk::Disk(){
-	setFilePath("disk.yaml");
-	readDiskContents(filePath);
+Disk::Disk(std::string path){
+	setFilePath(path);
+	readFileContents(path);
 }
 
 // Read operations
-void Disk::openDisk(std::string_view fp){ 
+void Disk::openFile(std::string_view fp){ 
 	diskFile.clear();
 	diskFile.open(std::string{fp});
 	diskFile.seekg(0);
 
-	if (!isDiskGood()){
-		printErr("openDisk: Disk is not accessible");
+	if (!isFileGood()){
+		printErr("openFile: Disk is not accessible");
 		return;
 	}
 	else return;
 }
 
-bool Disk::isDiskGood(){ 
+bool Disk::isFileGood(){ 
 	return (diskFile.good()); 
 }
 
-std::vector<std::string> Disk::readDiskContents(std::string_view fp){
+std::vector<std::string> Disk::readFileContents(std::string_view fp){
 	std::string line;
 	diskContents.clear();
-	if (!diskFile.is_open()) {openDisk(fp);}
+	if (!diskFile.is_open()) {openFile(fp);}
 	else { diskFile.clear(); diskFile.seekg(0); }
 
 		while( std::getline(diskFile >> std::ws, line))
@@ -144,7 +144,7 @@ std::vector<std::string> Disk::readDiskContents(std::string_view fp){
 
 void Disk::parseDisk(std::string_view fp)
 {
-	diskContents = readDiskContents(fp);
+	diskContents = readFileContents(fp);
 	attributes = StrVecToKVL(diskContents);
 	objects = splitByObjects(attributes);
 }
@@ -166,12 +166,48 @@ ObjectList Disk::splitByObjects(const KeyValueList& attributes)
 	return objects;
 }
 
-void Disk::initProgram()
+void Disk::loadFromDisk(std::string diskPath)
 {
-	parseDisk();
-	const short objLineNum {0};
+	parseDisk(diskPath);
 
-	// Pass 1: Load participants
+	loadUsers(
+		objLineNum, 
+		loadLogs(
+			objLineNum, 
+			loadParticipants(objLineNum)
+		)
+	);
+
+	// Load current object counts and update Ids so new objects ids don't
+	// conflict with old ones ids
+	User::setNumUsers(updateMaxId(users));
+	Log::setNumLogs(updateMaxId(logs));
+	Participant::setNumParticipants(updateMaxId(participants));
+}
+
+size_t Disk::updateMaxId(std::vector<Participant*> participants){
+	int maxPartId{0};
+	for (auto* p : participants)
+		if (p->getId() > maxPartId) maxPartId = p->getId();
+	return maxPartId;
+}
+
+size_t Disk::updateMaxId(std::vector<Log*> logs){
+	int maxLogId{0};
+	for (auto* l : logs)
+		if (l->getId() > maxLogId) maxLogId = l->getId();
+	return maxLogId;
+}
+
+size_t Disk::updateMaxId(std::vector<User*> users){
+	int maxUserId{0};
+	for (auto* u : users)
+		if (u->getId() > maxUserId) maxUserId = u->getId();
+	return maxUserId;
+
+}
+
+std::vector<Participant*> Disk::loadParticipants(size_t objLineNum){
 	for (size_t i{0}; i < objects.size(); ++i){
 		const KeyValueList obj {objects.at(i)};
 
@@ -180,8 +216,10 @@ void Disk::initProgram()
 				{ addParticipant(initParticipant(obj)); }
 		}
 	}
+	return participants;
+}
 
-	// Pass 2: Load logs
+std::vector<Log*> Disk::loadLogs(size_t objLineNum, std::vector<Participant*> participants){
 	for (size_t i{0}; i < objects.size(); ++i){
 		const KeyValueList obj {objects.at(i)};
 
@@ -190,8 +228,10 @@ void Disk::initProgram()
 				{addLog(initLog(obj));}
 		}
 	}
-	
-	// Pass 3: Load users
+	return logs;
+}
+
+std::vector<User*> Disk::loadUsers(size_t objLineNum, std::vector<Log*> logs){
 	for (size_t i{0}; i < objects.size(); ++i){
 		const KeyValueList obj {objects.at(i)};
 
@@ -200,22 +240,7 @@ void Disk::initProgram()
 				{addUser(initUser(obj));}
 		}
 	}
-
-	// Seed id counters so newly-created objects don't collide with loaded ids
-	int maxUserId{0};
-	for (auto* u : users)
-		if (u->getId() > maxUserId) maxUserId = u->getId();
-	User::seedIdCounter(maxUserId);
-
-	int maxLogId{0};
-	for (auto* l : logs)
-		if (l->getId() > maxLogId) maxLogId = l->getId();
-	Log::seedIdCounter(maxLogId);
-
-	int maxPartId{0};
-	for (auto* p : participants)
-		if (p->getId() > maxPartId) maxPartId = p->getId();
-	Participant::seedIdCounter(maxPartId);
+	return users;
 }
 
 void Disk::printUserDetails(){ // for testing
@@ -391,10 +416,18 @@ Participant* Disk::initParticipant(KeyValueList PartKVL){
 Disk::~Disk(){
 	for (auto uPtr : users) {delete uPtr;}
 	users.clear();
-	for (auto lPtr : logs) {delete lPtr;}
 	logs.clear();
-	for (auto pPtr : participants) {delete pPtr;}
 	participants.clear();
+}
+
+void Disk::removeUser(User* u){
+	for (size_t i{0}; i < users.size(); ++i){
+		auto user = users.at(i);
+		if (user->getId() == u->getId()) {
+			delete user;
+			users.erase(users.begin() + i);
+		}
+	}
 }
 
 std::vector<std::string> Disk::userToStr(User* u){

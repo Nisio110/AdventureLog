@@ -38,17 +38,20 @@ public :
     // General
     virtual void print();
     void generateID(int &numObject);
-    static void seedIdCounter(int n);
+    static void setNumLogs(int n);
     void addParticipant(Participant* p);
     void removeParticipant(Participant* p);
 
     // Constructors & Destructor
     Log();
-    virtual ~Log() = default;
+    virtual ~Log();
     Log(int uid, std::string date);
     Log(int uid, std::string date, std::string note);
     Log(int uid, std::string date, std::string area, std::string note);
     Log(int uid, std::string date, std::string area, std::string note, std::vector<Participant*> participants);
+
+    static bool sortByID(Log* log1, Log* log2);
+    static bool sortByDuration(Log* log1, Log* log2);
 
 };
 

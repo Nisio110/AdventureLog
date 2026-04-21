@@ -16,7 +16,7 @@ int userSettings();
 void changeUsername();
 void changePassword();
 void deleteAccount();
-vector<Log*> sortID(vector<Log*> logs);
-vector<Log*> sortDuration(vector<Log*> logs);
+std::vector<Log*> sortID(vector<Log*> logs);
+std::vector<Log*> sortDuration(vector<Log*> logs);
 
 #endif

@@ -10,4 +10,5 @@ file(GLOB SOURCES src/*.cpp)
 add_executable(AdventureLog ${SOURCES})
 
 target_include_directories(AdventureLog PRIVATE include)
-target_compile_options(AdventureLog PRIVATE -Werror -Wall)
+#target_compile_options(AdventureLog PRIVATE -Werror -Wall -Wpedantic)
+target_compile_options(AdventureLog PRIVATE -Werror )

@@ -130,17 +130,17 @@ int userSettings()
     return choice;
 }
 
-vector<Log*> sortID(vector<Log*> logs)
+vector<Log*> sortID(vector<Log*> inputs)
 {
-    vector<Log*> input=logs;
-    vector<Log*> output;
-    int counter=0;
-    int size=logs.size();
-    Log* test=input.at(1);
-    Log* pivot=input.at(0);
-    for (counter<size; counter++;){
+    vector<Log*> outputs;
+    
+    int size = inputs.size();
+    Log* test = inputs.at(1);
+    Log* pivot = inputs.at(0);
+    for (int counter{0}; counter < size; ++counter){
         sortID(pivot, test);
     }
+    return outputs;
 }
 
 void loadLog(int logSelect){

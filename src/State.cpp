@@ -5,12 +5,8 @@ void State::setUsers(std::vector<User*> u){
     users = u;
 }
 
-void State::loadSave(){
-    disk.loadFromDisk();
-    users = disk.getUsers();
-}
-void State::loadSave(std::string diskPath){
-    disk.loadFromDisk(diskPath);
+void State::loadSave(std::string path){
+    disk.loadFromDisk(path);
     users = disk.getUsers();
 }
 
@@ -107,13 +103,8 @@ void State::save(){
 	disk.writeToDisk(buffer);
 }
 
-State::State(){
-    loadSave();
-    ui(*this);
-}
-
-State::State(std::string diskPath){
-    loadSave(diskPath);
+State::State(std::string path) : disk(path) {
+    loadSave(path);
     ui(*this);
 }
 

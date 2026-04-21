@@ -34,8 +34,7 @@ namespace DiskHelper {
 
 class Disk{
 protected:
-	static inline std::string filePath;
-	const static inline std::string defaultDiskPath {"../disk.yaml"};
+	std::string filePath;
 	std::ifstream diskFile;
 	std::vector<std::string> diskContents;
 	KeyValueList attributes;
@@ -52,7 +51,7 @@ protected:
 	const size_t objLineNum {0};
 public:
 	// Constructors
-	Disk(std::string diskPath = defaultDiskPath);
+	Disk(std::string diskPath);
 	~Disk();
 
 	// Getters 
@@ -74,10 +73,10 @@ public:
 	// File operations
 	void openFile(std::string_view fp);
 	bool isFileGood();
-	std::vector<std::string> readFileContents(std::string_view fp = filePath);
+	std::vector<std::string> readFileContents(std::string_view fp);
 
 	// Parsing functions
-	void parseDisk(std::string_view fp = defaultDiskPath);
+	void parseDisk(std::string_view fp);
 
 	// Init functions
 	User* initUser(KeyValueList attr);
@@ -91,7 +90,7 @@ public:
 	std::vector<Participant*> loadParticipants(size_t objLineNum);
 	std::vector<Log*> loadLogs(size_t objLineNum, std::vector<Participant*> participants);
 	std::vector<User*> loadUsers(size_t objLineNum, std::vector<Log*> logs);
-	void loadFromDisk(std::string diskPath = defaultDiskPath);
+	void loadFromDisk(std::string diskPath);
 
 	// Update max id reached
 	size_t updateMaxId(std::vector<Participant*>);

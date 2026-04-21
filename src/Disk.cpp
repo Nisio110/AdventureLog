@@ -180,9 +180,9 @@ void Disk::loadFromDisk(std::string diskPath)
 
 	// Load current object counts and update Ids so new objects ids don't
 	// conflict with old ones ids
-	User::setNumUsers(updateMaxId(participants));
+	User::setNumUsers(updateMaxId(users));
 	Log::setNumLogs(updateMaxId(logs));
-	Participant::setNumParticipants(updateMaxId(users));
+	Participant::setNumParticipants(updateMaxId(participants));
 }
 
 size_t Disk::updateMaxId(std::vector<Participant*> participants){

@@ -131,3 +131,15 @@ int userSettings()
     cin >> choice;
     return choice;
 }
+
+vector<Log*> sortID(vector<Log*> logs)
+{
+    vector<Log*> input=logs;
+    vector<Log*> output;
+    int counter=0;
+    int size=logs.size();
+    while (counter<size){
+        
+    }
+
+}

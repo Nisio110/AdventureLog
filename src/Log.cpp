@@ -86,6 +86,14 @@ Log::Log(int uid, string date, string area, string note, vector<Participant*> pa
     setNote(note);
 }
 
+//Sorting
+bool CaveLog::sortByID(Log* log1, Log* log2){
+    return (log1->getId() > log2->getId());
+}
+bool CaveLog::sortByDuration(Log* log1, Log* log2){
+    return (log1->getDurationMins() > log2->getDurationMins());
+}
+
 // CAVELOG CLASS ========================================= //
 string CaveLog::getName(){ return name; }
 bool CaveLog::isSRTCave(){ return isSRT; }

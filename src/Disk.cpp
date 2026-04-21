@@ -416,9 +416,7 @@ Participant* Disk::initParticipant(KeyValueList PartKVL){
 Disk::~Disk(){
 	for (auto uPtr : users) {delete uPtr;}
 	users.clear();
-	for (auto lPtr : logs) {delete lPtr;}
 	logs.clear();
-	for (auto pPtr : participants) {delete pPtr;}
 	participants.clear();
 }
 

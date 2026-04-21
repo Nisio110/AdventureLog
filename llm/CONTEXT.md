@@ -38,10 +38,11 @@ Active memory store of AdventureLog's current state — specific symbol location
 ## Memory ownership
 
 - Raw `new` / `delete` throughout; no smart pointers.
-- `Disk::~Disk` at [src/Disk.cpp:416-423](../src/Disk.cpp#L416-L423) is the **single bulk cleanup site** — it deletes every loaded `User*`, `Log*`, `Participant*`.
+- **Cascading destructors.** `~User()` ([src/User.cpp:34-37](../src/User.cpp#L34-L37)) deletes every `Log*` in `logs`; `~Log()` ([src/Log.cpp:64-67](../src/Log.cpp#L64-L67)) deletes every `Participant*` in `participants`. Deleting a `User` therefore tears down the whole subtree. `~Participant()` is trivial (leaf).
+- `Disk::~Disk` at [src/Disk.cpp:416-421](../src/Disk.cpp#L416-L421) deletes only `users` and then `.clear()`s the `logs` and `participants` vectors without deleting — their objects are freed via the cascade. This is the **single root cleanup site**.
 - `State` holds its `Disk` by value, so `~State()` triggers `~Disk()` after the final `save()`.
-- `User::removeLog` and `Log::removeParticipant` call `delete` on the matched pointer without detaching from `Disk::logs` / `Disk::participants`, which causes a double-free at exit (both containers hold the same pointers after load). The safe pattern is the one used by `State::removeUser` → `Disk::removeUser` ([src/Disk.cpp:425-433](../src/Disk.cpp#L425-L433)): the parent layer erases from its own vector without deleting, then delegates the actual `delete` + erase to `Disk`'s coordinated remover. Equivalent `Disk::removeLog` / `Disk::removeParticipant` helpers don't exist yet — they'd be needed to make `User::removeLog` / `Log::removeParticipant` safe.
-- `User::~User` and `Log::~Log` are trivial (the `Log` destructor is `virtual ~Log() = default;` at [include/Log.h:47](../include/Log.h#L47)) — children are not cascade-deleted from parent destructors.
+- **Orphan caveat.** A `Log` or `Participant` that sits in `Disk::logs`/`Disk::participants` but is not reachable from any `User` will leak on exit — nothing deletes it. Acceptable while the domain forbids orphans; would matter if a future load-time orphan check ever decides to preserve them.
+- **Mid-session removers.** `User::removeLog`, `Log::removeParticipant`, and `Disk::removeUser` ([src/Disk.cpp:423-431](../src/Disk.cpp#L423-L431)) each do `delete x;` on the matched pointer — and because of the cascade, that delete tears down `x`'s subtree automatically. Known wrinkle: `User::removeLog` / `Log::removeParticipant` don't detach from `Disk::logs`/`Disk::participants`, so those vectors can hold dangling pointers mid-session. Currently harmless because nothing outside `Disk` reads them (`Disk::getLogs` / `getParticipants` are never called from other translation units), but would bite if external access were ever added.
 
 ## UI menu mechanics
 

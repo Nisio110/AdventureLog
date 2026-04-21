@@ -31,6 +31,10 @@ User::User(string n, string p){
     setName(n);
     setPasswd(p);
 }
+User::~User(){
+    for (auto log : logs) { delete log; }
+    logs.clear();
+}
 
 // General
 void User::print(){

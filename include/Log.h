@@ -44,7 +44,7 @@ public :
 
     // Constructors & Destructor
     Log();
-    virtual ~Log() = default;
+    virtual ~Log();
     Log(int uid, std::string date);
     Log(int uid, std::string date, std::string note);
     Log(int uid, std::string date, std::string area, std::string note);

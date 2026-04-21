@@ -36,6 +36,7 @@ public :
     User();
     User(std::string name);
     User(std::string name, std::string passwd);
+    ~User();
 };
 
 namespace UserTests {

@@ -61,6 +61,10 @@ void Log::removeParticipant(Participant* p){
     }
 } 
 Log::Log(){}
+Log::~Log(){
+    for (auto p : participants) { delete p; }
+    participants.clear();
+}
 Log::Log(int uid, string date){
     setUserId(uid);
     generateID(numLogs);

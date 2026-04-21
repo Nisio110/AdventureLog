@@ -1,7 +1,6 @@
 #ifndef UI_H
 #define UI_H
 int ui();
-#endif
 
 int startupMenu()
 {
@@ -79,3 +78,12 @@ void changeUsername(){}
 void changePassword(){}
 
 void deleteAccount(){}
+
+
+
+
+vector<Log*> sortID(vector<Log*> logs);
+vector<Log*> sortDuration(vector<Log*> logs);
+
+
+#endif

@@ -1,7 +1,6 @@
-//#include "../include/DiskUsers.h"
-#include "../include/State.h"
 #include <iostream>
 #include "../include/UI.h"
+
 using namespace std;
 
 int ui(){
@@ -111,12 +110,11 @@ int mainMenu()
     return choice;
 }
 
-int logMenu(int page)
+int logMenu(int p)
 {
-    int choice;
-    int page=page;
-
-    cout << "Page: " << page << endl;
+    int choice{-1};
+    cout << "Page: " << p << endl;
+    return choice;
 }
 
 int userSettings()
@@ -141,5 +139,10 @@ vector<Log*> sortID(vector<Log*> logs)
     while (counter<size){
         
     }
+void loadLog(int logSelect){
+
+}
+
+void sortLogs(){
 
 }

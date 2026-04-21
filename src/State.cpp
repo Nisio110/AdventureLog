@@ -25,13 +25,12 @@ void State::printAll(){
 }
 
 void State::removeUser(User* u){
-        for (size_t i{0}; i < users.size(); ++i){
-        auto user = users.at(i);
-        if (user->getId() == u->getId()) {
-            delete user;
+    for (size_t i{0}; i < users.size(); ++i){
+        if (users.at(i)->getId() == u->getId()) {
             users.erase(users.begin() + i);
         }
     }
+    disk.removeUser(u);
 }
 
 void State::save(Disk& disk){

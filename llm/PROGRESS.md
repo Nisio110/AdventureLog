@@ -15,19 +15,19 @@ Status key: ✅ working · 🟡 partial / has known issues · ❌ stub or not im
 - ✅ Static ID counters correctly restored on load (`User::numUsers`, `Log::numLogs`, `Participant::numParticipants`) — was buggy, now fixed at [src/Disk.cpp:183-185](../src/Disk.cpp#L183-L185).
 - ✅ **Save walks user → logs → participants and drops unreachable children.** Previously flagged as "orphan drop"; confirmed intentional — the domain forbids orphan logs/participants, and the user-rooted walk enforces that invariant in the written file.
 - ❌ **No load-time orphan check.** `Disk::loadLogs` and `Disk::loadUsers` silently skip participants/logs whose `logId` / `owner-id` doesn't match anything — the orphans stay in `Disk::`'s vectors but never attach to a parent, then get dropped on the next save. A hand-edited or corrupted `disk.yaml` loses data with no warning. Proposed fix: after `loadUsers`, count unattached entries in `Disk::logs` / `Disk::participants` and emit a single `printErr` if non-zero.
-- 🟡 **Disk-State mismatch check is broken** ([src/State.cpp:80-96](../src/State.cpp#L80-L96)) — compares current in-memory state against the loaded snapshot (so it detects "something changed" rather than actual inconsistency), and a stray `;` after the inner `if` at [src/State.cpp:93](../src/State.cpp#L93) causes the error print to fire unconditionally.
+- 🟡 **Disk-State mismatch check is structurally meaningless** ([src/State.cpp:80-97](../src/State.cpp#L80-L97)) — `State::users` and `disk.getUsers()` share the same `User*` pointers (State loads via `users = disk.getUsers()`), so the size-comparison check can only ever detect divergence from `State::addUser` / `State::removeUser`, not real corruption or tampering. The second loop at [src/State.cpp:89-97](../src/State.cpp#L89-L97) also runs unconditionally and can throw out-of-range if the first check tripped.
 
 ## Domain models
 
 - ✅ `User`, `Log`, `CaveLog`, `HikeLog`, `Participant` — fields, getters/setters, print methods.
 - ✅ Add / remove helpers: `User::addLog`/`removeLog`, `Log::addParticipant`/`removeParticipant`.
 - ✅ Static sort comparators declared on `Log` (`sortByID`, `sortByDuration`).
-- 🟡 `Log(int uid, string date, string area, string note, vector<Participant*> participants)` constructor ([src/Log.cpp:81-87](../src/Log.cpp#L81-L87)) **does not store the participants argument** — the vector is discarded. Callers that rely on it will get an empty participants list.
+- 🟡 `Log(int uid, string date, string note)` 3-arg constructor ([src/Log.cpp:69-73](../src/Log.cpp#L69-L73)) silently drops its `date` argument — sets `userId` and `note` but never calls `setDate`. `HikeLog(uid, date, note)` at [src/Log.cpp:184](../src/Log.cpp#L184) inherits the bug via delegation.
 
 ## State layer
 
 - ✅ `loadSave()` / `loadSave(diskPath)` — loads from disk and populates `users`.
-- ✅ `addUser`, `removeUser`.
+- ✅ `addUser`, `removeUser` — `State::removeUser` now delegates the actual `delete` to `Disk::removeUser`, so the pointer is removed from `Disk::users` before `~Disk()` iterates. No more double-free.
 - ✅ `save()` called from `~State()` (best-effort autosave on clean exit).
 - ✅ `save()` also callable explicitly (used from UI exit path).
 

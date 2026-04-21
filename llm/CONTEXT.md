@@ -20,12 +20,13 @@ Active memory store of AdventureLog's current state — specific symbol location
 
 ## Save pipeline — user-rooted walk, full rewrite
 
-`State::save()` at [src/State.cpp:64-108](../src/State.cpp#L64-L108):
+`State::save()` at [src/State.cpp:64-109](../src/State.cpp#L64-L109):
 
-- Walks `users → u->getLogs() → log->getParticipants()`. Anything not reachable from a `User` is silently dropped — this is the "orphan drop" risk tracked in PROGRESS.md.
+- Walks `users → u->getLogs() → log->getParticipants()`. Anything not reachable from a `User` is silently dropped — intentional, since the domain forbids orphan logs/participants.
 - Buffers are concatenated in group order: all users first, then all logs, then all participants. Save order (parent-first) is deliberately opposite to load order (child-first).
 - `Disk::writeToDisk` opens the file with `ios::out | ios::trunc` at [src/Disk.cpp:570](../src/Disk.cpp#L570) — the file is fully rewritten each save, never appended to.
-- `~State()` at [src/State.cpp:120-122](../src/State.cpp#L120-L122) calls `save()`, so autosave only happens on clean exit. A crash or SIGKILL drops every change made since the session started.
+- `~State()` at [src/State.cpp:121-123](../src/State.cpp#L121-L123) calls `save()`, so autosave only happens on clean exit. A crash or SIGKILL drops every change made since the session started.
+- In-memory check at [src/State.cpp:80-97](../src/State.cpp#L80-L97) compares `disk.getUsers()` sizes against `State::users` sizes. Important to understand: `State::users` is populated via `users = disk.getUsers()` at load ([src/State.cpp:10](../src/State.cpp#L10)), and `Disk::getUsers()` returns a reference — so both vectors hold the **same `User*` pointers**. The check compares sizes, not deep state, and can only ever detect divergence introduced by `State::addUser` / `State::removeUser`. It cannot catch a mutated-but-same-size graph.
 
 ## ID counters
 
@@ -39,7 +40,7 @@ Active memory store of AdventureLog's current state — specific symbol location
 - Raw `new` / `delete` throughout; no smart pointers.
 - `Disk::~Disk` at [src/Disk.cpp:416-423](../src/Disk.cpp#L416-L423) is the **single bulk cleanup site** — it deletes every loaded `User*`, `Log*`, `Participant*`.
 - `State` holds its `Disk` by value, so `~State()` triggers `~Disk()` after the final `save()`.
-- `User::removeLog` and `Log::removeParticipant` call `delete` on the matched pointer. Calling these on objects that `Disk` is also tracking will cause a double-free at exit. For safe removal, also detach from `Disk::users` / `Disk::logs` / `Disk::participants` — no helper currently does this in one step.
+- `User::removeLog` and `Log::removeParticipant` call `delete` on the matched pointer without detaching from `Disk::logs` / `Disk::participants`, which causes a double-free at exit (both containers hold the same pointers after load). The safe pattern is the one used by `State::removeUser` → `Disk::removeUser` ([src/Disk.cpp:425-433](../src/Disk.cpp#L425-L433)): the parent layer erases from its own vector without deleting, then delegates the actual `delete` + erase to `Disk`'s coordinated remover. Equivalent `Disk::removeLog` / `Disk::removeParticipant` helpers don't exist yet — they'd be needed to make `User::removeLog` / `Log::removeParticipant` safe.
 - `User::~User` and `Log::~Log` are trivial (the `Log` destructor is `virtual ~Log() = default;` at [include/Log.h:47](../include/Log.h#L47)) — children are not cascade-deleted from parent destructors.
 
 ## UI menu mechanics

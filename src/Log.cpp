@@ -70,6 +70,7 @@ Log::Log(int uid, string date, string note){
     generateID(numLogs);
     setUserId(uid);
     setNote(note);
+    setDate(date);
 }
 Log::Log(int uid, string date, string area, string note){
     generateID(numLogs);

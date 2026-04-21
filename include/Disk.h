@@ -69,6 +69,8 @@ public:
 	inline void addLog(Log* log){logs.push_back(log);}
 	inline void addParticipant(Participant* p){participants.push_back(p);}
 
+	void removeUser(User* u);
+
 	// File operations
 	void openFile(std::string_view fp);
 	bool isFileGood();

@@ -422,6 +422,16 @@ Disk::~Disk(){
 	participants.clear();
 }
 
+void Disk::removeUser(User* u){
+	for (size_t i{0}; i < users.size(); ++i){
+		auto user = users.at(i);
+		if (user->getId() == u->getId()) {
+			delete user;
+			users.erase(users.begin() + i);
+		}
+	}
+}
+
 std::vector<std::string> Disk::userToStr(User* u){
 	std::vector<std::string> vecStr;
 

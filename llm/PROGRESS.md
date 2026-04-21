@@ -13,7 +13,8 @@ Status key: ✅ working · 🟡 partial / has known issues · ❌ stub or not im
 - ✅ Serialization of User / CaveLog / HikeLog / Participant via the `*ToStr` methods.
 - ✅ Polymorphic log dispatch in `logToStr` — `dynamic_cast` selects the CaveLog vs HikeLog branch.
 - ✅ Static ID counters correctly restored on load (`User::numUsers`, `Log::numLogs`, `Participant::numParticipants`) — was buggy, now fixed at [src/Disk.cpp:183-185](../src/Disk.cpp#L183-L185).
-- 🟡 **Orphan-drop on save.** `State::save()` walks `users → logs → participants`; any `Log` or `Participant` not reachable from a `User` is silently omitted from the write. Acceptable while UI flows always attach children to their parents, but fragile.
+- ✅ **Save walks user → logs → participants and drops unreachable children.** Previously flagged as "orphan drop"; confirmed intentional — the domain forbids orphan logs/participants, and the user-rooted walk enforces that invariant in the written file.
+- ❌ **No load-time orphan check.** `Disk::loadLogs` and `Disk::loadUsers` silently skip participants/logs whose `logId` / `owner-id` doesn't match anything — the orphans stay in `Disk::`'s vectors but never attach to a parent, then get dropped on the next save. A hand-edited or corrupted `disk.yaml` loses data with no warning. Proposed fix: after `loadUsers`, count unattached entries in `Disk::logs` / `Disk::participants` and emit a single `printErr` if non-zero.
 - 🟡 **Disk-State mismatch check is broken** ([src/State.cpp:80-96](../src/State.cpp#L80-L96)) — compares current in-memory state against the loaded snapshot (so it detects "something changed" rather than actual inconsistency), and a stray `;` after the inner `if` at [src/State.cpp:93](../src/State.cpp#L93) causes the error print to fire unconditionally.
 
 ## Domain models
@@ -35,15 +36,18 @@ Status key: ✅ working · 🟡 partial / has known issues · ❌ stub or not im
 The core menu loop in `ui(State&)` ([src/UI.cpp:6-70](../src/UI.cpp#L6-L70)) is structurally wrong in several ways, and most action handlers are empty. This is the primary area of ongoing work.
 
 ### Menu loop bugs
+
 - ❌ **Case fall-through throughout the inner switches.** In `case 1:` (main menu dispatch, [src/UI.cpp:38-46](../src/UI.cpp#L38-L46)) and `case 2:` (log menu dispatch, [src/UI.cpp:47-63](../src/UI.cpp#L47-L63)), almost every inner `case` is missing its `break`, so control falls through into every subsequent case — every selection runs multiple handlers and ends at the `default` "Invalid Input" branch.
 - ❌ **User Settings is unreachable.** `mainMenu()` returns `3` for that option ([src/UI.cpp:105](../src/UI.cpp#L105)), but the outer `switch (menu)` has no `case 3:` — only 0, 1, 2. Selecting settings does nothing.
 - ❌ **Logout flow** — `mainMenu()` returns `4` for Logout, with no corresponding case.
 
 ### Auth
+
 - ❌ `logIn()` ([src/UI.cpp:85-92](../src/UI.cpp#L85-L92)) prints the username/password prompts but **never calls `cin >>`** — it always returns `true`. Credentials are neither read nor checked.
 - ❌ `signUp()` ([src/UI.cpp:94-97](../src/UI.cpp#L94-L97)) simply delegates to `logIn()`; it does not create a new `User` or persist one.
 
 ### Log browsing
+
 - ❌ `logMenu(int page)` ([src/UI.cpp:112-117](../src/UI.cpp#L112-L117)) prints the page number and returns `-1` — no log listing, no pagination logic, no selection.
 - ❌ `loadLog(int)` ([src/UI.cpp:145](../src/UI.cpp#L145)) — empty body.
 - ❌ `sortLogs()` ([src/UI.cpp:149](../src/UI.cpp#L149)) — empty body.
@@ -51,7 +55,9 @@ The core menu loop in `ui(State&)` ([src/UI.cpp:6-70](../src/UI.cpp#L6-L70)) is 
 - ❌ `sortDuration` — declared in [include/UI.h](../include/UI.h), no definition.
 
 ### Log / account mutation
+
 All declared in [include/UI.h](../include/UI.h), none defined:
+
 - ❌ `editLog()`
 - ❌ `deleteLog()`
 - ❌ `addLog()`

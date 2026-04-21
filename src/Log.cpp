@@ -84,6 +84,7 @@ Log::Log(int uid, string date, string area, string note, vector<Participant*> pa
     setDate(date);
     setArea(area);
     setNote(note);
+    setParticipants(participants);
 }
 
 //Sorting

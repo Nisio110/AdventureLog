@@ -76,6 +76,7 @@ void State::save(){
             }
         }
 	}
+
     // Error checking
     if (disk.getUsers().size() != users.size()){
         DiskHelper::printErr("State: Disk-State Mismatch");
@@ -88,10 +89,10 @@ void State::save(){
     for (size_t i{0}; i < disk.getUsers().size(); ++i){
         auto logs {disk.getUsers().at(i)->getLogs()};
         for (size_t j{0}; j < logs.size(); ++j){
-            if (disk.getUsers().at(i)->getLogs().at(j)->getParticipants().size() 
-                != 
-                this->users.at(i)->getLogs().at(j)->getParticipants().size());
-            DiskHelper::printErr("State: Disk-State Mismatch");
+            if (disk.getUsers().at(i)->getLogs().at(j)->getParticipants().size() != 
+                    this->users.at(i)->getLogs().at(j)->getParticipants().size()) {
+                DiskHelper::printErr("State: Disk-State Mismatch");
+            }
         }
     }
 

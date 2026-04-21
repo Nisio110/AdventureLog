@@ -1,5 +1,6 @@
 #ifndef UI_H
 #define UI_H
+#include "../include/State.h"
 
 int ui();
 int startupMenu();
@@ -16,7 +17,7 @@ int userSettings();
 void changeUsername();
 void changePassword();
 void deleteAccount();
-std::vector<Log*> sortID(vector<Log*> logs);
-std::vector<Log*> sortDuration(vector<Log*> logs);
+std::vector<Log*> sortID(std::vector<Log*> logs);
+std::vector<Log*> sortDuration(std::vector<Log*> logs);
 
 #endif

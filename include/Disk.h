@@ -48,6 +48,7 @@ protected:
 	std::ofstream writeFile;
 
 	ObjectList splitByObjects(const KeyValueList& kvl);
+	const size_t objLineNum {0};
 public:
 	// Constructors
 	Disk();
@@ -76,10 +77,21 @@ public:
 	void parseDisk(std::string_view fp = filePath);
 
 	// Init functions
-	void initProgram();
 	User* initUser(KeyValueList attr);
 	Log* initLog(KeyValueList attr);
 	Participant* initParticipant(KeyValueList attr);
+
+	// Each object requires the last
+	std::vector<Participant*> loadParticipants(size_t objLineNum);
+	std::vector<Log*> loadLogs(size_t objLineNum, std::vector<Participant*> participants);
+	std::vector<User*> loadUsers(size_t objLineNum, std::vector<Log*> logs);
+	void loadFromDisk();
+	void loadFromDisk(std::string diskPath);
+
+	// Update max id reached
+	size_t updateMaxId(std::vector<Participant*>);
+	size_t updateMaxId(std::vector<Log*>);
+	size_t updateMaxId(std::vector<User*>);
 
 	// Display
 	void printUserDetails(); // for testing

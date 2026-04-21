@@ -1,11 +1,8 @@
-#include "../include/UI.h"
+#include "../include/State.h"
 #include <iostream>
 
 int main(){
 	State s;
-	s.initProgram();
-	ui();
-	s.save();
 }
 
 

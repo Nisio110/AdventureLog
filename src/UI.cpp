@@ -3,9 +3,8 @@
 
 using namespace std;
 
-int ui(){
-    State s;
-    s.initProgram();
+int ui(State& s){
+    s.loadSave();
     std::vector<User*> users = s.getUsers();
     int choice=-1;
     int log=-1;
@@ -138,7 +137,7 @@ vector<Log*> sortID(vector<Log*> inputs)
     Log* test = inputs.at(1);
     Log* pivot = inputs.at(0);
     for (int counter{0}; counter < size; ++counter){
-        sortID(pivot, test);
+        Log::sortByID(pivot, test);
     }
     return outputs;
 }

@@ -166,12 +166,47 @@ ObjectList Disk::splitByObjects(const KeyValueList& attributes)
 	return objects;
 }
 
-void Disk::initProgram()
+void Disk::loadFromDisk()
 {
 	parseDisk();
-	const short objLineNum {0};
 
-	// Pass 1: Load participants
+	loadUsers(
+		objLineNum, 
+		loadLogs(
+			objLineNum, 
+			loadParticipants(objLineNum)
+		)
+	);
+
+	// Seed id counters so newly-created objects don't collide with loaded ids
+	User::seedIdCounter(updateMaxId(participants));
+	Log::seedIdCounter(updateMaxId(logs));
+	Participant::seedIdCounter(updateMaxId(users));
+}
+
+size_t updateMaxId(std::vector<Participant*> participants){
+	int maxPartId{0};
+	for (auto* p : participants)
+		if (p->getId() > maxPartId) maxPartId = p->getId();
+	return maxPartId;
+}
+
+size_t updateMaxId(std::vector<Log*> logs){
+	int maxLogId{0};
+	for (auto* l : logs)
+		if (l->getId() > maxLogId) maxLogId = l->getId();
+	return maxLogId;
+}
+
+size_t updateMaxId(std::vector<User*> users){
+	int maxUserId{0};
+	for (auto* u : users)
+		if (u->getId() > maxUserId) maxUserId = u->getId();
+	return maxUserId;
+
+}
+
+std::vector<Participant*> Disk::loadParticipants(size_t objLineNum){
 	for (size_t i{0}; i < objects.size(); ++i){
 		const KeyValueList obj {objects.at(i)};
 
@@ -180,8 +215,9 @@ void Disk::initProgram()
 				{ addParticipant(initParticipant(obj)); }
 		}
 	}
+}
 
-	// Pass 2: Load logs
+std::vector<Log*> Disk::loadLogs(size_t objLineNum, std::vector<Participant*> participants){
 	for (size_t i{0}; i < objects.size(); ++i){
 		const KeyValueList obj {objects.at(i)};
 
@@ -191,7 +227,9 @@ void Disk::initProgram()
 		}
 	}
 	
-	// Pass 3: Load users
+}
+
+std::vector<User*> Disk::loadUsers(size_t objLineNum, std::vector<Log*> logs){
 	for (size_t i{0}; i < objects.size(); ++i){
 		const KeyValueList obj {objects.at(i)};
 
@@ -200,22 +238,6 @@ void Disk::initProgram()
 				{addUser(initUser(obj));}
 		}
 	}
-
-	// Seed id counters so newly-created objects don't collide with loaded ids
-	int maxUserId{0};
-	for (auto* u : users)
-		if (u->getId() > maxUserId) maxUserId = u->getId();
-	User::seedIdCounter(maxUserId);
-
-	int maxLogId{0};
-	for (auto* l : logs)
-		if (l->getId() > maxLogId) maxLogId = l->getId();
-	Log::seedIdCounter(maxLogId);
-
-	int maxPartId{0};
-	for (auto* p : participants)
-		if (p->getId() > maxPartId) maxPartId = p->getId();
-	Participant::seedIdCounter(maxPartId);
 }
 
 void Disk::printUserDetails(){ // for testing

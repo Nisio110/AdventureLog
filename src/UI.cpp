@@ -136,9 +136,13 @@ vector<Log*> sortID(vector<Log*> logs)
     vector<Log*> output;
     int counter=0;
     int size=logs.size();
-    while (counter<size){
-        
+    Log* test=input.at(1);
+    Log* pivot=input.at(0);
+    for (counter<size; counter++;){
+        sortID(pivot, test);
     }
+}
+
 void loadLog(int logSelect){
 
 }

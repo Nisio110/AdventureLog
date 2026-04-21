@@ -20,4 +20,6 @@ void deleteAccount();
 std::vector<Log*> sortID(std::vector<Log*> logs);
 std::vector<Log*> sortDuration(std::vector<Log*> logs);
 
+
+
 #endif

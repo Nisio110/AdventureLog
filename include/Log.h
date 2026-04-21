@@ -50,6 +50,10 @@ public :
     Log(int uid, std::string date, std::string area, std::string note);
     Log(int uid, std::string date, std::string area, std::string note, std::vector<Participant*> participants);
 
+    //Sorting
+    static bool sortByID(Log* log1, Log* log2);
+    static bool sortByDuration(Log* log1, Log* log2);
+
 };
 
 class CaveLog : public Log {
@@ -77,6 +81,7 @@ public :
     CaveLog(int uid, std::string name, std::string date);
     CaveLog(int uid, std::string name, std::string date, std::string area, std::string note);
     CaveLog(int uid, std::string name, std::string date, std::string area, std::string note, std::vector<Participant*> participants, bool isSRT, bool wasCL, bool wasRigg);
+
 };
 
 class HikeLog : public Log {

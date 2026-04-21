@@ -87,10 +87,10 @@ Log::Log(int uid, string date, string area, string note, vector<Participant*> pa
 }
 
 //Sorting
-bool CaveLog::sortByID(Log* log1, Log* log2){
+static bool CaveLog::sortByID(Log* log1, Log* log2){
     return (log1->getId() > log2->getId());
 }
-bool CaveLog::sortByDuration(Log* log1, Log* log2){
+static bool Log::sortByDuration(Log* log1, Log* log2){
     return (log1->getDurationMins() > log2->getDurationMins());
 }
 

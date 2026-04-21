@@ -47,7 +47,7 @@ void Log::generateID(int &numObject){
     ++numLogs;
     setID(++numObject);
 }
-void Log::seedIdCounter(int n){ numLogs = n; }
+void Log::setNumLogs(int n){ numLogs = n; }
 void Log::addParticipant(Participant* p){
     participants.push_back(p);
 }

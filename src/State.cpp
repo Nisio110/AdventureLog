@@ -1,4 +1,5 @@
 #include "../include/State.h"
+#include "UI.h"
 
 void State::setUsers(std::vector<User*> u){
     users = u;
@@ -108,12 +109,12 @@ void State::save(){
 
 State::State(){
     loadSave();
-    ui();
+    ui(*this);
 }
 
 State::State(std::string diskPath){
     loadSave(diskPath);
-    ui();
+    ui(*this);
 }
 
 State::~State(){

@@ -1,7 +1,6 @@
 #ifndef UI_H
 #define UI_H
-#include "Disk.h"
-class State;
+#include "State.h"
 
 int ui(State& s);
 int startupMenu();

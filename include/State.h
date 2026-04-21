@@ -1,7 +1,6 @@
 #ifndef STATE_H
 #define STATE_H
-
-#include "UI.h"
+#include "Disk.h"
 
 class State{
     std::vector<User*> users;

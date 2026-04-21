@@ -4,8 +4,6 @@
 using namespace std;
 
 int ui(State& s){
-    s.loadSave();
-    std::vector<User*> users = s.getUsers();
     int choice=-1;
     int log=-1;
     int page=1;

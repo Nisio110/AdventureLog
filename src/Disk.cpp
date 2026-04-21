@@ -110,7 +110,6 @@ namespace DiskHelper{
 // Constructors
 Disk::Disk(std::string path){
 	setFilePath(path);
-	readFileContents(path);
 }
 
 // Read operations

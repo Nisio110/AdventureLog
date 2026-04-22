@@ -19,7 +19,7 @@ void User::generateID(){
     numUsers += 1;
     id = numUsers;
 }
-void User::seedIdCounter(int n){ numUsers = n; }
+void User::setNumUsers(int n){ numUsers = n; }
 User::User(){}
 
 User::User(string n){
@@ -30,6 +30,10 @@ User::User(string n, string p){
     generateID();
     setName(n);
     setPasswd(p);
+}
+User::~User(){
+    for (auto log : logs) { delete log; }
+    logs.clear();
 }
 
 // General

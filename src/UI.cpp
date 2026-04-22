@@ -3,10 +3,7 @@
 
 using namespace std;
 
-int ui(){
-    State s;
-    s.initProgram();
-    std::vector<User*> users = s.getUsers();
+int ui(State& s){
     int choice=-1;
     int log=-1;
     int page=1;

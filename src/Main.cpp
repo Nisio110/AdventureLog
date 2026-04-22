@@ -1,21 +1,8 @@
 #include "../include/UI.h"
 #include <iostream>
 
-int main(){
-	State s;
-	s.initProgram();
-	ui();
-	s.save();
-}
-
-
-void basicTest(){
-	User u1("oisin", "password");
-	//User* u2;
-	CaveLog c1(u1.getId(),"Bruce's Pot", "16/02/2026");
-	c1.setArea("Fermanagh");
-	c1.setSRTCave(true);
-	c1.setCaveLeader(false);
-	c1.setRigger(false);
-	c1.print();
+int main(int argc, char* argv[]){
+	std::string path;
+	if (argc > 1){path = argv[1];}
+	State s(path);
 }

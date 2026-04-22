@@ -9,6 +9,9 @@ file(GLOB SOURCES src/*.cpp)
 
 add_executable(AdventureLog ${SOURCES})
 
+set_target_properties(AdventureLog PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 target_include_directories(AdventureLog PRIVATE include)
 #target_compile_options(AdventureLog PRIVATE -Werror -Wall -Wpedantic)
 target_compile_options(AdventureLog PRIVATE -Werror )

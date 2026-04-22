@@ -1,0 +1,76 @@
+// Adventure Log — program flow graph
+// Render: dot -Tpng flow-graph.dot -o flow-graph.png
+//         dot -Tsvg flow-graph.dot -o flow-graph.svg
+
+digraph AdventureLog {
+    rankdir=TB;
+    fontname="Helvetica";
+    node  [fontname="Helvetica", shape=box, style="rounded,filled", fillcolor="#EEF5FF", color="#3A6EA5"];
+    edge  [fontname="Helvetica", color="#3A6EA5"];
+
+    // Lifecycle nodes
+    start     [label="Start\n(main)", shape=oval, fillcolor="#C8E6C9", color="#2E7D32"];
+    end       [label="Exit",         shape=oval, fillcolor="#FFCDD2", color="#B71C1C"];
+
+    // Boot
+    initState [label="State::initProgram()"];
+    initDisk  [label="Disk::initProgram()\nparse + load objects"];
+    readDisk  [label="Disk::readDiskContents()\n(disk.yaml)"];
+    parseDisk [label="Disk::parseDisk()\nsplit into objects"];
+    buildObjs [label="Disk::initUser / initLog /\ninitParticipant"];
+    loadUsers [label="State.users = disk.getUsers()"];
+
+    // UI
+    welcome   [label="Welcome menu", shape=parallelogram, fillcolor="#FFF3E0", color="#E65100"];
+    choose    [label="Choose option", shape=diamond, fillcolor="#FFF9C4", color="#F57F17"];
+    login     [label="Login\n(username + password)"];
+    signup    [label="Sign up\n(choose username + password)"];
+    mainMenu  [label="Main menu", shape=parallelogram, fillcolor="#FFF3E0", color="#E65100"];
+    mainChoice[label="Main choice", shape=diamond, fillcolor="#FFF9C4", color="#F57F17"];
+    viewLogs  [label="View logs"];
+    addLog    [label="Add log\n(CaveLog / HikeLog)"];
+    logout    [label="Logout"];
+
+    // Domain operations
+    addUser   [label="State::addUser(User*)"];
+    printAll  [label="State::printAll()\nUser::printAll()"];
+
+    // Persistence
+    save      [label="State::save()"];
+    userToStr [label="Disk::userToStr / logToStr /\npartToStr"];
+    writeDisk [label="Disk::writeToDisk()\n(disk.yaml)"];
+
+    // Flow
+    start -> initState -> initDisk -> readDisk -> parseDisk -> buildObjs -> loadUsers -> welcome;
+    welcome -> choose;
+    choose  -> login   [label="1"];
+    choose  -> signup  [label="2"];
+    choose  -> save    [label="3 (exit)"];
+    login   -> mainMenu;
+    signup  -> addUser -> mainMenu;
+    mainMenu-> mainChoice;
+    mainChoice -> viewLogs [label="1"];
+    mainChoice -> addLog   [label="2"];
+    mainChoice -> logout   [label="3"];
+    viewLogs -> printAll -> mainMenu;
+    addLog   -> mainMenu;
+    logout   -> welcome;
+    save     -> userToStr -> writeDisk -> end;
+
+    // Grouping
+    subgraph cluster_boot {
+        label="Boot / load from disk";
+        color="#9FB8D8"; style="dashed";
+        initState; initDisk; readDisk; parseDisk; buildObjs; loadUsers;
+    }
+    subgraph cluster_ui {
+        label="UI loop";
+        color="#E6B47A"; style="dashed";
+        welcome; choose; login; signup; mainMenu; mainChoice; viewLogs; addLog; logout;
+    }
+    subgraph cluster_persist {
+        label="Persistence";
+        color="#9FB8D8"; style="dashed";
+        save; userToStr; writeDisk;
+    }
+}

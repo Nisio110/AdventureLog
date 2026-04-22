@@ -1,8 +1,8 @@
 #ifndef UI_H
 #define UI_H
-#include "../include/State.h"
+#include "State.h"
 
-int ui();
+int ui(State& s);
 int startupMenu();
 bool logIn();
 void signUp();

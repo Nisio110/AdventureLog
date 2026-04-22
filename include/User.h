@@ -28,7 +28,7 @@ public :
     void print();
     void printAll();
     void generateID();
-    static void seedIdCounter(int n);
+    static void setNumUsers(int n);
     void addLog(Log* log);
     void removeLog(Log* log);
 
@@ -36,6 +36,7 @@ public :
     User();
     User(std::string name);
     User(std::string name, std::string passwd);
+    ~User();
 };
 
 namespace UserTests {

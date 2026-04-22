@@ -135,10 +135,34 @@ vector<Log*> sortID(vector<Log*> inputs)
     vector<Log*> outputs;
     
     int size = inputs.size();
-    Log* test = inputs.at(1);
+    int position = size;
     Log* pivot = inputs.at(0);
-    for (int counter{0}; counter < size; ++counter){
-        sortID(pivot, test);
+    for (position; position > 0; --position){
+        for (int counter{1}; counter < position; ++counter){
+            Log* test = inputs.at(counter);
+            if (Log::sortByID(pivot, test));{
+                pivot=test;
+            }
+        }
+        outputs.at(position)=pivot;
+    }
+    return outputs;
+}
+
+std::vector<Log*> sortDuration(std::vector<Log*> logs){
+    vector<Log*> outputs;
+    
+    int size = logs.size();
+    int position = size;
+    Log* pivot = logs.at(0);
+    for (position; position > 0; --position){
+        for (int counter{1}; counter < position; ++counter){
+            Log* test = logs.at(counter);
+            if (Log::sortByDuration(pivot, test));{
+                pivot=test;
+            }
+        }
+        outputs.at(position)=pivot;
     }
     return outputs;
 }

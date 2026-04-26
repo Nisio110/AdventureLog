@@ -1,5 +1,4 @@
 #include "../include/State.h"
-#include "UI.h"
 #include <iostream>
 
 void State::setUsers(std::vector<User*> u){
@@ -119,7 +118,6 @@ State::State(std::string path) : disk(path) {
             }
         }
     }
-    ui(*this);
 }
 
 State::~State(){
@@ -134,10 +132,40 @@ State::~State(){
         } catch (std::exception& e){
             DiskHelper::printErr(e.what());
         }
+        break;
     }
 }
 
 void State::createUser(std::string username, std::string password){
-    User* u = new User(username, password);
-    addUser(u);
+    if (isUniqueUsername(username)){
+        User* u = new User(username, password);
+        addUser(u);
+    }
+    else throw std::runtime_error{"Username is taken"};
+}
+
+bool State::logIn(std::string username, std::string password){
+    bool authenticated {false};
+
+    for (auto user : getUsers()) {
+        if (username == user->getName()){
+            if (password == user->getPasswd()){
+                authenticated = true;
+                break;
+            }
+            throw std::runtime_error {"Incorrect Password"};
+        }
+    }
+    if (!authenticated) throw std::runtime_error {"User does not exist"};
+    else return authenticated;
+}
+
+bool State::isUniqueUsername(std::string username){
+    bool isUniqueName {true};
+    for (auto user : users){
+        if (username == user->getName()){
+            isUniqueName = false;
+        }
+    }
+    return isUniqueName;
 }

@@ -20,8 +20,8 @@ UI  ->  State  ->  Disk  ->  models (User, Log, Participant)
 
 Each layer only knows about the one directly beneath it. This ordering is intentional and should be preserved.
 
-- **`UI`** — interactive menu loop; reads input, calls into `State` to mutate data, calls `state.save()` on explicit user action. Currently the most incomplete layer (many handlers are stubs or placeholders).
-- **`State`** — the session orchestrator. Owns the `Disk` instance and the in-memory `vector<User*>`. Its constructor triggers `loadSave()` and hands control to `ui(*this)`; its destructor calls `save()`. This is the only place load and save are wired together.
+- **`UI`** — class that owns a `State` member by value and drives the interactive menu loop via `UI::run()`. `main` constructs a `UI`, which in turn constructs its `State` (loading the save), then calls `run()`. Reads input, calls into `s` to mutate data, calls `s.save()` on explicit user action. Currently the most incomplete layer (many handlers are stubs or placeholders).
+- **`State`** — the session orchestrator. Owns the `Disk` instance and the in-memory `vector<User*>`. Its constructor triggers `loadSave()`; its destructor calls `save()`. Lifecycle is driven from `UI`/`main` — `State` no longer reaches up into the UI layer.
 - **`Disk`** — parses and emits the on-disk format, plus holds raw pointers to loaded objects. Knows about all three model types and wires their relationships on load.
 - **Models** — `User`, `Log` (with subclasses `CaveLog` and `HikeLog`), `Participant`. Each has a static ID counter (`numUsers`, `numLogs`, `numParticipants`) used to hand out fresh IDs.
 

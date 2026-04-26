@@ -14,6 +14,8 @@ public:
     void addUser(User* u);
     void removeUser(User* u);
     void createUser(std::string username, std::string password);
+    bool logIn(std::string username,std::string password);
+    bool isUniqueUsername(std::string);
 
     void loadSave(std::string path);
     void printAll();

@@ -34,26 +34,25 @@ Status key: ✅ working · 🟡 partial / has known issues · ❌ stub or not im
 
 ## UI layer — substantially incomplete
 
-The core menu loop in `ui(State&)` ([src/UI.cpp:6-70](../src/UI.cpp#L6-L70)) is structurally wrong in several ways, and most action handlers are empty. This is the primary area of ongoing work.
+`UI` is now a class ([include/UI.h](../include/UI.h)) with a `State s` member; `main` constructs it and calls `UI::run()`. The core loop ([src/UI.cpp:12-70](../src/UI.cpp#L12-L70)) is structurally wrong in several ways, and most action handlers are empty. This is the primary area of ongoing work.
 
 ### Menu loop bugs
 
-- ❌ **Case fall-through throughout the inner switches.** In `case 1:` (main menu dispatch, [src/UI.cpp:38-46](../src/UI.cpp#L38-L46)) and `case 2:` (log menu dispatch, [src/UI.cpp:47-63](../src/UI.cpp#L47-L63)), almost every inner `case` is missing its `break`, so control falls through into every subsequent case — every selection runs multiple handlers and ends at the `default` "Invalid Input" branch.
-- ❌ **User Settings is unreachable.** `mainMenu()` returns `3` for that option ([src/UI.cpp:105](../src/UI.cpp#L105)), but the outer `switch (menu)` has no `case 3:` — only 0, 1, 2. Selecting settings does nothing.
+- ❌ **Case fall-through throughout the inner switches.** In `case 1:` (main menu dispatch, [src/UI.cpp:39-47](../src/UI.cpp#L39-L47)) and `case 2:` (log menu dispatch, [src/UI.cpp:49-65](../src/UI.cpp#L49-L65)), almost every inner `case` is missing its `break`, so control falls through into every subsequent case — every selection runs multiple handlers and ends at the `default` "Invalid Input" branch.
+- ❌ **User Settings is unreachable.** `mainMenu()` returns `3` for that option ([src/UI.cpp:90](../src/UI.cpp#L90)), but the outer `switch (menu)` has no `case 3:` — only 0, 1, 2. Selecting settings does nothing.
 - ❌ **Logout flow** — `mainMenu()` returns `4` for Logout, with no corresponding case.
 
 ### Auth
 
-- ❌ `logIn()` ([src/UI.cpp:85-92](../src/UI.cpp#L85-L92)) prints the username/password prompts but **never calls `cin >>`** — it always returns `true`. Credentials are neither read nor checked.
-- ❌ `signUp()` ([src/UI.cpp:94-97](../src/UI.cpp#L94-L97)) simply delegates to `logIn()`; it does not create a new `User` or persist one.
+- 🟡 `UI::logIn()` ([src/UI.cpp:139-155](../src/UI.cpp#L139-L155)) reads username/password via `takeInput()` but does no credential verification — it unconditionally calls `s.createUser` (creating a fresh user from whatever was typed) and returns `true`. Effectively indistinguishable from signup.
+- ❌ `UI::signUp()` ([src/UI.cpp:157-159](../src/UI.cpp#L157-L159)) just delegates to `logIn()`. With logIn's current behavior this happens to add a user, but for the wrong reasons — no separate signup-vs-login pathway exists.
 
 ### Log browsing
 
-- ❌ `logMenu(int page)` ([src/UI.cpp:112-117](../src/UI.cpp#L112-L117)) prints the page number and returns `-1` — no log listing, no pagination logic, no selection.
-- ❌ `loadLog(int)` ([src/UI.cpp:145](../src/UI.cpp#L145)) — empty body.
-- ❌ `sortLogs()` ([src/UI.cpp:149](../src/UI.cpp#L149)) — empty body.
-- 🟡 `sortID(vector<Log*>)` ([src/UI.cpp:132-143](../src/UI.cpp#L132-L143)) — compiles but does not sort: it iterates `size` times over the same fixed `pivot`/`test` indices and never writes to `outputs`.
-- ❌ `sortDuration` — declared in [include/UI.h](../include/UI.h), no definition.
+- ❌ `UI::logMenu()` ([src/UI.cpp:97-101](../src/UI.cpp#L97-L101)) prints the page number (using the `page` member) and returns `-1` — no log listing, no pagination logic, no selection.
+- ❌ `UI::loadLog(int)` ([src/UI.cpp:198-200](../src/UI.cpp#L198-L200)) — empty body.
+- ❌ `UI::sortLogs()` ([src/UI.cpp:202-204](../src/UI.cpp#L202-L204)) — empty body.
+- 🟡 `UI::sortID(vector<Log*>)` ([src/UI.cpp:162-178](../src/UI.cpp#L162-L178)) — compiles but does not sort: stray `;` after the `if` makes the `pivot = test` block run unconditionally, and `outputs` is `.at()`-assigned without ever being sized. Same shape in `UI::sortDuration` ([src/UI.cpp:180-196](../src/UI.cpp#L180-L196)).
 
 ### Log / account mutation
 

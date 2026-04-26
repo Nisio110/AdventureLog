@@ -1,89 +1,96 @@
 #include "../include/UI.h"
 #include <iostream>
+#include <limits>
 
 using std::cin;
 using std::cout;
 using std::endl;
 using std::vector;
 
+UI::UI(std::string path) : s(path) {}
+
 // MAIN UI LOOP ========================================= //
-int ui(State& s){
-    int choice {-1};
-    int log {-1};
-    int page {1};
-    bool loop {true};
-    int menu = 0;
-    while (loop) {
-        switch (menu) {
-            case 0:
-                choice = startupMenu();
-                switch (choice){
-                    case 1:
-                        if (logIn()) { //some bool stuff here will need tweaks when the actual loginchecks are implemented
-                            menu = 1;
-                        }
-                        else { menu = 0; }
-                        break;
-                    case 2:
-                        signUp();
-                        menu = 1;
-                        break;
-                    case 3:
-                        s.save();
-                        return 0;
-                        break;
-                    default:
-                        cout << "**Invalid Input: Please choose a valid option**" << endl;
-                }
-                break;
+void UI::run(){
+    size_t placeholder {1000};
+    size_t pageSelect{placeholder}; // buffer for holding page selection info
+    bool quit {false};
 
-            case 1:
-                choice = mainMenu();
-                switch (choice){
-                    case 1: menu = 2;
-                    case 2: menu = 3;
-                    case 3: menu = 0;
-                    default: cout << "**Invalid Input: Please choose a valid option**" << endl;
-                }
+    while (!quit) {
+        pageSelect = startupMenu();
+        switch (pageSelect){
+            using enum Startup;
+            case LOGIN:
+                pageSelect = placeholder;
+                logIn();
+            case SIGNUP:
+                pageSelect = placeholder;
+                signUp();
                 break;
-
-            case 2:
-                choice = logMenu(page);
-                log = choice;
-                switch (choice){
-                    case 1: loadLog(log);
-                    case 2: loadLog(log);
-                    case 3: loadLog(log);
-                    case 4: loadLog(log);
-                    case 5: loadLog(log);
-                    case 6: loadLog(log);
-                    case 7: page++;
-                    case 8: if (page > 1) { page--; }
-                    case 9: menu = 1;
-                    case 0: sortLogs();
-                    default: cout << "**Invalid Input: Please choose a valid option**" << endl;
-                }
+            case EXIT:
+                pageSelect = placeholder;
+                quit = exit();
                 break;
         }
+
     }
-    cout << "Good job you deserve a cookie";
-    return 0;
 }
 
 // MENUS ========================================= //
-int startupMenu(){
-    int choice;
-    cout << "Welcome to the Adventure Log System" << endl
-         << "Please choose an option"             << endl
-         << "1: Log in"                           << endl
-         << "2: Sign up"                          << endl
-         << "3: Exit"                             << endl
-         << "Select Option: ";
-    cin >> choice;
-    return choice;
+// void UI::choosePage(int page){
+//     switch (page){
+//         case Page::STARTUP: 
+//             startupMenu();
+//             break;
+//         case Page::MAIN:
+//             mainMenu();
+//             break;
+//         case Page::LOGS:
+//             logMenu();
+//             break;
+//         case Page::SIGNUP:
+//             signUp();
+//             break;
+//         case Page::LOGIN:
+//             logIn();
+//             break;
+        
+//     }
+// }
+
+bool UI::exit(){
+    bool confirmation {false};
+    printHeader("Exit");
+    takeBoolInput("Are you sure? [Y/n]: ", confirmation);
+    return confirmation;
 }
 
-int mainMenu(){
+int UI::startupMenu(){
+    using enum Startup;
+    size_t pageChoice;
+    
+    // Adjust according to current number of page choices!
+    size_t numChoices{3};
+    // Adjust according to current number of page choices!
+
+    printHeader("Welcome to the Adventure Logging System");
+
+    do {
+        printl("Please choose an option");
+        std::cout << LOGIN  << ": Log in"  << '\n'
+                  << SIGNUP << ": Sign up" << '\n'
+                  << EXIT   << ": Exit"    << '\n';
+
+        takeUIntInput("Select option: ", pageChoice);
+
+        if (pageChoice > numChoices) {
+            printErr("Invalid page choice");
+            std::cout << '\n';
+        }
+    } while (pageChoice > numChoices);
+    return pageChoice;
+}
+
+int UI::mainMenu(){
     int choice;
     cout << "Main Menu"        << endl
          << "1: View Logs"     << endl
@@ -93,15 +100,33 @@ int mainMenu(){
          << "Select Option: ";
     cin >> choice;
     return choice;
+    
+    // TODO: Add switch statement for each case
 }
 
-int logMenu(int p){
+int UI::logMenu(){
     int choice{-1};
-    cout << "Page: " << p << endl;
+    int log{0}; // placeholder
+    switch (choice){
+        case 1: loadLog(log);
+        case 2: loadLog(log);
+        case 3: loadLog(log);
+        case 4: loadLog(log);
+        case 5: loadLog(log);
+        case 6: loadLog(log);
+        case 7: page++;
+        case 8: if (page > 1) { page--; }
+        case 9: menu = 1;
+        case 0: sortLogs();
+        default: cout << "**Invalid Input: Please choose a valid option**" << endl;
+    }
+    cout << "Page: " << page << endl;
     return choice;
+
+    // TODO: Figure out what the fuck is going on here
 }
 
-int userSettings(){
+int UI::userSettings(){
     int choice;
     cout << "User Settings"        << endl
          << "1: Change Username"   << endl
@@ -111,55 +136,135 @@ int userSettings(){
          << "Select Option: ";
     cin >> choice;
     return choice;
+
+    // TODO: Add switch statement for each case.
 }
 
-std::string takeInput(){
-    std::string buffer;
-    // Skips trailing whitespace
+// AUTH ========================================= //
+void UI::logIn(){
+    printHeader("Login Menu");
+    std::string username;
+    std::string password;
+
+    takeInput("Enter username: ", username);
+    takeInput("Enter password: ", password);
+
     try {
-        std::getline(std::cin >> std::ws, buffer);
-    } catch (std::exception& e){
-        DiskHelper::printErr(e.what());
+        if (s.logIn(username,password)) {mainMenu();}
+    } catch (std::runtime_error& e){
+        printErr(e.what());
+        logIn();
     }
+}
+
+void UI::signUp(){
+    std::string username;
+    std::string password;
+    std::string passwordCheck;
+    
+    printHeader("Account Creator");
+    do {
+        takeInput("Enter a username: ", username);
+    } while (!s.isUniqueUsername(username));
+
+    do {
+        takeInput("Create a password: ", password);
+        takeInput("Confirm password: ", passwordCheck);
+        if (password != passwordCheck)
+            {printErr("Passwords do not match");}
+    } while (!(password != passwordCheck));
+
+    try { s.createUser(username, password);
+    } catch (std::runtime_error& e) {
+        printErr(e.what());
+        signUp();
+    }
+
+}
+
+// INPUT HANDLING =============================== //
+std::string UI::takeInput(std::string_view prefix){
+    std::string buffer;
+    print(prefix);
+
+    std::getline(std::cin >> std::ws, buffer);
+
+    // try {
+    //     std::getline(std::cin >> std::ws, buffer);
+    // } catch (std::exception& e){
+    //     printErr(e.what());
+    //     takeInput(prefix);
+    //     resetInputStream(std::cin);
+    // }
     return buffer;
 }
 
-size_t takeUIntInput(){
-    std::string buffer {takeInput()};
+void UI::resetInputStream(std::istream& in){
+    // Clear failbit/badbit flags
+    in.clear();
+    // Discard the rest of the stream
+    in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+std::size_t UI::takeUIntInput(std::string_view prefix){
+    std::string buffer {takeInput(prefix)};
     const short base {10};
     std::size_t convertedUInt{0};
+
     try{
 		convertedUInt = std::stoul(buffer.c_str(),nullptr, base);
-	} catch (std::exception& e){
-        DiskHelper::printErr(e.what());
+	} catch (std::invalid_argument& e){
+        printErr("Invalid argument");
+        convertedUInt = takeUIntInput(prefix);
+    } catch (std::exception& e){
+        printErr("Exception reached");
+        printErr(e.what());
+        convertedUInt = takeUIntInput(prefix);
     }
     return convertedUInt;
 }
 
-// AUTH ========================================= //
-bool logIn(){
-    while (true) {
-        try {
-            cout << "Please enter your username: ";
-            std::string username {takeInput()};
-            cout << "Please enter your password: ";
-            std::string password {takeInput()};
-
-        } catch (std::exception& e){
-            DiskHelper::printErr(e.what());
-        }
-        break;
+bool UI::takeBoolInput(std::string_view prefix){
+    std::string input {takeInput(prefix)};
+    std::string preConversion;
+    bool postConversion {false};
+    if (input == "y" || input == "Y" || input == "Yes" || input == "yes"){
+        preConversion = "true";
     }
-    s.createUser(username,password);
-    return true;
+    else if (input == "n" || input == "N" || input == "No" || input == "no"){
+        preConversion = "false";
+    }
+
+    try{
+        postConversion = DiskHelper::strToBool(preConversion);
+    }
+    catch(std::runtime_error& e){
+        printErr(e.what());
+        takeBoolInput(prefix);
+    }
+    return postConversion;
 }
 
-void signUp(){
-    logIn(); //disk stuff that need to be done
+std::string UI::takeInput(std::string_view prefix, std::string& buffer){
+    std::string input {takeInput(prefix)};
+    buffer = input;
+    return buffer;
+}
+
+std::size_t UI::takeUIntInput(std::string_view prefix, std::size_t& buffer){
+    std::size_t input {takeUIntInput(prefix)};
+    buffer = input;
+    return buffer;
+}
+
+bool UI::takeBoolInput(std::string_view prefix, bool& buffer){
+    bool input {takeBoolInput(prefix)};
+    buffer = input;
+    return buffer;
 }
 
 // SORTING ========================================= //
-vector<Log*> sortID(vector<Log*> inputs){
+vector<Log*> UI::sortID(vector<Log*> inputs){
     vector<Log*> outputs;
 
     int size = inputs.size();
@@ -177,7 +282,7 @@ vector<Log*> sortID(vector<Log*> inputs){
     return outputs;
 }
 
-vector<Log*> sortDuration(vector<Log*> logs){
+vector<Log*> UI::sortDuration(vector<Log*> logs){
     vector<Log*> outputs;
 
     int size = logs.size();
@@ -195,10 +300,29 @@ vector<Log*> sortDuration(vector<Log*> logs){
     return outputs;
 }
 
-void loadLog(int logSelect){
+void UI::loadLog(int logSelect){
 
 }
 
-void sortLogs(){
+void UI::sortLogs(){
 
 }
+
+
+// PRINTING ======================================== //
+void UI::print(std::string_view buffer){
+    std::cout << buffer;
+}
+
+void UI::printl(std::string_view buffer){
+    std::cout << buffer << '\n';
+}
+
+void UI::printErr(std::string_view buffer){
+    DiskHelper::printErr(buffer);
+}
+
+void UI::printHeader(std::string_view buffer){
+    std::cout << '\n' << "===" << " " << buffer << " " << '\n';
+}
+

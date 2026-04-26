@@ -2,26 +2,67 @@
 #define UI_H
 #include "State.h"
 
-int ui(State& s);
-int startupMenu();
-bool logIn();
-void signUp();
-int mainMenu();
-int logMenu(int page);
-void loadLog(int log);
-void sortLogs();
-void editLog();
-void deleteLog();
-void addLog();
-int userSettings();
-void changeUsername();
-void changePassword();
-void deleteAccount();
-std::vector<Log*> sortID(std::vector<Log*> logs);
-std::vector<Log*> sortDuration(std::vector<Log*> logs);
-std::string takeInput();
-size_t takeUIntInput();
+class UI {
+    State s;
+    User u;
+    int menu {0};
+    int page {1};
+    bool loop {true};
 
+public:
+    UI(std::string path);
+    void run();
+
+private:
+
+    // Menus: Select a page to navigate to
+    int startupMenu();
+    int mainMenu();
+    int logMenu();
+
+    // pages
+    void logIn(); 
+    void signUp();
+    bool exit(); // signals to the run() function that it should end
+
+    //void choosePage(int menu);
+    void loadLog(int log);
+    void sortLogs();
+    void editLog();
+    void deleteLog();
+    void addLog();
+    int userSettings();
+    void changeUsername();
+    void changePassword();
+    void deleteAccount();
+
+    // Input Handling
+    static std::string takeInput(std::string_view prefix);
+    static void resetInputStream(std::istream& i);
+
+    static std::size_t takeUIntInput(std::string_view prefix);
+    static bool takeBoolInput(std::string_view prefix);
+    static std::string takeInput(std::string_view prefix, std::string& buffer);
+    static std::size_t takeUIntInput(std::string_view prefix, std::size_t& buffer);
+    static bool takeBoolInput(std::string_view prefix, bool& buffer);
+
+    // Sorting
+    static std::vector<Log*> sortID(std::vector<Log*> logs);
+    static std::vector<Log*> sortDuration(std::vector<Log*> logs);
+
+    // Printing
+    static void print(std::string_view); 
+    static void printl(std::string_view);
+    static void printErr(std::string_view);
+    static void printHeader(std::string_view);
+
+
+    enum Startup{
+        LOGIN,
+        SIGNUP,
+        EXIT,
+    };
+};
 
 
 #endif

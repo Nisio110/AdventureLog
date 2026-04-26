@@ -113,19 +113,44 @@ int userSettings(){
     return choice;
 }
 
-std::string takeUserInput(){
+std::string takeInput(){
     std::string buffer;
     // Skips trailing whitespace
-    while (!std::getline(std::cin >> std::ws, buffer));
+    try {
+        std::getline(std::cin >> std::ws, buffer);
+    } catch (std::exception& e){
+        DiskHelper::printErr(e.what());
+    }
     return buffer;
+}
+
+size_t takeUIntInput(){
+    std::string buffer {takeInput()};
+    const short base {10};
+    std::size_t convertedUInt{0};
+    try{
+		convertedUInt = std::stoul(buffer.c_str(),nullptr, base);
+	} catch (std::exception& e){
+        DiskHelper::printErr(e.what());
+    }
+    return convertedUInt;
 }
 
 // AUTH ========================================= //
 bool logIn(){
-    cout << "Please enter your username: ";
-    cout << endl;
-    cout << "Please enter your password: ";
-    cout << endl;
+    while (true) {
+        try {
+            cout << "Please enter your username: ";
+            std::string username {takeInput()};
+            cout << "Please enter your password: ";
+            std::string password {takeInput()};
+
+        } catch (std::exception& e){
+            DiskHelper::printErr(e.what());
+        }
+        break;
+    }
+    s.createUser(username,password);
     return true;
 }
 

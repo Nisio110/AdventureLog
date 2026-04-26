@@ -1,5 +1,6 @@
 #include "../include/State.h"
 #include "UI.h"
+#include <iostream>
 
 void State::setUsers(std::vector<User*> u){
     users = u;
@@ -104,10 +105,39 @@ void State::save(){
 }
 
 State::State(std::string path) : disk(path) {
-    loadSave(path);
+    while (true) {
+        try {
+            loadSave(path);
+            break;
+        } catch (DiskAccessError& e) {
+            while(true){
+                DiskHelper::printErr(e.what());
+                std::cout << "Enter the path to a valid save file: ";
+                if (std::getline(std::cin, path)){
+                    break;
+                }
+            }
+        }
+    }
     ui(*this);
 }
 
 State::~State(){
-    save();
+    while(true){
+        try {
+            save();
+        } catch (DiskAccessError& e){
+            std::cout << "Enter the path to a valid save file: ";
+            std::string path;
+            std::getline(std::cin, path);
+            disk.setFilePath(path);
+        } catch (std::exception& e){
+            DiskHelper::printErr(e.what());
+        }
+    }
+}
+
+void State::createUser(std::string username, std::string password){
+    User* u = new User(username, password);
+    addUser(u);
 }

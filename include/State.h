@@ -13,6 +13,7 @@ public:
 
     void addUser(User* u);
     void removeUser(User* u);
+    void createUser(std::string username, std::string password);
 
     void loadSave(std::string path);
     void printAll();

@@ -1,28 +1,32 @@
-#include <iostream>
 #include "../include/UI.h"
+#include <iostream>
 
-using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
+using std::vector;
 
+// MAIN UI LOOP ========================================= //
 int ui(State& s){
-    int choice=-1;
-    int log=-1;
-    int page=1;
-    bool loop=1;
-    int menu=0;
-    while (loop==1) {
+    int choice {-1};
+    int log {-1};
+    int page {1};
+    bool loop {true};
+    int menu = 0;
+    while (loop) {
         switch (menu) {
             case 0:
                 choice = startupMenu();
                 switch (choice){
                     case 1:
                         if (logIn()) { //some bool stuff here will need tweaks when the actual loginchecks are implemented
-                            menu=1;
+                            menu = 1;
                         }
-                        else{menu=0;}
+                        else { menu = 0; }
                         break;
                     case 2:
                         signUp();
-                        menu=1;
+                        menu = 1;
                         break;
                     case 3:
                         s.save();
@@ -32,20 +36,21 @@ int ui(State& s){
                         cout << "**Invalid Input: Please choose a valid option**" << endl;
                 }
                 break;
-    
+
             case 1:
                 choice = mainMenu();
-                switch(choice){
-                    case 1: menu=2;
-                    case 2: menu=3;
-                    case 3: menu=0;
-                    default:cout << "**Invalid Input: Please choose a valid option**" << endl;
+                switch (choice){
+                    case 1: menu = 2;
+                    case 2: menu = 3;
+                    case 3: menu = 0;
+                    default: cout << "**Invalid Input: Please choose a valid option**" << endl;
                 }
                 break;
+
             case 2:
                 choice = logMenu(page);
-                log=choice;
-                switch(choice){
+                log = choice;
+                switch (choice){
                     case 1: loadLog(log);
                     case 2: loadLog(log);
                     case 3: loadLog(log);
@@ -53,35 +58,70 @@ int ui(State& s){
                     case 5: loadLog(log);
                     case 6: loadLog(log);
                     case 7: page++;
-                    case 8: if (page>1) {page--;}
-                    case 9: menu=1;
+                    case 8: if (page > 1) { page--; }
+                    case 9: menu = 1;
                     case 0: sortLogs();
-                    default:cout << "**Invalid Input: Please choose a valid option**" << endl;
+                    default: cout << "**Invalid Input: Please choose a valid option**" << endl;
                 }
                 break;
-
-
         }
     }
     cout << "Good job you deserve a cookie";
     return 0;
 }
 
-int startupMenu()
-{
+// MENUS ========================================= //
+int startupMenu(){
     int choice;
-    cout << "Welcome to the Adventure Log System" << endl 
-         << "Please choose an option" << endl
-         << "1: Log in" << endl
-         << "2: Sign up" << endl
-         << "3: Exit" << endl
+    cout << "Welcome to the Adventure Log System" << endl
+         << "Please choose an option"             << endl
+         << "1: Log in"                           << endl
+         << "2: Sign up"                          << endl
+         << "3: Exit"                             << endl
          << "Select Option: ";
     cin >> choice;
     return choice;
-};
+}
 
-bool logIn()
-{
+int mainMenu(){
+    int choice;
+    cout << "Main Menu"        << endl
+         << "1: View Logs"     << endl
+         << "2: Add Logs"      << endl
+         << "3: User Settings" << endl
+         << "4: Logout"        << endl
+         << "Select Option: ";
+    cin >> choice;
+    return choice;
+}
+
+int logMenu(int p){
+    int choice{-1};
+    cout << "Page: " << p << endl;
+    return choice;
+}
+
+int userSettings(){
+    int choice;
+    cout << "User Settings"        << endl
+         << "1: Change Username"   << endl
+         << "2: Change Password"   << endl
+         << "3: Delete Account"    << endl
+         << "4: Back to Main Menu" << endl
+         << "Select Option: ";
+    cin >> choice;
+    return choice;
+}
+
+std::string takeUserInput(){
+    std::string buffer;
+    // Skips trailing whitespace
+    while (!std::getline(std::cin >> std::ws, buffer));
+    return buffer;
+}
+
+// AUTH ========================================= //
+bool logIn(){
     cout << "Please enter your username: ";
     cout << endl;
     cout << "Please enter your password: ";
@@ -89,48 +129,14 @@ bool logIn()
     return true;
 }
 
-void signUp()
-{
+void signUp(){
     logIn(); //disk stuff that need to be done
 }
 
-int mainMenu()
-{
-    int choice;
-    cout << "Main Menu" << endl
-         << "1: View Logs" << endl
-         << "2: Add Logs" << endl
-         << "3: User Settings" << endl
-         << "4: Logout" << endl
-         << "Select Option: ";
-    cin >> choice;
-    return choice;
-}
-
-int logMenu(int p)
-{
-    int choice{-1};
-    cout << "Page: " << p << endl;
-    return choice;
-}
-
-int userSettings()
-{
-    int choice;
-    cout << "User Settings" << endl
-         << "1: Change Username" << endl
-         << "2: Change Password" << endl
-         << "3: Delete Account" << endl
-         << "4: Back to Main Menu" << endl
-         << "Select Option: ";
-    cin >> choice;
-    return choice;
-}
-
-vector<Log*> sortID(vector<Log*> inputs)
-{
+// SORTING ========================================= //
+vector<Log*> sortID(vector<Log*> inputs){
     vector<Log*> outputs;
-    
+
     int size = inputs.size();
     int position = size;
     Log* pivot = inputs.at(0);
@@ -138,17 +144,17 @@ vector<Log*> sortID(vector<Log*> inputs)
         for (int counter{1}; counter < position; ++counter){
             Log* test = inputs.at(counter);
             if (Log::sortByID(pivot, test));{
-                pivot=test;
+                pivot = test;
             }
         }
-        outputs.at(position)=pivot;
+        outputs.at(position) = pivot;
     }
     return outputs;
 }
 
-std::vector<Log*> sortDuration(std::vector<Log*> logs){
+vector<Log*> sortDuration(vector<Log*> logs){
     vector<Log*> outputs;
-    
+
     int size = logs.size();
     int position = size;
     Log* pivot = logs.at(0);
@@ -156,10 +162,10 @@ std::vector<Log*> sortDuration(std::vector<Log*> logs){
         for (int counter{1}; counter < position; ++counter){
             Log* test = logs.at(counter);
             if (Log::sortByDuration(pivot, test));{
-                pivot=test;
+                pivot = test;
             }
         }
-        outputs.at(position)=pivot;
+        outputs.at(position) = pivot;
     }
     return outputs;
 }

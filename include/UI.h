@@ -21,16 +21,16 @@ private:
     int logMenu();
 
     // pages
+    bool exit(bool forceQuit = 0); // signals to the run() function that it should end
     bool logIn(); 
     bool signUp();
-    bool exit(); // signals to the run() function that it should end
+    void viewLog(size_t logSelector);
+    void logCreator();
+    void deleteLog();
+    void editLog();
 
     //void choosePage(int menu);
-    void viewLog(size_t logSelector);
     void sortLogs();
-    void editLog();
-    void deleteLog();
-    void addLog();
     int userSettings();
     void changeUsername();
     void changePassword();
@@ -58,30 +58,37 @@ private:
 
 
     enum Startup{
-        LOGIN,
-        SIGNUP,
-        EXIT,
+        LOGIN = 0,
+        SIGNUP = 1,
+        EXIT = 2,
     };
 
     enum Main{
-        VIEW_LOGS,
-        ADD_LOG,
-        SETTINGS,
-        LOGOUT
+        VIEW_LOGS = 0,
+        ADD_LOG = 1,
+        SETTINGS = 2,
+        LOGOUT = 3
     };
 
     enum Logs{
-        LOG1,
-        LOG2,
-        LOG3,
-        LOG4,
-        LOG5,
-        LOG6,
-        NEXT_PAGE,
-        PREV_PAGE,
-        MAIN_MENU,
-        SORT_MENU
-    }
+        LOG1 = 0,
+        LOG2 = 1,
+        LOG3 = 2,
+        LOG4 = 3,
+        LOG5 = 4,
+        LOG6 = 5,
+        SORT_MENU = 6,
+        MAIN_MENU = 7,
+        PREV_PAGE = 8,
+        NEXT_PAGE = 9,
+    };
+
+    enum ViewLog{
+        LOG_OVERVIEW,
+        EDIT_LOG,
+        DELETE_LOG,
+        EXIT_PROGRAM
+    };
 };
 
 

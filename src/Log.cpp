@@ -129,7 +129,7 @@ void CaveLog::print(){
     else _srtCave = neg;
 
 
-    cout << div(1) << " Log #" << getId() << " - Cave " << div(2) << '\n'
+    cout << div(1) << " Log #" << getId() << " - Cave " << '\n'
          << "Cave        : " << getName()         << "\n"
          << "Date        : " << getDate()         << "\n"
          << "SRT Cave    : " << _srtCave          << "\n"
@@ -145,9 +145,9 @@ void CaveLog::print(){
             p->print();
         }
 
-    cout << div(3)                                << "\n"
+    cout << div(2)                                << "\n"
          << "Notes : " << "\n" << getNote()       << "\n"
-         << div(3)                                << "\n\n";
+         << div(2)                                << "\n\n";
 }
 
 CaveLog::CaveLog(){}
@@ -173,7 +173,7 @@ void HikeLog::setWeather(string w){ weather = w; }
 
 void HikeLog::print(){
     using namespace Tests;
-    cout << div(1) << " Log #" << getId() << " - Hike " << div(2) << '\n'
+    cout << div(1) << " Log #" << getId() << " - Hike " << '\n'
          << "Date        : " << getDate()         << "\n"
          << "Area        : " << getArea()         << "\n"
          << "Distance    : " << getDist()         << "\n"
@@ -184,9 +184,9 @@ void HikeLog::print(){
     for (auto p : getParticipants())
         { p->print(); }
 
-    cout << div(3)                                << "\n"
+    cout << div(2)                                << "\n"
          << "Notes : " << "\n" << getNote()       << "\n"
-         << div(3)                                << "\n\n";
+         << div(2)                                << "\n\n";
 }
 
 HikeLog::HikeLog(){}

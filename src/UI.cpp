@@ -22,32 +22,41 @@ void UI::run(){
         bool signedUp {false};
         switch (pageSelect){
             using enum Startup;
-            case LOGIN:
-                pageSelect = placeholder;
-                do{loggedIn = logIn();
-                } while (!logIn());
-                if (loggedIn) {mainMenu();}
-                break;
             case SIGNUP:
                 pageSelect = placeholder;
                 do{signedUp = signUp();
-                } while(!signUp());
+                } while(!signedUp);
                 if (signedUp) {startupMenu();}
                 break;
             case EXIT:
                 pageSelect = placeholder;
                 if (exit()) quit = exit();
                 break;
-        }
+            case LOGIN:
+                pageSelect = placeholder;
+                do{ loggedIn = logIn();
+                } while (!loggedIn);
 
+                if (loggedIn) {
+                    switch (mainMenu()){
+                        case VIEW_LOGS: logMenu();
+                        case ADD_LOG: logCreator();
+                        case SETTINGS: userSettings();
+                        case LOGOUT: quit = exit();
+                    }
+                }
+                break;
+        }
     }
 }
 
 // MENUS ========================================= //
-bool UI::exit(){
+bool UI::exit(bool forceQuit){
     bool confirmation {false};
     printHeader("Exit");
     takeBoolInput("Are you sure? [Y/n]: ", confirmation);
+    if (forceQuit == true)
+        {std::terminate();}
     return confirmation;
 }
 
@@ -94,7 +103,7 @@ bool UI::logIn(){
         printErr(e.what());
         return false;
     }
-
+    return false;
 }
 
 bool UI::signUp(){
@@ -146,48 +155,81 @@ int UI::mainMenu(){
 int UI::logMenu(){
     using enum Logs;
     User* user = s.getCurrentUser();
-    std::vector<Log*> logs {user->getLogs()};
     size_t selectedChoice{0};
     size_t log{0};
     const short shownLogs{6};
     size_t currentPage{1};
-    size_t numPages = std::ceil((user->getLogs().size()) / shownLogs);
 
+    while(true){
+    std::vector<Log*> logs {user->getLogs()};
+    size_t numPages = std::ceil((user->getLogs().size()) / shownLogs);
+    size_t numLogs {logs.size()};
 
     printHeader("Logs Overview");
-    
-    log = (currentPage - 1) * shownLogs; // tie log selector to the current page.
-    std::cout << LOG1 << ": " << *logs.at(log) << '\n'
-              << LOG2 << ": " << *logs.at(++log) << '\n'
-              << LOG3 << ": " << *logs.at(++log) << '\n'
-              << LOG4 << ": " << *logs.at(++log) << '\n'
-              << LOG5 << ": " << *logs.at(++log) << '\n'
-              << LOG6 << ": " << *logs.at(++log) << '\n'
-              << NEXT_PAGE << ": Next page\n"
-              << PREV_PAGE << ": Previous page\n"
-              << MAIN_MENU << ": Main menu\n"
-              << SORT_MENU << ": Sort logs\n";
-    takeUIntInput("Select an option", selectedChoice);
+        log = (currentPage - 1) * shownLogs; // tie log selector to the current page.
+        std::cout << "- Page " << currentPage << '\n';
+        if (log < numLogs)
+            {std::cout << LOG1 << ": Log " << logs.at(log)->getDate() << '\n';}
+        else std::cout << LOG1 << ": - - -\n";
+        if (log+1 < numLogs)
+            {std::cout << LOG2 << ": Log " << logs.at(++log)->getDate() << '\n';}
+        else std::cout << LOG2 << ": - - -\n";
+        if (log+1 < numLogs)
+            {std::cout << LOG3 << ": Log " << logs.at(++log)->getDate() << '\n';}
+        else std::cout << LOG3 << ": - - -\n";
+        if (log+1 < numLogs)
+            {std::cout << LOG4 << ": Log " << logs.at(++log)->getDate() << '\n';}
+        else std::cout << LOG4 << ": - - -\n";
+        if (log+1 < numLogs)
+            {std::cout << LOG5 << ": Log " << logs.at(++log)->getDate() << '\n';}
+        else std::cout << LOG5 << ": - - -\n";
+        if (log+1 < numLogs)
+            {std::cout << LOG6 << ": Log " << logs.at(++log)->getDate() << '\n';}
+        else std::cout << LOG6 << ": - - -\n";
 
-    log = (currentPage - 1) * shownLogs; // tie log selector to the current page.
-    switch (selectedChoice){
-        case LOG1: viewLog(log);
-        case LOG2: viewLog(++log);
-        case LOG3: viewLog(++log);
-        case LOG4: viewLog(++log);
-        case LOG5: viewLog(++log);
-        case LOG6: viewLog(++log);
-        case NEXT_PAGE: ++currentPage;
-        case PREV_PAGE: if (page > 1) { page--; }
-        case MAIN_MENU: mainMenu();
-        case SORT_MENU: sortLogs();
-        default: printErr("Invalid selection");
+        std::cout << SORT_MENU << ": Sort logs\n";
+        std::cout << MAIN_MENU << ": Main menu\n";
+        std::cout << PREV_PAGE << ": Previous page\n";
+        std::cout << NEXT_PAGE << ": Next page\n";
+        takeUIntInput("Select an option: ", selectedChoice);
+
+        log = (currentPage - 1) * shownLogs; // tie log selector to the current page.
+        switch (selectedChoice){
+            case LOG1: 
+                viewLog(LOG1);
+                break;
+            case LOG2:
+                viewLog(LOG2);
+                break;
+            case LOG3:
+                viewLog(LOG3);
+                break;
+            case LOG4:
+                viewLog(LOG4);
+                break;
+            case LOG5:
+                viewLog(LOG5);
+                break;
+            case LOG6:
+                viewLog(LOG6);
+                break;
+            case NEXT_PAGE: 
+                ++currentPage;
+                break;
+            case PREV_PAGE: 
+                if (page > 1) { page--; }
+                break;
+            case MAIN_MENU: 
+                mainMenu();
+                break;
+            case SORT_MENU: 
+                sortLogs();
+                break;
+            default: 
+                printErr("Invalid selection");
+        }
     }
-    cout << "Page: " << page << '\n';
-    
     return 0;
-
-    // TODO: Figure out what the fuck is going on here
 }
 
 int UI::userSettings(){
@@ -205,13 +247,48 @@ int UI::userSettings(){
 }
 
 void UI::viewLog(size_t logSelect){
+    using enum ViewLog;
+    printHeader("Log Viewer");
     std::vector<Log*> logs = s.getCurrentUser()->getLogs();
     logs.at(logSelect)->print();
+    
+    std::cout << "- Options\n";
+    std::cout << LOG_OVERVIEW << ": Back to log overview\n";
+    std::cout << EDIT_LOG << ": Edit log\n";
+    std::cout << DELETE_LOG << ": Delete log\n";
+    std::cout << EXIT_PROGRAM << ": Exit program\n";
+
+    size_t selectedChoice{0};
+    takeUIntInput("Select option: ", selectedChoice);
+
+    switch (selectedChoice){
+        case LOG_OVERVIEW:
+            return;
+        case EDIT_LOG:
+            editLog();
+        case DELETE_LOG:
+            deleteLog();
+        case EXIT_PROGRAM:
+            exit(true);
+    }
+
     // TODO: Add options
     // 0) Go back to log overview
     // 1) Edit log
     // 2) Delete log
     // 3) Exit program
+}
+
+void UI::logCreator(){
+    // Placeholder
+}
+
+void UI::editLog(){
+    // Placeholder
+}
+
+void UI::deleteLog(){
+    // Placeholder
 }
 
 // INPUT HANDLING =============================== //
@@ -354,4 +431,3 @@ void UI::printErr(std::string_view buffer){
 void UI::printHeader(std::string_view buffer){
     std::cout << '\n' << "===" << " " << buffer << " " << '\n';
 }
-

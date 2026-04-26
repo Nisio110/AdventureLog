@@ -5,6 +5,7 @@
 class State{
     std::vector<User*> users;
     Disk disk;
+    User* currentUser;
     static inline std::string defaultDiskPath {"disk.yaml"};
 
 public:
@@ -16,6 +17,8 @@ public:
     void createUser(std::string username, std::string password);
     bool logIn(std::string username,std::string password);
     bool isUniqueUsername(std::string);
+    inline User* getCurrentUser() {return currentUser;}
+    inline void setCurrentUser(User* u){currentUser = u;}
 
     void loadSave(std::string path);
     void printAll();

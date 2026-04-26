@@ -1,6 +1,7 @@
 #include "../include/UI.h"
 #include <iostream>
 #include <limits>
+#include <cmath>
 
 using std::cin;
 using std::cout;
@@ -17,18 +18,25 @@ void UI::run(){
 
     while (!quit) {
         pageSelect = startupMenu();
+        bool loggedIn {false};
+        bool signedUp {false};
         switch (pageSelect){
             using enum Startup;
             case LOGIN:
                 pageSelect = placeholder;
-                logIn();
+                do{loggedIn = logIn();
+                } while (!logIn());
+                if (loggedIn) {mainMenu();}
+                break;
             case SIGNUP:
                 pageSelect = placeholder;
-                signUp();
+                do{signedUp = signUp();
+                } while(!signUp());
+                if (signedUp) {startupMenu();}
                 break;
             case EXIT:
                 pageSelect = placeholder;
-                quit = exit();
+                if (exit()) quit = exit();
                 break;
         }
 
@@ -36,27 +44,6 @@ void UI::run(){
 }
 
 // MENUS ========================================= //
-// void UI::choosePage(int page){
-//     switch (page){
-//         case Page::STARTUP: 
-//             startupMenu();
-//             break;
-//         case Page::MAIN:
-//             mainMenu();
-//             break;
-//         case Page::LOGS:
-//             logMenu();
-//             break;
-//         case Page::SIGNUP:
-//             signUp();
-//             break;
-//         case Page::LOGIN:
-//             logIn();
-//             break;
-        
-//     }
-// }
-
 bool UI::exit(){
     bool confirmation {false};
     printHeader("Exit");
@@ -82,66 +69,16 @@ int UI::startupMenu(){
 
         takeUIntInput("Select option: ", pageChoice);
 
-        if (pageChoice > numChoices) {
+        if (pageChoice >= numChoices) {
             printErr("Invalid page choice");
             std::cout << '\n';
         }
-    } while (pageChoice > numChoices);
+    } while (pageChoice >= numChoices);
     return pageChoice;
 }
 
-int UI::mainMenu(){
-    int choice;
-    cout << "Main Menu"        << endl
-         << "1: View Logs"     << endl
-         << "2: Add Logs"      << endl
-         << "3: User Settings" << endl
-         << "4: Logout"        << endl
-         << "Select Option: ";
-    cin >> choice;
-    return choice;
-    
-    // TODO: Add switch statement for each case
-}
-
-int UI::logMenu(){
-    int choice{-1};
-    int log{0}; // placeholder
-    switch (choice){
-        case 1: loadLog(log);
-        case 2: loadLog(log);
-        case 3: loadLog(log);
-        case 4: loadLog(log);
-        case 5: loadLog(log);
-        case 6: loadLog(log);
-        case 7: page++;
-        case 8: if (page > 1) { page--; }
-        case 9: menu = 1;
-        case 0: sortLogs();
-        default: cout << "**Invalid Input: Please choose a valid option**" << endl;
-    }
-    cout << "Page: " << page << endl;
-    return choice;
-
-    // TODO: Figure out what the fuck is going on here
-}
-
-int UI::userSettings(){
-    int choice;
-    cout << "User Settings"        << endl
-         << "1: Change Username"   << endl
-         << "2: Change Password"   << endl
-         << "3: Delete Account"    << endl
-         << "4: Back to Main Menu" << endl
-         << "Select Option: ";
-    cin >> choice;
-    return choice;
-
-    // TODO: Add switch statement for each case.
-}
-
 // AUTH ========================================= //
-void UI::logIn(){
+bool UI::logIn(){
     printHeader("Login Menu");
     std::string username;
     std::string password;
@@ -150,14 +87,17 @@ void UI::logIn(){
     takeInput("Enter password: ", password);
 
     try {
-        if (s.logIn(username,password)) {mainMenu();}
+        if (s.logIn(username,password)) {
+            return true;
+        }
     } catch (std::runtime_error& e){
         printErr(e.what());
-        logIn();
+        return false;
     }
+
 }
 
-void UI::signUp(){
+bool UI::signUp(){
     std::string username;
     std::string password;
     std::string passwordCheck;
@@ -177,9 +117,101 @@ void UI::signUp(){
     try { s.createUser(username, password);
     } catch (std::runtime_error& e) {
         printErr(e.what());
-        signUp();
+        return false;
     }
+    return true;
+}
 
+// MENUS ========================================= //
+int UI::mainMenu(){
+    using enum Main;
+    size_t pageChoice{0};
+    size_t numChoices{4};
+
+    printHeader("Main Menu");
+    do {
+        std::cout << VIEW_LOGS << ": View Logs"     << '\n'
+                  << ADD_LOG  << ": Add Log"      << '\n'
+                  << SETTINGS  << ": User Settings" << '\n'
+                  << LOGOUT    << ": Logout"        << '\n';
+        takeUIntInput("Select Option: ", pageChoice);
+        if (pageChoice >= numChoices){
+            printErr("Invalid page choice");
+            std::cout << '\n';
+        }
+    } while(pageChoice >= numChoices);
+    return pageChoice;
+}
+
+int UI::logMenu(){
+    using enum Logs;
+    User* user = s.getCurrentUser();
+    std::vector<Log*> logs {user->getLogs()};
+    size_t selectedChoice{0};
+    size_t log{0};
+    const short shownLogs{6};
+    size_t currentPage{1};
+    size_t numPages = std::ceil((user->getLogs().size()) / shownLogs);
+
+
+    printHeader("Logs Overview");
+    
+    log = (currentPage - 1) * shownLogs; // tie log selector to the current page.
+    std::cout << LOG1 << ": " << *logs.at(log) << '\n'
+              << LOG2 << ": " << *logs.at(++log) << '\n'
+              << LOG3 << ": " << *logs.at(++log) << '\n'
+              << LOG4 << ": " << *logs.at(++log) << '\n'
+              << LOG5 << ": " << *logs.at(++log) << '\n'
+              << LOG6 << ": " << *logs.at(++log) << '\n'
+              << NEXT_PAGE << ": Next page\n"
+              << PREV_PAGE << ": Previous page\n"
+              << MAIN_MENU << ": Main menu\n"
+              << SORT_MENU << ": Sort logs\n";
+    takeUIntInput("Select an option", selectedChoice);
+
+    log = (currentPage - 1) * shownLogs; // tie log selector to the current page.
+    switch (selectedChoice){
+        case LOG1: viewLog(log);
+        case LOG2: viewLog(++log);
+        case LOG3: viewLog(++log);
+        case LOG4: viewLog(++log);
+        case LOG5: viewLog(++log);
+        case LOG6: viewLog(++log);
+        case NEXT_PAGE: ++currentPage;
+        case PREV_PAGE: if (page > 1) { page--; }
+        case MAIN_MENU: mainMenu();
+        case SORT_MENU: sortLogs();
+        default: printErr("Invalid selection");
+    }
+    cout << "Page: " << page << '\n';
+    
+    return 0;
+
+    // TODO: Figure out what the fuck is going on here
+}
+
+int UI::userSettings(){
+    int choice;
+    cout << "User Settings"        << endl
+         << "1: Change Username"   << endl
+         << "2: Change Password"   << endl
+         << "3: Delete Account"    << endl
+         << "4: Back to Main Menu" << endl
+         << "Select Option: ";
+    cin >> choice;
+    return choice;
+
+    // TODO: Add switch statement for each case.
+}
+
+void UI::viewLog(size_t logSelect){
+    std::vector<Log*> logs = s.getCurrentUser()->getLogs();
+    logs.at(logSelect)->print();
+    // TODO: Add options
+    // 0) Go back to log overview
+    // 1) Edit log
+    // 2) Delete log
+    // 3) Exit program
 }
 
 // INPUT HANDLING =============================== //
@@ -300,9 +332,6 @@ vector<Log*> UI::sortDuration(vector<Log*> logs){
     return outputs;
 }
 
-void UI::loadLog(int logSelect){
-
-}
 
 void UI::sortLogs(){
 

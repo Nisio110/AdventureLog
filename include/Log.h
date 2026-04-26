@@ -3,6 +3,7 @@
 #include "Participant.h"
 #include <string>
 #include <vector>
+#include <iosfwd>
 class User;
 
 class Log{
@@ -53,6 +54,7 @@ public :
     static bool sortByID(Log* log1, Log* log2);
     static bool sortByDuration(Log* log1, Log* log2);
 
+    friend std::ostream& operator<<(std::ostream& os, Log& log);
 };
 
 class CaveLog : public Log {

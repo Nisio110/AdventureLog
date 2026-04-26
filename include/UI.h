@@ -21,12 +21,12 @@ private:
     int logMenu();
 
     // pages
-    void logIn(); 
-    void signUp();
+    bool logIn(); 
+    bool signUp();
     bool exit(); // signals to the run() function that it should end
 
     //void choosePage(int menu);
-    void loadLog(int log);
+    void viewLog(size_t logSelector);
     void sortLogs();
     void editLog();
     void deleteLog();
@@ -62,6 +62,26 @@ private:
         SIGNUP,
         EXIT,
     };
+
+    enum Main{
+        VIEW_LOGS,
+        ADD_LOG,
+        SETTINGS,
+        LOGOUT
+    };
+
+    enum Logs{
+        LOG1,
+        LOG2,
+        LOG3,
+        LOG4,
+        LOG5,
+        LOG6,
+        NEXT_PAGE,
+        PREV_PAGE,
+        MAIN_MENU,
+        SORT_MENU
+    }
 };
 
 

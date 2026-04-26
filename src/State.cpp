@@ -151,6 +151,7 @@ bool State::logIn(std::string username, std::string password){
         if (username == user->getName()){
             if (password == user->getPasswd()){
                 authenticated = true;
+                setCurrentUser(user);
                 break;
             }
             throw std::runtime_error {"Incorrect Password"};

@@ -100,6 +100,11 @@ bool Log::sortByDuration(Log* log1, Log* log2){
     return (log1->getDurationMins() < log2->getDurationMins());
 }
 
+std::ostream& operator<<(std::ostream& os, Log& log){
+    log.print();
+    return os;
+}
+
 // CAVELOG CLASS ========================================= //
 string CaveLog::getName(){ return name; }
 bool CaveLog::isSRTCave(){ return isSRT; }

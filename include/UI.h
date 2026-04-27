@@ -48,9 +48,12 @@ private:
     static size_t takeMCQ(std::vector<std::string> choices);
     void openPage(size_t pageNum, size_t oldPage = 0);
 
-    // Sorting
+public:
+    // Sorting — pure utilities on a Log* vector, exposed for unit testing.
     static std::vector<Log*> sortID(std::vector<Log*> logs);
     static std::vector<Log*> sortDuration(std::vector<Log*> logs);
+
+private:
 
     // Printing
     static void print(std::string_view); 

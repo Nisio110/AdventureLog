@@ -6,9 +6,19 @@ A personal C++ logger for caving and hiking trips. Single-user CLI app that load
 
 - **CMake** (min 3.25), generator is Unix Makefiles (the CMake default on Linux) in [build/](../build/).
 - **C++26**, compiled with `g++` and `-Werror`.
-- `file(GLOB src/*.cpp)` picks up all sources — adding a new `.cpp` under [src/](../src/) requires re-running cmake configure.
+- Sources are split into a static library `AdventureLogLib` (everything under `src/` except `Main.cpp`) plus the `AdventureLog` executable. The library exists so the test binary can link the project's code without a duplicate `main()`.
+- `file(GLOB src/*.cpp)` picks up all sources — adding a new `.cpp` under [src/](../src/) or [tests/](../tests/) requires re-running cmake configure.
+- **Tests** use GoogleTest, fetched via `FetchContent`. **Coverage** is opt-in via `-DENABLE_COVERAGE=ON` and produces an HTML report through `gcovr` when present.
 
-Typical workflow: `cmake -B build && cmake --build build`, then run `./build/AdventureLog`.
+Typical workflow:
+
+```sh
+cmake -B build && cmake --build build
+./AdventureLog                   # run the program
+ctest --test-dir build           # run the test suite
+```
+
+For a coverage report: `cmake -B build -DENABLE_COVERAGE=ON && cmake --build build --target coverage` (requires `gcovr`).
 
 ## Architecture
 
@@ -50,15 +60,16 @@ Save is `ios::trunc` — the whole file is rewritten on every save, there is no 
 ## Directory layout
 
 - [include/](../include/) — header files, one per class/module.
-- [src/](../src/) — implementations, paired 1:1 with headers. `Main.cpp` is trivial and just constructs a `State`.
+- [src/](../src/) — implementations, paired 1:1 with headers. `Main.cpp` is trivial and just constructs a `UI` (which then constructs its `State` and runs the menu loop).
+- [tests/](../tests/) — GoogleTest unit tests, one `test_*.cpp` per area (`test_user.cpp`, `test_disk_helper.cpp`, `test_participant.cpp`). Discovered automatically via `gtest_discover_tests`.
 - [docs/](../docs/) — UML diagrams, class-flow graphs, and planning artifacts (Excalidraw, PlantUML, Graphviz). Useful for understanding intended structure at a glance.
-- [build/](../build/) — CMake/Ninja output, gitignored.
+- [build/](../build/) — CMake build output, gitignored. Includes the FetchContent'd gtest sources under `_deps/` and any `.gcno`/`.gcda` coverage artefacts when `ENABLE_COVERAGE=ON`.
 - [CMakeLists.txt](../CMakeLists.txt) — build config.
 
 ## Conventions
 
 - Headers in `include/` are included from `src/` using relative paths (`#include "../include/Foo.h"`).
-- Each model class has a matching `FooTests` namespace declared in its header with ad-hoc interactive tests; shared helpers live in [include/Tests.h](../include/Tests.h) (`Tests::verifyTest`, `Tests::div`). There is no automated test runner — tests prompt the user via stdin.
+- Automated tests live under [tests/](../tests/) and run through GoogleTest + CTest. The legacy `UserTests` / `LogTests` / `ParticipantTests` namespaces (declared in each model's header, with shared helpers in [include/Tests.h](../include/Tests.h)) are *interactive* checks that prompt the user via stdin — kept around but distinct from the automated suite, and not run by `ctest`.
 - `DiskHelper` namespace ([src/Disk.cpp](../src/Disk.cpp)) holds free-function utilities (string conversions, logging, KV parsing). `keys` namespace holds the disk format's string constants — always prefer those over string literals when touching persistence.
 - Error reporting is via `DiskHelper::printErr` which prints red `[ ERROR ]` to stderr. No exceptions are thrown from the persistence layer.
 - Memory: raw `new` / `delete`, with `Disk` and `User` destructors responsible for cleaning up owned pointers. No smart pointers in use.

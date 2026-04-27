@@ -39,12 +39,36 @@ The executable is emitted into the project root (see [CMakeLists.txt](CMakeLists
 
 Sources are picked up with `file(GLOB src/*.cpp)`, so adding a new `.cpp` under [src/](src/) is a matter of dropping the file in and re-running `cmake -B build`.
 
+### Tests
+
+Unit tests use [GoogleTest](https://github.com/google/googletest), pulled in automatically by CMake via `FetchContent` on first configure. After building, run them through CTest:
+
+```sh
+ctest --test-dir build
+```
+
+Or run the test binary directly: `./build/tests/AdventureLogTests`. New `.cpp` files under [tests/](tests/) are picked up automatically and registered with CTest individually. Tests can be skipped at configure time with `-DBUILD_TESTING=OFF`.
+
+### Coverage
+
+Line and branch coverage is wired up through [gcovr](https://gcovr.com), gated behind a CMake option so day-to-day builds aren't slowed down by instrumentation. To produce a report:
+
+```sh
+cmake -B build -DENABLE_COVERAGE=ON
+cmake --build build --target coverage
+```
+
+The `coverage` target builds the instrumented binary, runs the test suite, and emits an HTML report at `build/coverage/index.html`, plus a one-line summary on stdout. Filtering is set up so the report only counts `src/` and `include/` (excluding `Main.cpp`) — the gtest internals and CMake-fetched dependencies don't pollute the numbers.
+
+Requires `gcovr` to be installed (`dnf install gcovr`, `pip install gcovr`, or your distro equivalent). If it's missing the build still succeeds, but the `coverage` target won't be defined and a configure-time warning explains how to install it.
+
 ## Project structure
 
 ```text
 AdventureLog/
 ├── include/            # Headers — one per class/module
 ├── src/                # Implementations, paired 1:1 with headers
+├── tests/              # GoogleTest unit tests
 ├── docs/               # UML, class-flow graphs, Excalidraw planning
 ├── disk-template.yaml  # Canonical example of the disk format
 ├── disk.yaml           # Live user data (gitignored)

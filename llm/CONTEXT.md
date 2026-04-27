@@ -78,14 +78,36 @@ Defined in [src/Tests.cpp](../src/Tests.cpp):
 ## Build specifics
 
 - CMake 3.25+, C++26, compiler hardcoded to `/bin/g++` at [CMakeLists.txt:2](../CMakeLists.txt#L2). Portability to clang or a different g++ path currently requires editing the CMakeLists directly.
-- Sources picked up via `file(GLOB src/*.cpp)` at [CMakeLists.txt:8](../CMakeLists.txt#L8) — adding a new `.cpp` requires re-running `cmake -S . -B build` before incremental builds find it.
-- `-Werror` is on; `-Wall -Wpedantic` is present but commented out at [CMakeLists.txt:13-14](../CMakeLists.txt#L13-L14). Re-enabling would almost certainly surface warnings from the current UI code.
-- Build dir uses Unix Makefiles (driven via the `cmake-configure` / `cmake-build` tasks in [.vscode/tasks.json](../.vscode/tasks.json)). The binary lands at the workspace root (`AdventureLog`), not in `build/`, because [CMakeLists.txt:13](../CMakeLists.txt#L13) sets `RUNTIME_OUTPUT_DIRECTORY` to `${CMAKE_SOURCE_DIR}`.
+- **Source-and-binary split.** [CMakeLists.txt](../CMakeLists.txt) compiles all of `src/*.cpp` *except* `Main.cpp` into a static library `AdventureLogLib` (line 13), and then builds the `AdventureLog` executable from `Main.cpp` linked against the library (line 18). This split exists so `tests/AdventureLogTests` can link the same library without dragging in a duplicate `main()` symbol.
+- Source globs: `file(GLOB LIB_SOURCES src/*.cpp)` at [CMakeLists.txt:10](../CMakeLists.txt#L10), then `Main.cpp` is removed via `list(REMOVE_ITEM ...)`. Adding a new `.cpp` requires re-running `cmake -B build` before incremental builds find it.
+- `-Werror` is applied per-target (at lines [15](../CMakeLists.txt#L15) and [20](../CMakeLists.txt#L20), library and exe respectively) — *not* on the test target, so gtest's headers don't break the build under stricter modes. `-Wall -Wpedantic` is present but commented out at [CMakeLists.txt:16](../CMakeLists.txt#L16); re-enabling would almost certainly surface warnings from the current UI code.
+- The binary lands at the workspace root (`AdventureLog`), not in `build/`, because [CMakeLists.txt:23](../CMakeLists.txt#L23) sets `RUNTIME_OUTPUT_DIRECTORY` to `${CMAKE_SOURCE_DIR}`. The test binary stays under `build/tests/AdventureLogTests`.
+- Build dir uses Unix Makefiles (the CMake default on Linux when no `-G` is supplied). `.vscode/tasks.json` (gitignored) drives `cmake-configure` / `cmake-build` if you have it.
+
+## Tests
+
+- Framework: **GoogleTest v1.15.2**, fetched via `FetchContent` in [tests/CMakeLists.txt:1-10](../tests/CMakeLists.txt#L1-L10). Sources live in `build/_deps/googletest-src/`, build artefacts in `build/_deps/googletest-build/` — both gitignored under `build/`.
+- **Test discovery is per-`TEST()`-case**, not per-binary, via `gtest_discover_tests()` at [tests/CMakeLists.txt:20](../tests/CMakeLists.txt#L20). CTest sees one entry per `TEST(...)` macro, so `ctest --test-dir build` produces a 1-line-per-test report and you can filter with `-R <regex>`.
+- **Test sources globbed** by `file(GLOB TEST_SOURCES *.cpp)` at [tests/CMakeLists.txt:12](../tests/CMakeLists.txt#L12) — drop a new `test_*.cpp` in and reconfigure.
+- **`BUILD_TESTING` toggle.** `include(CTest)` in the root CMakeLists declares the option (default `ON`); pass `-DBUILD_TESTING=OFF` to skip the gtest fetch and test build entirely. Useful in CI paths that only need the main binary.
+- **Static-counter caveat.** Tests share the same `User::numUsers` / `Log::numLogs` / `Participant::numParticipants` counters as the rest of the program — they're TU-scoped statics with no test-fixture reset, so any test that asserts on an exact ID is order-dependent. Existing tests deliberately use relative checks (`EXPECT_GT(id, 0)`, `EXPECT_NE(a.id, b.id)`) for this reason.
+- The pre-existing `UserTests` / `LogTests` / `ParticipantTests` namespaces ([include/User.h:42-47](../include/User.h#L42-L47) etc.) are *interactive* helpers that prompt the user via stdin — orthogonal to the gtest suite. They're not run from the test binary.
+
+## Coverage (gcovr)
+
+- **Opt-in via `-DENABLE_COVERAGE=ON`** at configure time, declared in [CMakeLists.txt:8](../CMakeLists.txt#L8). Off by default so normal builds don't pay the instrumentation cost.
+- **Three targets get the flag**, each for a different reason:
+  - `AdventureLogLib` gets `--coverage -O0 -g` as PRIVATE *compile* options ([CMakeLists.txt:21](../CMakeLists.txt#L21)) — produces `.gcno` static maps and `.gcda` runtime counters next to each object file.
+  - `AdventureLogLib` *also* gets `--coverage` as a PRIVATE *link* option ([CMakeLists.txt:22](../CMakeLists.txt#L22)). For a static library this is largely a no-op (no real link step), but kept for clarity.
+  - `AdventureLog` (main exe, [CMakeLists.txt:32](../CMakeLists.txt#L32)) and `AdventureLogTests` (test exe, [tests/CMakeLists.txt:26](../tests/CMakeLists.txt#L26)) both get `--coverage` as PRIVATE *link* options. Without this on either consumer, the gcov runtime symbols (`__gcov_init`, `__gcov_merge_add`) are unresolved and linking fails — a real foot-gun discovered the first time this was wired up. Spelling it out explicitly in all three places makes it harder to break later than relying on PUBLIC propagation from the lib.
+- **`coverage` custom target** at [tests/CMakeLists.txt:32-49](../tests/CMakeLists.txt#L32-L49) chains: make `build/coverage/`, run ctest, run gcovr with filters narrowed to `src/` and `include/` (excluding `Main.cpp`), output HTML at `build/coverage/index.html`, plus a `--print-summary` line on stdout.
+- **Conditional on gcovr being on PATH.** `find_program(GCOVR_EXECUTABLE gcovr)` either defines the target or emits a configure-time warning with install hints — instrumented build still succeeds either way, only the report target depends on gcovr.
+- **What's measurable today.** With the current test suite (`UserTest`, `DiskHelperTest`, `ParticipantTest`), only `User.cpp`, `Disk.cpp` (helper functions), `Participant.cpp`, `Log.cpp`, and `Tests.cpp` see runtime hits. `State.cpp`, `UI.cpp`, and the rest of `Disk.cpp` get `.gcno` files (compiled instrumented) but no `.gcda` (never executed) — so they'll register as 0% coverage in the report. That's accurate and is what'll drive future test additions.
 
 ## Filesystem layout
 
 - [disk-template.yaml](../disk-template.yaml) — canonical schema example, committed.
-- `disk.yaml` — live user data, **gitignored**. The default path is `defaultDiskPath = "disk.yaml"` (cwd-relative), declared as `public static inline` on `State` at [include/State.h:11](../include/State.h#L11). It's referenced as the default argument of both `State::State` ([include/State.h:30](../include/State.h#L30)) and `UI::UI` ([include/UI.h:13](../include/UI.h#L13)), and `Main.cpp`'s no-argv branch lets that default fire (see "Entry point" below). Since the binary lands at the project root per [CMakeLists.txt:13](../CMakeLists.txt#L13), the cwd-relative `"disk.yaml"` resolves correctly when launched from there.
+- `disk.yaml` — live user data, **gitignored**. The default path is `defaultDiskPath = "disk.yaml"` (cwd-relative), declared as `public static inline` on `State` at [include/State.h:11](../include/State.h#L11). It's referenced as the default argument of both `State::State` ([include/State.h:30](../include/State.h#L30)) and `UI::UI` ([include/UI.h:13](../include/UI.h#L13)), and `Main.cpp`'s no-argv branch lets that default fire (see "Entry point" below). Since the binary lands at the project root per [CMakeLists.txt:23](../CMakeLists.txt#L23), the cwd-relative `"disk.yaml"` resolves correctly when launched from there.
 - `disk copy.yaml` sometimes appears in the working tree — a user-made backup, not a project convention. Safe to ignore; not referenced by any code.
 - `.gitignore` excludes: `build/`, `.DS_Store`, `.vscode/`, `.claude/`, `.cache/`, `disk.yaml`.
 

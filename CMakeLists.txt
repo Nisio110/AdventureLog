@@ -5,13 +5,36 @@ project(AdventureLog LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB SOURCES src/*.cpp)
+option(ENABLE_COVERAGE "Build with coverage instrumentation (gcc/clang)" OFF)
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+# Split sources: the library gets every translation unit except Main.cpp,
+# so tests can link the project's code without colliding with main().
+file(GLOB LIB_SOURCES src/*.cpp)
+list(REMOVE_ITEM LIB_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/Main.cpp")
+
+add_library(${PROJECT_NAME}Lib STATIC ${LIB_SOURCES})
+target_include_directories(${PROJECT_NAME}Lib PUBLIC include)
+target_compile_options(${PROJECT_NAME}Lib PRIVATE -Werror)
+#target_compile_options(${PROJECT_NAME}Lib PRIVATE -Werror -Wall -Wpedantic)
+
+if(ENABLE_COVERAGE)
+    target_compile_options(${PROJECT_NAME}Lib PRIVATE --coverage -O0 -g)
+    target_link_options(${PROJECT_NAME}Lib PRIVATE --coverage)
+endif()
+
+add_executable(${PROJECT_NAME} src/Main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}Lib)
+target_compile_options(${PROJECT_NAME} PRIVATE -Werror)
+
+if(ENABLE_COVERAGE)
+    target_link_options(${PROJECT_NAME} PRIVATE --coverage)
+endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-target_include_directories(${PROJECT_NAME} PRIVATE include)
-#target_compile_options(AdventureLog PRIVATE -Werror -Wall -Wpedantic)
-target_compile_options(${PROJECT_NAME} PRIVATE -Werror )
+# Unit tests via gtest (FetchContent). Disable with -DBUILD_TESTING=OFF.
+include(CTest)
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()

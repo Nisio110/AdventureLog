@@ -4,4 +4,4 @@ build/
 .claude/
 .cache/
 disk.yaml
-./AdventureLog
+AdventureLog

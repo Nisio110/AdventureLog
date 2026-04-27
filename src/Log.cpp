@@ -60,14 +60,15 @@ void Log::removeParticipant(Participant* p){
         }
     }
 } 
-Log::Log(){}
+Log::Log(){
+    generateID(numLogs);
+}
 Log::~Log(){
     for (auto p : participants) { delete p; }
     participants.clear();
 }
 Log::Log(int uid, string date){
     setUserId(uid);
-    generateID(numLogs);
     setDate(date);
 }
 Log::Log(int uid, string date, string note){
@@ -150,7 +151,7 @@ void CaveLog::print(){
          << div(2)                                << "\n\n";
 }
 
-CaveLog::CaveLog(){}
+CaveLog::CaveLog() : Log(){}
 CaveLog::CaveLog(int uid, string name, string date): Log(uid,date) {
     setName(name);
 }
@@ -189,7 +190,7 @@ void HikeLog::print(){
          << div(2)                                << "\n\n";
 }
 
-HikeLog::HikeLog(){}
+HikeLog::HikeLog() : Log() {}
 HikeLog::HikeLog(int uid, string date): Log(uid,date){}
 HikeLog::HikeLog(int uid, string date, string note): Log(uid,date,note){}
 HikeLog::HikeLog(int uid, string date, string area, string note, int dist): Log(uid, date, area, note){

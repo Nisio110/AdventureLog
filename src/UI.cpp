@@ -2,6 +2,7 @@
 #include <iostream>
 #include <limits>
 #include <cmath>
+#include <exception>
 
 using std::cin;
 using std::cout;
@@ -26,7 +27,6 @@ void UI::run(){
                 pageSelect = placeholder;
                 do{signedUp = signUp();
                 } while(!signedUp);
-                if (signedUp) {startupMenu();}
                 break;
             case EXIT:
                 pageSelect = placeholder;
@@ -38,12 +38,23 @@ void UI::run(){
                 } while (!loggedIn);
 
                 if (loggedIn) {
-                    switch (mainMenu()){
-                        case VIEW_LOGS: logMenu();
-                        case ADD_LOG: logCreator();
-                        case SETTINGS: userSettings();
-                        case LOGOUT: quit = exit();
-                    }
+                    bool mainMenuLoop{false};
+                    do {
+                        switch (mainMenu()){
+                            case VIEW_LOGS: 
+                                mainMenuLoop = logMenu();
+                                break;
+                            case ADD_LOG: 
+                                mainMenuLoop = logCreator();
+                                break;
+                            case SETTINGS: 
+                                mainMenuLoop = userSettings();
+                                break;
+                            case LOGOUT: 
+                                quit = exit();
+                                break;
+                        }
+                    } while (mainMenuLoop);
                 }
                 break;
         }
@@ -121,13 +132,14 @@ bool UI::signUp(){
         takeInput("Confirm password: ", passwordCheck);
         if (password != passwordCheck)
             {printErr("Passwords do not match");}
-    } while (!(password != passwordCheck));
+    } while (password != passwordCheck);
 
     try { s.createUser(username, password);
     } catch (std::runtime_error& e) {
         printErr(e.what());
         return false;
     }
+    s.save();
     return true;
 }
 
@@ -152,7 +164,7 @@ int UI::mainMenu(){
     return pageChoice;
 }
 
-int UI::logMenu(){
+bool UI::logMenu(){
     using enum Logs;
     User* user = s.getCurrentUser();
     size_t selectedChoice{0};
@@ -217,10 +229,10 @@ int UI::logMenu(){
                 ++currentPage;
                 break;
             case PREV_PAGE: 
-                if (page > 1) { page--; }
+                if (currentPage > 1) { --currentPage; }
                 break;
             case MAIN_MENU: 
-                mainMenu();
+                return true;
                 break;
             case SORT_MENU: 
                 sortLogs();
@@ -229,10 +241,10 @@ int UI::logMenu(){
                 printErr("Invalid selection");
         }
     }
-    return 0;
+    return true;
 }
 
-int UI::userSettings(){
+bool UI::userSettings(){
     int choice;
     cout << "User Settings"        << endl
          << "1: Change Username"   << endl
@@ -241,7 +253,7 @@ int UI::userSettings(){
          << "4: Back to Main Menu" << endl
          << "Select Option: ";
     cin >> choice;
-    return choice;
+    return true;
 
     // TODO: Add switch statement for each case.
 }
@@ -279,8 +291,114 @@ void UI::viewLog(size_t logSelect){
     // 3) Exit program
 }
 
-void UI::logCreator(){
-    // Placeholder
+bool UI::logCreator(){
+    // = Structure =
+    // Leave blank if N/A
+    // - for both -
+    // Adventure Type: <Hike or Cave>
+    // Date: <date>
+    // Area: <area>
+    // - if cave -
+    // Cave name: <name>
+    // Did you lead any part of the cave? [y/n]: <ans>
+    // Was it an SRT cave? [y/n]: <ans>
+    // Did you rig anything? [y/n]: <ans>
+    // ---
+    // - if hike -
+    // Hike distance: <dist>
+    // Describe the weather: <weather info>
+    // ---
+    // - for both -
+    // Write a note: <note>
+
+    printHeader("Log Creator");
+    std::string type;
+    std::string date;
+    std::string area;
+    std::size_t durMins{0};
+    // - if cave -
+    std::string cname;
+    bool didLead {false};
+    bool didSRT {false};
+    bool didRig {false};   
+    // - if hike -
+    size_t dist{0};
+    std::string weather;
+    // - for both -
+    bool addParticipants {false};
+    std::vector<std::string> pNames;
+    std::string note;
+    do{
+        takeInput("Choose log type [Hike/Cave]: ", type);
+        if (type != CaveLog::type && type != HikeLog::type){
+            printErr("Invalid type");
+        }
+    } while (type != CaveLog::type && type != HikeLog::type);
+    takeInput("Log date [DD/MM/YYYY]: ", date);
+    takeUIntInput("Duration [mins]: ", durMins);
+    takeInput("Area: ", area);
+    if (type == CaveLog::type){
+        takeInput("Cave name: ", cname);
+        takeBoolInput("Did you lead any part of the cave? [y/n]: ", didLead);
+        takeBoolInput("Did you do any SRT? [y/n]: ", didSRT);
+        takeBoolInput("Did you rig any part of the cave? [y/n]: ", didRig);
+    }
+    else if (type == HikeLog::type){
+        takeUIntInput("Hike distance [km]: ", dist);
+        takeInput("Describe the weather: ", weather);
+    }
+    takeBoolInput("Add participants? [y/n]: ", addParticipants);
+    size_t numParticipants{0};
+    takeUIntInput("How many? : ", numParticipants);
+    if (addParticipants){
+        for (size_t i{0}; i < numParticipants; ++i){
+            std::string pName;
+            const size_t threshold {2};
+            std::cout << "Participant " << i + 1 << " name: ";
+            takeInput("", pName);
+
+            if (pName.size() < threshold){loop = false;}
+            else {
+                pNames.push_back(pName);
+                continue;
+            }
+        }
+    }
+    takeInput("Write a note: ", note);
+
+
+    Log* log{nullptr};
+
+    if (type == CaveLog::type){
+        CaveLog* clog = new CaveLog();
+        clog->setName(cname);
+        clog->setCaveLeader(didLead);
+        clog->setSRTCave(didSRT);
+        clog->setRigger(didRig);
+        log = clog;
+    }
+    else if (type == HikeLog::type){
+        HikeLog* hlog = new HikeLog();
+        hlog->setDist(dist);
+        hlog->setWeather(weather);
+        log = hlog;
+    }
+    log->setUserId(s.getCurrentUser()->getId());
+    log->setDate(date);
+    log->setDurationMins(durMins);
+    log->setArea(area);
+
+    std::vector<Participant*> pVec;    
+    for (size_t i{0}; i < pNames.size(); ++i){
+        Participant* p = new Participant(pNames.at(i), log->getId());
+        pVec.push_back(p);
+    }
+    log->setParticipants(pVec);
+    log->setNote(note);
+
+    s.getCurrentUser()->addLog(log);
+    s.save();
+    return true;
 }
 
 void UI::editLog(){
@@ -295,16 +413,7 @@ void UI::deleteLog(){
 std::string UI::takeInput(std::string_view prefix){
     std::string buffer;
     print(prefix);
-
     std::getline(std::cin >> std::ws, buffer);
-
-    // try {
-    //     std::getline(std::cin >> std::ws, buffer);
-    // } catch (std::exception& e){
-    //     printErr(e.what());
-    //     takeInput(prefix);
-    //     resetInputStream(std::cin);
-    // }
     return buffer;
 }
 

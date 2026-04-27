@@ -209,8 +209,9 @@ std::vector<Participant*> Disk::loadParticipants(size_t objLineNum){
 		const KeyValueList obj {objects.at(i)};
 
 		if (getAttrKey(obj, objLineNum) == keys::obj){
-			if (getAttrValue(obj, objLineNum) == keys::participant) 
-				{ addParticipant(initParticipant(obj)); }
+			if (getAttrValue(obj, objLineNum) == keys::participant) {
+				if (Participant* p = initParticipant(obj)) { addParticipant(p); }
+			}
 		}
 	}
 	return participants;
@@ -403,6 +404,11 @@ Participant* Disk::initParticipant(KeyValueList PartKVL){
 			{ id = getVal(i); }
 		else if ((logId.empty()) && (getKey(i) == keys::pLogId))
 			{ logId = getVal(i); }
+	}
+	if (id.empty() || logId.empty()) {
+		std::cerr << "Disk::initParticipant: skipping malformed Participant block "
+		          << "(name='" << name << "', id='" << id << "', log-id='" << logId << "')\n";
+		return nullptr;
 	}
 	p = new Participant(name);
 	p->setID(stoi(id));

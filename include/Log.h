@@ -63,6 +63,7 @@ class CaveLog : public Log {
     bool wasCL{};
     bool didRigging{};
 public : 
+    inline static const std::string type {"Cave"};
     // Getters
     std::string getName();
     bool isSRTCave();
@@ -88,6 +89,7 @@ class HikeLog : public Log {
     int distance{-1};
     std::string weather{"N/A"};
 public : 
+    inline static const std::string type {"Hike"};
     // Getters
     int getDist();
     std::string getWeather();

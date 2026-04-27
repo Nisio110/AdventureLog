@@ -18,20 +18,20 @@ private:
     // Menus: Select a page to navigate to
     int startupMenu();
     int mainMenu();
-    int logMenu();
+    bool logMenu();
 
     // pages
     bool exit(bool forceQuit = 0); // signals to the run() function that it should end
     bool logIn(); 
     bool signUp();
     void viewLog(size_t logSelector);
-    void logCreator();
+    bool logCreator();
     void deleteLog();
     void editLog();
 
     //void choosePage(int menu);
     void sortLogs();
-    int userSettings();
+    bool userSettings();
     void changeUsername();
     void changePassword();
     void deleteAccount();

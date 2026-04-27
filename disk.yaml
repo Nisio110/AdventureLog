@@ -18,6 +18,11 @@ id: 4
 name: YAY
 password: 
 ---
+object: User
+id: 5
+name: Goku
+password: hiimgoku
+---
 object: CaveLog
 id: 1
 duration-mins: 210
@@ -64,28 +69,8 @@ srt-cave: false
 cave-leader: true
 rigging: false
 ---
-object: Participant
-name: Adam
-id: 1
-log-id: 1
----
-object: Participant
-name: Sean
-id: 2
-log-id: 1
----
-object: Participant
-name: Jamie
-id: 3
-log-id: 1
----
-object: Participant
-name: Giovanni
-id: 4
-log-id: 1
----
-object: Participant
-name: Ronan
+object: CaveLog
 id: 5
-log-id: 1
----
+duration-mins: 95
+area: Fermanagh
+note: This cave was pretty strong! I tried to fight it but its made of rock so it didn't fight back.

@@ -4,6 +4,14 @@ A personal C++ logger for caving and hiking trips. Single-user CLI: it loads you
 
 The goal is a small, self-contained record-keeper — somewhere to write down where you went, who came along, how long you were underground, whether you rigged, what the weather was like — without a database, a web service, or an account anywhere but your own machine.
 
+## Features
+
+- Sign up and log in to your own per-user record set.
+- Create cave or hike logs, tagged with the people you went with.
+- Browse your logs in a paginated list and inspect any entry in detail.
+- Auto-save on exit — your data lives in a plain-text file you can read, back up, or hand-edit with any text editor.
+- Pass a path as `argv[1]` to keep separate save files (e.g. one per season, or one per project).
+
 ## What it logs
 
 Two kinds of outings, sharing a common `Log` base:
@@ -12,22 +20,6 @@ Two kinds of outings, sharing a common `Log` base:
 - **HikeLog** — area, duration, distance, weather.
 
 Each log belongs to a **User** and carries zero or more **Participants** (the people you went with). Relationships are stored by ID; [disk-template.yaml](disk-template.yaml) shows the canonical on-disk shape.
-
-## Status
-
-What works today:
-
-- Sign up and log in (name + password — see *Caveats* for the storage model).
-- Create cave or hike logs with optional participants.
-- Browse logs in a paginated list and inspect individual entries.
-- Auto-save on clean exit; alternate save file via `argv[1]`.
-
-Known gaps:
-
-- Editing and deleting existing logs are placeholder stubs.
-- Log sorting compiles but does not sort correctly.
-- User-settings flow (change username / change password / delete account) is unimplemented; the menu entry is hidden until those handlers exist.
-- Saves only happen on a clean exit — a crash, kill, or `Ctrl-C` mid-session drops every change made since startup.
 
 ## Build and run
 
@@ -39,15 +31,13 @@ cmake --build build
 ./AdventureLog
 ```
 
-The executable is emitted into the project root (see [CMakeLists.txt](CMakeLists.txt)). With no argument, it loads `disk.yaml` from the current working directory. Pass an alternate path as `argv[1]` to use a different save file:
+The executable is emitted into the project root (see [CMakeLists.txt](CMakeLists.txt)). With no argument it loads `disk.yaml` from the current working directory; pass an alternate path to use a different save file:
 
 ```sh
 ./AdventureLog ~/saves/caving-2026.yaml
 ```
 
-If the path can't be opened, you'll be reprompted for a valid one rather than the program exiting.
-
-`-Werror` is on; `-Wall -Wpedantic` are currently commented out. Sources are picked up with `file(GLOB src/*.cpp)`, so adding a new `.cpp` under [src/](src/) requires re-running `cmake -S . -B build` before incremental builds will see it.
+Sources are picked up with `file(GLOB src/*.cpp)`, so adding a new `.cpp` under [src/](src/) is a matter of dropping the file in and re-running `cmake -S . -B build`.
 
 ## Project structure
 
@@ -94,11 +84,6 @@ srt-cave: false
 ---
 ```
 
-The parser is hand-rolled — not a real YAML parser. Keys that don't match the constants in `namespace keys` ([include/Disk.h](include/Disk.h)) are silently ignored. Saves rewrite the whole file in full (`ios::trunc`); there is no incremental append.
-
-## Caveats
-
-- **Passwords are stored in plain text** alongside the rest of the data. This is a personal-use logger for trusted, single-user setups — treat `disk.yaml` like any other private document on your machine, not like a credentials store.
-- **Hand-editing the save file is allowed but unforgiving.** Lines that don't match the expected `key: value` shape are silently dropped, and any log or participant whose owning ID doesn't resolve is discarded on the next save.
+Save files are plain text — open them in any editor to read, back up, or move to another machine. The keys the format recognises are defined in `namespace keys` ([include/Disk.h](include/Disk.h)).
 
 Design artifacts (UML, flow graphs, early planning) live in [docs/](docs/).

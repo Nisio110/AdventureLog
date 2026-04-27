@@ -30,7 +30,7 @@ void UI::run(){
                 break;
             case EXIT:
                 pageSelect = placeholder;
-                if (exit()) quit = exit();
+                if (quitMenu()) quit = quitMenu();
                 break;
             case LOGIN:
                 pageSelect = placeholder;
@@ -51,7 +51,7 @@ void UI::run(){
                             //     mainMenuLoop = userSettings();
                             //     break;
                             case LOGOUT: 
-                                quit = exit();
+                                quit = quitMenu();
                                 break;
                         }
                     } while (mainMenuLoop);
@@ -62,13 +62,12 @@ void UI::run(){
 }
 
 // MENUS ========================================= //
-bool UI::exit(bool forceQuit){
+bool UI::quitMenu(){
+    printHeader("Exit Menu");
     bool confirmation {false};
-    printHeader("Exit");
     takeBoolInput("Are you sure? [Y/n]: ", confirmation);
-    if (forceQuit == true)
-        {std::terminate();}
-    return confirmation;
+    if (confirmation) {std::exit(0);}
+    return true;
 }
 
 int UI::startupMenu(){
@@ -125,6 +124,9 @@ bool UI::signUp(){
     printHeader("Account Creator");
     do {
         takeInput("Enter a username: ", username);
+        if (!s.isUniqueUsername(username)){
+            printErr("Username is taken");
+        }
     } while (!s.isUniqueUsername(username));
 
     do {
@@ -272,7 +274,10 @@ bool UI::viewLog(size_t logSelect){
     std::cout << MAIN_MENU2 << ": Back to main menu\n";
 
     size_t selectedChoice{0};
-    takeUIntInput("Select option: ", selectedChoice);
+    size_t numChoices{2};
+    do{
+        takeUIntInput("Select option: ", selectedChoice);
+    } while (selectedChoice > numChoices);
 
     switch (selectedChoice){
         case LOG_OVERVIEW:
@@ -330,17 +335,27 @@ bool UI::logCreator(){
     bool addParticipants {false};
     std::vector<std::string> pNames;
     std::string note;
+
     do{
         takeInput("Choose log type [Hike/Cave]: ", type);
-        if (type != CaveLog::type && type != HikeLog::type){
+        if (type.empty()){printErr("Type cannot be empty");}
+        else if (type != CaveLog::type && type != HikeLog::type){
             printErr("Invalid type");
         }
     } while (type != CaveLog::type && type != HikeLog::type);
-    takeInput("Log date [DD/MM/YYYY]: ", date);
+
+    do {
+        takeInput("Log date [DD/MM/YYYY]: ", date);
+        if (date.empty()) {printErr("Date cannot be empty");}
+    } while (date.empty());
+    
     takeUIntInput("Duration [mins]: ", durMins);
     takeInput("Area: ", area);
     if (type == CaveLog::type){
-        takeInput("Cave name: ", cname);
+        do {
+            takeInput("Cave name: ", cname);
+            if (cname.empty()){printErr("Cave name cannot be empty");}
+        } while (cname.empty());
         takeBoolInput("Did you lead any part of the cave? [y/n]: ", didLead);
         takeBoolInput("Did you do any SRT? [y/n]: ", didSRT);
         takeBoolInput("Did you rig any part of the cave? [y/n]: ", didRig);
@@ -351,13 +366,16 @@ bool UI::logCreator(){
     }
     takeBoolInput("Add participants? [y/n]: ", addParticipants);
     size_t numParticipants{0};
-    takeUIntInput("How many? : ", numParticipants);
     if (addParticipants){
+        takeUIntInput("How many? : ", numParticipants);
         for (size_t i{0}; i < numParticipants; ++i){
             std::string pName;
             const size_t threshold {2};
-            std::cout << "Participant " << i + 1 << " name: ";
-            takeInput("", pName);
+            do{ 
+                std::cout << "Participant " << i + 1 << " name: ";
+                takeInput("", pName);
+                if (pName.empty()) {printErr("Participant name cannot be empty");}
+            } while (pName.empty());
 
             if (pName.size() < threshold){loop = false;}
             else {
@@ -368,6 +386,7 @@ bool UI::logCreator(){
     }
     takeInput("Write a note: ", note);
 
+    
 
     Log* log{nullptr};
 
@@ -411,11 +430,32 @@ void UI::deleteLog(){
     // Placeholder
 }
 
+void UI::openPage(size_t pageNum, size_t oldPage){
+    switch (pageNum){
+        case 1: 
+            startupMenu();
+            break;
+        case 2:
+            mainMenu();
+            break;
+        case 3:
+            logMenu();
+            break;
+        case 4:
+            quitMenu();
+            break;
+    }
+    if (oldPage != 0){
+        openPage(oldPage);
+    }
+}
+
+
 // INPUT HANDLING =============================== //
 std::string UI::takeInput(std::string_view prefix){
     std::string buffer;
     print(prefix);
-    std::getline(std::cin >> std::ws, buffer);
+    std::getline(std::cin, buffer);
     return buffer;
 }
 

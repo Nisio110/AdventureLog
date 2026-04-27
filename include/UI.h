@@ -21,7 +21,7 @@ private:
     bool logMenu();
 
     // pages
-    bool exit(bool forceQuit = 0); // signals to the run() function that it should end
+    bool quitMenu(); // signals to the run() function that it should end
     bool logIn(); 
     bool signUp();
     bool viewLog(size_t logSelector);
@@ -45,6 +45,8 @@ private:
     static std::string takeInput(std::string_view prefix, std::string& buffer);
     static std::size_t takeUIntInput(std::string_view prefix, std::size_t& buffer);
     static bool takeBoolInput(std::string_view prefix, bool& buffer);
+    static size_t takeMCQ(std::vector<std::string> choices);
+    void openPage(size_t pageNum, size_t oldPage = 0);
 
     // Sorting
     static std::vector<Log*> sortID(std::vector<Log*> logs);

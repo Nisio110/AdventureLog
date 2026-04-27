@@ -130,25 +130,22 @@ void CaveLog::print(){
     else _srtCave = neg;
 
 
-    cout << div(1) << " Log #" << getId() << " - Cave " << '\n'
+    cout << div(1)           << "Cave Log"        << '\n'
          << "Cave        : " << getName()         << "\n"
          << "Date        : " << getDate()         << "\n"
          << "SRT Cave    : " << _srtCave          << "\n"
          << "Area        : " << getArea()         << "\n"
-         << "Cavers      : " << "TBC"             << "\n"
          << "Rigged      : " << _rigger           << "\n"
          << "Cave Leader : " << _caveLeader       << "\n"
-         << "Participants: " << "\n";
+         << "Cavers      : " << "\n";
 
-    for (auto p : getParticipants())
-        {
-            cout << "  ";
-            p->print();
-        }
+    for (size_t i{0}; i < getParticipants().size(); ++i) {
+        cout << i+1 << ")  ";
+        getParticipants().at(i)->print();
+    }
 
-    cout << div(2)                                << "\n"
-         << "Notes : " << "\n" << getNote()       << "\n"
-         << div(2)                                << "\n\n";
+    cout << "---Notes : " << "\n" << getNote()       << "\n"
+         << "==="                                 << "\n\n";
 }
 
 CaveLog::CaveLog() : Log(){}
@@ -174,20 +171,21 @@ void HikeLog::setWeather(string w){ weather = w; }
 
 void HikeLog::print(){
     using namespace Tests;
-    cout << div(1) << " Log #" << getId() << " - Hike " << '\n'
-         << "Date        : " << getDate()         << "\n"
-         << "Area        : " << getArea()         << "\n"
-         << "Distance    : " << getDist()         << "\n"
-         << "Weather     : " << getWeather()      << "\n"
-         << "Duration    : " << getDurationMins() << " mins" << "\n"
-         << "Participants: " << "\n";
+    cout << div(1) << "Hike Log" << '\n'
+         << "Date     : " << getDate()         << "\n"
+         << "Area     : " << getArea()         << "\n"
+         << "Distance : " << getDist()         << " km" << "\n"
+         << "Weather  : " << getWeather()      << "\n"
+         << "Duration : " << getDurationMins() << " mins" << "\n"
+         << "Hikers   : " << "\n";
 
-    for (auto p : getParticipants())
-        { p->print(); }
+    for (size_t i{0}; i < getParticipants().size(); ++i) {
+        cout << i+1 << ")  ";
+        getParticipants().at(i)->print();
+    }
 
-    cout << div(2)                                << "\n"
-         << "Notes : " << "\n" << getNote()       << "\n"
-         << div(2)                                << "\n\n";
+    cout << "---Notes : " << "\n" << getNote()       << "\n"
+         << "==="                                     << "\n\n";
 }
 
 HikeLog::HikeLog() : Log() {}

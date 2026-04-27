@@ -140,6 +140,7 @@ void State::createUser(std::string username, std::string password){
     if (isUniqueUsername(username)){
         User* u = new User(username, password);
         addUser(u);
+        disk.addUser(u);
     }
     else throw std::runtime_error{"Username is taken"};
 }

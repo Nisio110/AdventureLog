@@ -23,6 +23,16 @@ id: 5
 name: Goku
 password: hiimgoku
 ---
+object: User
+id: 6
+name: Luffy
+password: niku
+---
+object: User
+id: 7
+name: Zoro
+password: sord
+---
 object: CaveLog
 id: 1
 duration-mins: 210
@@ -39,7 +49,7 @@ object: HikeLog
 id: 2
 duration-mins: 190
 area: Mourne Mountains
-note: null
+note: 
 date: 22/02/2026
 owner-id: 1
 distance: 16
@@ -81,6 +91,40 @@ srt-cave: false
 cave-leader: true
 rigging: true
 ---
+object: HikeLog
+id: 9
+duration-mins: 34523
+area: sdflkjasjdfa
+note: :3
+date: 34524652345
+owner-id: 6
+distance: 3452345
+weather: Shit
+---
+object: CaveLog
+id: 11
+duration-mins: 1345
+area: Feradfgadg
+note: RAHHHHHHHHHH
+date: 234
+owner-id: 6
+cave-name: Hah
+srt-cave: false
+cave-leader: false
+rigging: false
+---
+object: CaveLog
+id: 7
+duration-mins: 105
+area: Fermanagh
+note: i got eaten by a fish, looked like a cave
+date: Why should I?
+owner-id: 7
+cave-name: Some fish idk
+srt-cave: false
+cave-leader: false
+rigging: false
+---
 object: Participant
 name: Bulma
 id: 1
@@ -105,4 +149,29 @@ object: Participant
 name: Chichi
 id: 5
 log-id: 5
+---
+object: Participant
+name: 2sdfasd
+id: 8
+log-id: 9
+---
+object: Participant
+name: f231efd
+id: 9
+log-id: 9
+---
+object: Participant
+name: fdsf134e
+id: 10
+log-id: 9
+---
+object: Participant
+name: Nami
+id: 6
+log-id: 7
+---
+object: Participant
+name: Ussop
+id: 7
+log-id: 7
 ---

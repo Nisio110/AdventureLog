@@ -66,20 +66,6 @@ Each layer only knows about the one directly beneath it.
 - **Disk** ([src/Disk.cpp](src/Disk.cpp)) — parses and emits the on-disk format, and reconstructs the in-memory pointer graph on load (participants first, then logs, then users).
 - **Models** — [User.h](include/User.h), [Log.h](include/Log.h) (with `CaveLog`/`HikeLog` subclasses), [Participant.h](include/Participant.h). Each uses a static ID counter to hand out fresh IDs.
 
-### Class flow
-
-A more granular picture of the same architecture, generated from [docs/class-flow-graph.dot](docs/class-flow-graph.dot):
-
-![Class flow](docs/class-flow-graph2-16x9.png)
-
-Each coloured cluster is one class — `State` (blue), `Disk` (orange), `Log` with its `CaveLog` / `HikeLog` subclasses (purple), `User` (green), and `Participant` (yellow). Solid arrows are calls within a class; dashed pink edges are the cross-class dependencies, which all run in the strict UI → State → Disk → models direction described above. The strip along the bottom traces `main()` left-to-right, so you can read the full lifecycle of a session — startup, load, menu loop, save, exit — without chasing across files.
-
-A denser variant of the same diagram (with more of the intra-class call detail visible) is also in the docs folder:
-
-![Class flow — detailed](docs/class-flow-graph-16x9.png)
-
-Same colours and conventions, more arrows. Useful when you want to see *which* methods call which inside a single class, rather than just the cross-class relationships.
-
 ## Persistence format
 
 A flat, YAML-ish text format. Each object is a block of `key: value` lines, terminated by a `---` divider:

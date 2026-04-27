@@ -10,7 +10,7 @@ class UI {
     bool loop {true};
 
 public:
-    UI(std::string path);
+    UI(std::string path = State::defaultDiskPath);
     void run();
 
 private:

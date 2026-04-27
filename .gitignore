@@ -5,3 +5,4 @@ build/
 .cache/
 disk.yaml
 AdventureLog
+log

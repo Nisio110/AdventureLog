@@ -6,9 +6,10 @@ class State{
     std::vector<User*> users;
     Disk disk;
     User* currentUser;
-    static inline std::string defaultDiskPath {"disk.yaml"};
 
 public:
+    static inline std::string defaultDiskPath {"disk.yaml"};
+
     inline std::vector<User*> getUsers(){return users;};
     inline void setUsers(std::vector<User*> users);
 

@@ -85,7 +85,7 @@ Defined in [src/Tests.cpp](../src/Tests.cpp):
 ## Filesystem layout
 
 - [disk-template.yaml](../disk-template.yaml) — canonical schema example, committed.
-- `disk.yaml` — live user data, **gitignored**. Loaded by default from `defaultDiskPath = "../disk.yaml"` at [include/Disk.h:38](../include/Disk.h#L38) — i.e. the binary expects to be run from one level below the project root (typically `build/`).
+- `disk.yaml` — live user data, **gitignored**. The default path is `defaultDiskPath = "disk.yaml"` (cwd-relative), declared as `public static inline` on `State` at [include/State.h:11](../include/State.h#L11). It's referenced as the default argument of both `State::State` ([include/State.h:30](../include/State.h#L30)) and `UI::UI` ([include/UI.h:13](../include/UI.h#L13)), and `Main.cpp`'s no-argv branch lets that default fire (see "Entry point" below). Since the binary lands at the project root per [CMakeLists.txt:13](../CMakeLists.txt#L13), the cwd-relative `"disk.yaml"` resolves correctly when launched from there.
 - `disk copy.yaml` sometimes appears in the working tree — a user-made backup, not a project convention. Safe to ignore; not referenced by any code.
 - `.gitignore` excludes: `build/`, `.DS_Store`, `.vscode/`, `.claude/`, `.cache/`, `disk.yaml`.
 
@@ -95,14 +95,18 @@ Defined in [src/Tests.cpp](../src/Tests.cpp):
 
 ```cpp
 int main(int argc, char* argv[]){
-    std::string path;
-    if (argc > 1){ path = argv[1]; }
-    UI ui(path);
-    return ui.run();
+    if (argc > 1){
+        UI ui(argv[1]);
+        ui.run();
+    } else {
+        UI ui;
+        ui.run();
+    }
+    return 0;
 }
 ```
 
-`UI`'s constructor builds its `State` member (which loads from disk), `run()` drives the menu loop, and `~UI` → `~State` triggers the autosave. `argv[1]` lets the user point at an alternative save file; with no arg, an empty string is forwarded to `State` (which then enters its DiskAccessError reprompt loop instead of using `defaultDiskPath`).
+`UI`'s constructor builds its `State` member (which loads from disk), `run()` drives the menu loop, and `~UI` → `~State` triggers the autosave. The two-branch shape is deliberate: passing `argv[1]` explicitly when present, and constructing `UI` with **no argument** when absent so that the `State::defaultDiskPath` default actually kicks in. The earlier `UI ui(path)` form (with a local `path` defaulted to `""`) bypassed every default arg in the chain — `State` would receive `""`, `Disk::openFile("")` would fail, and the reprompt loop would catch it. That bug is gone now; with no argv, the default `"disk.yaml"` is loaded directly.
 
 ## Style inconsistencies worth knowing
 

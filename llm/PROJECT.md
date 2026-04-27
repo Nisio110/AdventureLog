@@ -4,11 +4,11 @@ A personal C++ logger for caving and hiking trips. Single-user CLI app that load
 
 ## Build
 
-- **CMake** (min 3.25), generator is Ninja in [build/](../build/).
+- **CMake** (min 3.25), generator is Unix Makefiles (the CMake default on Linux) in [build/](../build/).
 - **C++26**, compiled with `g++` and `-Werror`.
 - `file(GLOB src/*.cpp)` picks up all sources — adding a new `.cpp` under [src/](../src/) requires re-running cmake configure.
 
-Typical workflow: `cmake -S . -B build -G Ninja && cmake --build build`, then run `./build/AdventureLog`.
+Typical workflow: `cmake -B build && cmake --build build`, then run `./build/AdventureLog`.
 
 ## Architecture
 

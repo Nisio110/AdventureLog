@@ -23,10 +23,10 @@ Each log belongs to a **User** and carries zero or more **Participants** (the pe
 
 ## Build and run
 
-Requirements: CMake ≥ 3.25, Ninja, `g++` with C++26 support.
+Requirements: CMake ≥ 3.25, `g++` with C++26 support.
 
 ```sh
-cmake -S . -B build -G Ninja
+cmake -B build
 cmake --build build
 ./AdventureLog
 ```
@@ -37,7 +37,7 @@ The executable is emitted into the project root (see [CMakeLists.txt](CMakeLists
 ./AdventureLog ~/saves/caving-2026.yaml
 ```
 
-Sources are picked up with `file(GLOB src/*.cpp)`, so adding a new `.cpp` under [src/](src/) is a matter of dropping the file in and re-running `cmake -S . -B build`.
+Sources are picked up with `file(GLOB src/*.cpp)`, so adding a new `.cpp` under [src/](src/) is a matter of dropping the file in and re-running `cmake -B build`.
 
 ## Project structure
 

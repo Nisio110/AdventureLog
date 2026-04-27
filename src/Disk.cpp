@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <limits>
 
 using namespace DiskHelper;
 
@@ -579,13 +580,16 @@ std::vector<std::string> Disk::partToStr(Participant* p){
 
 void DiskHelper::openDiskForWriting(std::ofstream& file, std::string path){
 	file.open(path,std::ios::out | std::ios::trunc);
-	if (!file.good()) throw DiskAccessError{"openDiskForWriting: Failed to open disk for writing"};
-	else return;
+	if (!file.good()) 
+		throw DiskAccessError{"openDiskForWriting: Failed to open disk for writing"};
+	else 
+		return;
 }
 
 void Disk::writeToDisk(std::vector<std::string> buffer){
-	openDiskForWriting(writeFile, filePath);
+	if (!writeFile.is_open()) {openDiskForWriting(writeFile, filePath);}
 	for (auto str : buffer) {
 		writeFile << str << "\n";
 	}
+	writeFile.close();
 }

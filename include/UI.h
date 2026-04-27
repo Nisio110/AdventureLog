@@ -24,7 +24,7 @@ private:
     bool exit(bool forceQuit = 0); // signals to the run() function that it should end
     bool logIn(); 
     bool signUp();
-    void viewLog(size_t logSelector);
+    bool viewLog(size_t logSelector);
     bool logCreator();
     void deleteLog();
     void editLog();
@@ -64,10 +64,10 @@ private:
     };
 
     enum Main{
-        VIEW_LOGS = 0,
-        ADD_LOG = 1,
-        SETTINGS = 2,
-        LOGOUT = 3
+        VIEW_LOGS,
+        ADD_LOG,
+        //SETTINGS,
+        LOGOUT
     };
 
     enum Logs{
@@ -84,10 +84,10 @@ private:
     };
 
     enum ViewLog{
+        //EDIT_LOG = 0,
+        //DELETE_LOG = 1,
         LOG_OVERVIEW,
-        EDIT_LOG,
-        DELETE_LOG,
-        EXIT_PROGRAM
+        MAIN_MENU2
     };
 };
 

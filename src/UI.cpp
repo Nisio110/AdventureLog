@@ -47,9 +47,9 @@ void UI::run(){
                             case ADD_LOG: 
                                 mainMenuLoop = logCreator();
                                 break;
-                            case SETTINGS: 
-                                mainMenuLoop = userSettings();
-                                break;
+                            // case SETTINGS: 
+                            //     mainMenuLoop = userSettings();
+                            //     break;
                             case LOGOUT: 
                                 quit = exit();
                                 break;
@@ -153,7 +153,7 @@ int UI::mainMenu(){
     do {
         std::cout << VIEW_LOGS << ": View Logs"     << '\n'
                   << ADD_LOG  << ": Add Log"      << '\n'
-                  << SETTINGS  << ": User Settings" << '\n'
+                  //<< SETTINGS  << ": User Settings" << '\n'
                   << LOGOUT    << ": Logout"        << '\n';
         takeUIntInput("Select Option: ", pageChoice);
         if (pageChoice >= numChoices){
@@ -171,13 +171,14 @@ bool UI::logMenu(){
     size_t log{0};
     const short shownLogs{6};
     size_t currentPage{1};
+    bool loop {true};
 
-    while(true){
-    std::vector<Log*> logs {user->getLogs()};
-    size_t numPages = std::ceil((user->getLogs().size()) / shownLogs);
-    size_t numLogs {logs.size()};
+    while(loop){
+        std::vector<Log*> logs {user->getLogs()};
+        size_t numPages = std::ceil((user->getLogs().size()) / shownLogs);
+        size_t numLogs {logs.size()};
 
-    printHeader("Logs Overview");
+        printHeader("Logs Overview");
         log = (currentPage - 1) * shownLogs; // tie log selector to the current page.
         std::cout << "- Page " << currentPage << '\n';
         if (log < numLogs)
@@ -200,7 +201,7 @@ bool UI::logMenu(){
         else std::cout << LOG6 << ": - - -\n";
 
         std::cout << SORT_MENU << ": Sort logs\n";
-        std::cout << MAIN_MENU << ": Main menu\n";
+        std::cout << MAIN_MENU << ": Back to main menu\n";
         std::cout << PREV_PAGE << ": Previous page\n";
         std::cout << NEXT_PAGE << ": Next page\n";
         takeUIntInput("Select an option: ", selectedChoice);
@@ -208,22 +209,22 @@ bool UI::logMenu(){
         log = (currentPage - 1) * shownLogs; // tie log selector to the current page.
         switch (selectedChoice){
             case LOG1: 
-                viewLog(LOG1);
+                if (!viewLog(LOG1)) {loop = false;}
                 break;
             case LOG2:
-                viewLog(LOG2);
+                if (!viewLog(LOG2)) {loop = false;}
                 break;
             case LOG3:
-                viewLog(LOG3);
+                if (!viewLog(LOG3)) {loop = false;}
                 break;
             case LOG4:
-                viewLog(LOG4);
+                if (!viewLog(LOG4)) {loop = false;}
                 break;
             case LOG5:
-                viewLog(LOG5);
+                if (!viewLog(LOG5)) {loop = false;}
                 break;
             case LOG6:
-                viewLog(LOG6);
+                if (!viewLog(LOG6)) {loop = false;}
                 break;
             case NEXT_PAGE: 
                 ++currentPage;
@@ -258,30 +259,30 @@ bool UI::userSettings(){
     // TODO: Add switch statement for each case.
 }
 
-void UI::viewLog(size_t logSelect){
+bool UI::viewLog(size_t logSelect){
     using enum ViewLog;
     printHeader("Log Viewer");
     std::vector<Log*> logs = s.getCurrentUser()->getLogs();
     logs.at(logSelect)->print();
     
     std::cout << "- Options\n";
+    //std::cout << EDIT_LOG << ": Edit log\n";
+    //std::cout << DELETE_LOG << ": Delete log\n";
     std::cout << LOG_OVERVIEW << ": Back to log overview\n";
-    std::cout << EDIT_LOG << ": Edit log\n";
-    std::cout << DELETE_LOG << ": Delete log\n";
-    std::cout << EXIT_PROGRAM << ": Exit program\n";
+    std::cout << MAIN_MENU2 << ": Back to main menu\n";
 
     size_t selectedChoice{0};
     takeUIntInput("Select option: ", selectedChoice);
 
     switch (selectedChoice){
         case LOG_OVERVIEW:
-            return;
-        case EDIT_LOG:
-            editLog();
-        case DELETE_LOG:
-            deleteLog();
-        case EXIT_PROGRAM:
-            exit(true);
+            return true;
+        //case EDIT_LOG:
+        //    editLog();
+        //case DELETE_LOG:
+        //   deleteLog();
+        case MAIN_MENU2:
+            return false;
     }
 
     // TODO: Add options
@@ -289,6 +290,7 @@ void UI::viewLog(size_t logSelect){
     // 1) Edit log
     // 2) Delete log
     // 3) Exit program
+    return true;
 }
 
 bool UI::logCreator(){

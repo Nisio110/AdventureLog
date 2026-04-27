@@ -73,4 +73,36 @@ object: CaveLog
 id: 5
 duration-mins: 95
 area: Fermanagh
-note: This cave was pretty strong! I tried to fight it but its made of rock so it didn't fight back.
+note: This cave was strong! I tried to fight it, but there was always more rock!!!
+date: 27/04/2026
+owner-id: 5
+cave-name: Poll na Kiltyclogher
+srt-cave: false
+cave-leader: true
+rigging: true
+---
+object: Participant
+name: Bulma
+id: 1
+log-id: 5
+---
+object: Participant
+name: Vegata
+id: 2
+log-id: 5
+---
+object: Participant
+name: Krillin
+id: 3
+log-id: 5
+---
+object: Participant
+name: Piccolo
+id: 4
+log-id: 5
+---
+object: Participant
+name: Chichi
+id: 5
+log-id: 5
+---

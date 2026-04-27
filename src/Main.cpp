@@ -6,6 +6,9 @@ int main(int argc, char* argv[]){
 	UI ui(path);
 	try{
 		ui.run();
-	} catch (std::exception& e){}
+	} catch (std::exception& e){
+		DiskHelper::printErr(e.what());
+		return 0;
+	}
 	return 0;
 }

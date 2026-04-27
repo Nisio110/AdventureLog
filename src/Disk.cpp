@@ -2,6 +2,8 @@
 #include "../include/Participant.h"
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
+#include <limits>
 
 using namespace DiskHelper;
 
@@ -20,8 +22,7 @@ namespace DiskHelper{
 		for (size_t i{}; i < objKVList.size(); ++i)
 			{if (getKey(objKVList.at(i)) == key) {return i;}}
 
-		printErr("getKeyLocationInObj: Key not found in KVL.");
-		return {};
+		throw std::runtime_error{"getKeyLocationInObj: Key not found in KVL."};
 	}
 	unsigned long strToNum(const std::string& id)
 	{
@@ -95,9 +96,8 @@ namespace DiskHelper{
 	bool strToBool(std::string_view str){
 		if (str == "false") {return false;}
 		else if (str == "true"){return true;}
-		else { 
-			printErr("strToBool: String does not convert to boolean");
-			return false;
+		else {
+			throw std::runtime_error{"strToBool: String does not convert to boolean"};
 		}
 	}
 
@@ -119,8 +119,7 @@ void Disk::openFile(std::string_view fp){
 	diskFile.seekg(0);
 
 	if (!isFileGood()){
-		printErr("openFile: Disk is not accessible");
-		return;
+		throw DiskAccessError{"openFile: Disk is not accessible"};
 	}
 	else return;
 }
@@ -151,8 +150,7 @@ void Disk::parseDisk(std::string_view fp)
 ObjectList Disk::splitByObjects(const KeyValueList& attributes)
 {
 	if (attributes.empty()){
-		printErr("splitByObjects: No KV pairs found in attributes");
-		return objects;
+		throw std::runtime_error{"splitByObjects: No KV pairs found in attributes"};
 	}
 	for (size_t i{0}; i < attributes.size(); ++i){
 		if (getAttrKey(attributes, i) != keys::obj)
@@ -167,6 +165,7 @@ ObjectList Disk::splitByObjects(const KeyValueList& attributes)
 
 void Disk::loadFromDisk(std::string diskPath)
 {
+	setFilePath(diskPath);
 	parseDisk(diskPath);
 
 	loadUsers(
@@ -211,8 +210,9 @@ std::vector<Participant*> Disk::loadParticipants(size_t objLineNum){
 		const KeyValueList obj {objects.at(i)};
 
 		if (getAttrKey(obj, objLineNum) == keys::obj){
-			if (getAttrValue(obj, objLineNum) == keys::participant) 
-				{ addParticipant(initParticipant(obj)); }
+			if (getAttrValue(obj, objLineNum) == keys::participant) {
+				if (Participant* p = initParticipant(obj)) { addParticipant(p); }
+			}
 		}
 	}
 	return participants;
@@ -406,6 +406,11 @@ Participant* Disk::initParticipant(KeyValueList PartKVL){
 		else if ((logId.empty()) && (getKey(i) == keys::pLogId))
 			{ logId = getVal(i); }
 	}
+	if (id.empty() || logId.empty()) {
+		std::cerr << "Disk::initParticipant: skipping malformed Participant block "
+		          << "(name='" << name << "', id='" << id << "', log-id='" << logId << "')\n";
+		return nullptr;
+	}
 	p = new Participant(name);
 	p->setID(stoi(id));
 	p->setLogID(stoi(logId));
@@ -575,13 +580,16 @@ std::vector<std::string> Disk::partToStr(Participant* p){
 
 void DiskHelper::openDiskForWriting(std::ofstream& file, std::string path){
 	file.open(path,std::ios::out | std::ios::trunc);
-	if (!file.good()) printErr("openDiskForWriting: Failed to open disk for writing");
-	else return;
+	if (!file.good()) 
+		throw DiskAccessError{"openDiskForWriting: Failed to open disk for writing"};
+	else 
+		return;
 }
 
 void Disk::writeToDisk(std::vector<std::string> buffer){
-	openDiskForWriting(writeFile, filePath);
+	if (!writeFile.is_open()) {openDiskForWriting(writeFile, filePath);}
 	for (auto str : buffer) {
 		writeFile << str << "\n";
 	}
+	writeFile.close();
 }

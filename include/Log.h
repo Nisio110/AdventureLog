@@ -3,6 +3,7 @@
 #include "Participant.h"
 #include <string>
 #include <vector>
+#include <iosfwd>
 class User;
 
 class Log{
@@ -53,6 +54,7 @@ public :
     static bool sortByID(Log* log1, Log* log2);
     static bool sortByDuration(Log* log1, Log* log2);
 
+    friend std::ostream& operator<<(std::ostream& os, Log& log);
 };
 
 class CaveLog : public Log {
@@ -61,6 +63,7 @@ class CaveLog : public Log {
     bool wasCL{};
     bool didRigging{};
 public : 
+    inline static const std::string type {"Cave"};
     // Getters
     std::string getName();
     bool isSRTCave();
@@ -86,6 +89,7 @@ class HikeLog : public Log {
     int distance{-1};
     std::string weather{"N/A"};
 public : 
+    inline static const std::string type {"Hike"};
     // Getters
     int getDist();
     std::string getWeather();

@@ -30,7 +30,7 @@ string Tests::div(int x) { // there is no reason to do it this way i just think 
     else {
         string d;
         int size = std::round(std::pow(std::numbers::e, x));
-        for (int i{}; i < size; ++i) d.append("=");
+        for (int i{}; i < size; ++i) d.append("-");
         return d;
     }
 }

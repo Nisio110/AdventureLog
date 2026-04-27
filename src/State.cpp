@@ -1,5 +1,5 @@
 #include "../include/State.h"
-#include "UI.h"
+#include <iostream>
 
 void State::setUsers(std::vector<User*> u){
     users = u;
@@ -104,10 +104,70 @@ void State::save(){
 }
 
 State::State(std::string path) : disk(path) {
-    loadSave(path);
-    ui(*this);
+    while (true) {
+        try {
+            loadSave(path);
+            break;
+        } catch (DiskAccessError& e) {
+            while(true){
+                DiskHelper::printErr(e.what());
+                std::cout << "Enter the path to a valid save file: ";
+                if (std::getline(std::cin, path)){
+                    break;
+                }
+            }
+        }
+    }
 }
 
 State::~State(){
-    save();
+    while(true){
+        try {
+            save();
+        } catch (DiskAccessError& e){
+            std::cout << "Enter the path to a valid save file: ";
+            std::string path;
+            std::getline(std::cin, path);
+            disk.setFilePath(path);
+        } catch (std::exception& e){
+            DiskHelper::printErr(e.what());
+        }
+        break;
+    }
+}
+
+void State::createUser(std::string username, std::string password){
+    if (isUniqueUsername(username)){
+        User* u = new User(username, password);
+        addUser(u);
+        disk.addUser(u);
+    }
+    else throw std::runtime_error{"Username is taken"};
+}
+
+bool State::logIn(std::string username, std::string password){
+    bool authenticated {false};
+
+    for (auto user : getUsers()) {
+        if (username == user->getName()){
+            if (password == user->getPasswd()){
+                authenticated = true;
+                setCurrentUser(user);
+                break;
+            }
+            throw std::runtime_error {"Incorrect Password"};
+        }
+    }
+    if (!authenticated) throw std::runtime_error {"User does not exist"};
+    else return authenticated;
+}
+
+bool State::isUniqueUsername(std::string username){
+    bool isUniqueName {true};
+    for (auto user : users){
+        if (username == user->getName()){
+            isUniqueName = false;
+        }
+    }
+    return isUniqueName;
 }

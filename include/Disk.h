@@ -2,9 +2,14 @@
 #define DISK_H
 #include <vector>
 #include <fstream>
+#include <stdexcept>
 #include "User.h"
 class Log;
 class Participant;
+
+class DiskAccessError : public std::runtime_error {
+    using std::runtime_error::runtime_error;
+};
 
 using KeyValue     = std::pair<std::string, std::string>;
 using AttrKeyValue = std::pair<std::size_t,std::string>;

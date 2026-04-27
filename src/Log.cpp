@@ -60,14 +60,15 @@ void Log::removeParticipant(Participant* p){
         }
     }
 } 
-Log::Log(){}
+Log::Log(){
+    generateID(numLogs);
+}
 Log::~Log(){
     for (auto p : participants) { delete p; }
     participants.clear();
 }
 Log::Log(int uid, string date){
     setUserId(uid);
-    generateID(numLogs);
     setDate(date);
 }
 Log::Log(int uid, string date, string note){
@@ -94,10 +95,15 @@ Log::Log(int uid, string date, string area, string note, vector<Participant*> pa
 
 //Sorting
 bool Log::sortByID(Log* log1, Log* log2){
-    return (log1->getId() > log2->getId());
+    return (log1->getId() < log2->getId());
 }
 bool Log::sortByDuration(Log* log1, Log* log2){
-    return (log1->getDurationMins() > log2->getDurationMins());
+    return (log1->getDurationMins() < log2->getDurationMins());
+}
+
+std::ostream& operator<<(std::ostream& os, Log& log){
+    log.print();
+    return os;
 }
 
 // CAVELOG CLASS ========================================= //
@@ -124,28 +130,25 @@ void CaveLog::print(){
     else _srtCave = neg;
 
 
-    cout << div(1) << " Log #" << getId() << " - Cave " << div(2) << '\n'
+    cout << div(1)           << "Cave Log"        << '\n'
          << "Cave        : " << getName()         << "\n"
          << "Date        : " << getDate()         << "\n"
          << "SRT Cave    : " << _srtCave          << "\n"
          << "Area        : " << getArea()         << "\n"
-         << "Cavers      : " << "TBC"             << "\n"
          << "Rigged      : " << _rigger           << "\n"
          << "Cave Leader : " << _caveLeader       << "\n"
-         << "Participants: " << "\n";
+         << "Cavers      : " << "\n";
 
-    for (auto p : getParticipants())
-        {
-            cout << "  ";
-            p->print();
-        }
+    for (size_t i{0}; i < getParticipants().size(); ++i) {
+        cout << i+1 << ")  ";
+        getParticipants().at(i)->print();
+    }
 
-    cout << div(3)                                << "\n"
-         << "Notes : " << "\n" << getNote()       << "\n"
-         << div(3)                                << "\n\n";
+    cout << "---Notes : " << "\n" << getNote()       << "\n"
+         << "==="                                 << "\n\n";
 }
 
-CaveLog::CaveLog(){}
+CaveLog::CaveLog() : Log(){}
 CaveLog::CaveLog(int uid, string name, string date): Log(uid,date) {
     setName(name);
 }
@@ -168,23 +171,24 @@ void HikeLog::setWeather(string w){ weather = w; }
 
 void HikeLog::print(){
     using namespace Tests;
-    cout << div(1) << " Log #" << getId() << " - Hike " << div(2) << '\n'
-         << "Date        : " << getDate()         << "\n"
-         << "Area        : " << getArea()         << "\n"
-         << "Distance    : " << getDist()         << "\n"
-         << "Weather     : " << getWeather()      << "\n"
-         << "Duration    : " << getDurationMins() << " mins" << "\n"
-         << "Participants: " << "\n";
+    cout << div(1) << "Hike Log" << '\n'
+         << "Date     : " << getDate()         << "\n"
+         << "Area     : " << getArea()         << "\n"
+         << "Distance : " << getDist()         << " km" << "\n"
+         << "Weather  : " << getWeather()      << "\n"
+         << "Duration : " << getDurationMins() << " mins" << "\n"
+         << "Hikers   : " << "\n";
 
-    for (auto p : getParticipants())
-        { p->print(); }
+    for (size_t i{0}; i < getParticipants().size(); ++i) {
+        cout << i+1 << ")  ";
+        getParticipants().at(i)->print();
+    }
 
-    cout << div(3)                                << "\n"
-         << "Notes : " << "\n" << getNote()       << "\n"
-         << div(3)                                << "\n\n";
+    cout << "---Notes : " << "\n" << getNote()       << "\n"
+         << "==="                                     << "\n\n";
 }
 
-HikeLog::HikeLog(){}
+HikeLog::HikeLog() : Log() {}
 HikeLog::HikeLog(int uid, string date): Log(uid,date){}
 HikeLog::HikeLog(int uid, string date, string note): Log(uid,date,note){}
 HikeLog::HikeLog(int uid, string date, string area, string note, int dist): Log(uid, date, area, note){

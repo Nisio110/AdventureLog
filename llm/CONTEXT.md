@@ -46,13 +46,15 @@ Active memory store of AdventureLog's current state — specific symbol location
 
 ## UI menu mechanics
 
-Main dispatcher is `ui(State&)` at [src/UI.cpp:6](../src/UI.cpp#L6), driven by an `int menu` state variable:
+`UI` is a class ([include/UI.h](../include/UI.h)) that owns a `State s` member by value and holds the menu-loop state (`int menu {0}`, `int page {1}`, `bool loop {true}`) as members. Construction order: `main` builds `UI(path)` → `State` member is constructed (loads disk) → `main` calls `ui.run()` to enter the loop. `~UI` triggers `~State` which calls `save()`.
+
+Main dispatcher is `UI::run()` at [src/UI.cpp:12](../src/UI.cpp#L12), driven by the `menu` member:
 
 | `menu` | screen                          | choice source        |
 |--------|---------------------------------|----------------------|
 | `0`    | startup (login / signup / exit) | `startupMenu()`      |
 | `1`    | main menu                       | `mainMenu()`         |
-| `2`    | log list + paging               | `logMenu(page)`      |
+| `2`    | log list + paging               | `logMenu()`          |
 
 Menu-choice conventions from the printed menus in [src/UI.cpp](../src/UI.cpp):
 
@@ -78,7 +80,7 @@ Defined in [src/Tests.cpp](../src/Tests.cpp):
 - CMake 3.25+, C++26, compiler hardcoded to `/bin/g++` at [CMakeLists.txt:2](../CMakeLists.txt#L2). Portability to clang or a different g++ path currently requires editing the CMakeLists directly.
 - Sources picked up via `file(GLOB src/*.cpp)` at [CMakeLists.txt:8](../CMakeLists.txt#L8) — adding a new `.cpp` requires re-running `cmake -S . -B build` before incremental builds find it.
 - `-Werror` is on; `-Wall -Wpedantic` is present but commented out at [CMakeLists.txt:13-14](../CMakeLists.txt#L13-L14). Re-enabling would almost certainly surface warnings from the current UI code.
-- Build dir uses Ninja; the binary is `build/AdventureLog`.
+- Build dir uses Unix Makefiles (driven via the `cmake-configure` / `cmake-build` tasks in [.vscode/tasks.json](../.vscode/tasks.json)). The binary lands at the workspace root (`AdventureLog`), not in `build/`, because [CMakeLists.txt:13](../CMakeLists.txt#L13) sets `RUNTIME_OUTPUT_DIRECTORY` to `${CMAKE_SOURCE_DIR}`.
 
 ## Filesystem layout
 
@@ -92,14 +94,18 @@ Defined in [src/Tests.cpp](../src/Tests.cpp):
 [src/Main.cpp](../src/Main.cpp) is intentionally minimal:
 
 ```cpp
-int main() { State s; }
+int main(int argc, char* argv[]){
+    std::string path;
+    if (argc > 1){ path = argv[1]; }
+    UI ui(path);
+    return ui.run();
+}
 ```
 
-All lifecycle (load → UI → save) happens inside `State`'s constructor/destructor chain. A `basicTest()` free function is defined beneath `main` but never called — scratch code, not part of the runtime flow.
+`UI`'s constructor builds its `State` member (which loads from disk), `run()` drives the menu loop, and `~UI` → `~State` triggers the autosave. `argv[1]` lets the user point at an alternative save file; with no arg, an empty string is forwarded to `State` (which then enters its DiskAccessError reprompt loop instead of using `defaultDiskPath`).
 
 ## Style inconsistencies worth knowing
 
-- [src/UI.cpp:4](../src/UI.cpp#L4) has a full `using namespace std;` at file scope. Other `.cpp` files use selective `using std::foo;` declarations. Headers never pull `std` in.
 - Constructor parameter naming: `Participant` uses underscore-prefixed names (`_name`, `_logID`), `User` and `Log` use short forms (`n`, `p`, `l`). No project-wide convention.
 - The default `User()` no-arg constructor ([src/User.cpp:23](../src/User.cpp#L23)) does not call `generateID()` — it leaves `id` zero-initialised. `Disk::initUser` relies on this (it calls `u->setID(...)` manually after loading from disk). New-from-UI user creation should prefer `User(name, passwd)`, which does call `generateID()`.
 - Headers in [include/](../include/) are included from [src/](../src/) using `#include "../include/Foo.h"` — not just `"Foo.h"`, even though `target_include_directories(... include)` would allow the shorter form.

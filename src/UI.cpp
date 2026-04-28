@@ -202,7 +202,7 @@ bool UI::logMenu(){
             {std::cout << LOG6 << ": Log " << logs.at(++log)->getDate() << '\n';}
         else std::cout << LOG6 << ": - - -\n";
 
-        std::cout << SORT_MENU << ": Sort logs\n";
+        std::cout << SORT_MENU << ": - - -\n";
         std::cout << MAIN_MENU << ": Back to main menu\n";
         std::cout << PREV_PAGE << ": Previous page\n";
         std::cout << NEXT_PAGE << ": Next page\n";
@@ -229,12 +229,15 @@ bool UI::logMenu(){
                 if (!viewLog(LOG6)) {loop = false;}
                 break;
             case NEXT_PAGE: 
-                ++currentPage;
+                if(currentPage < 100) {++currentPage;}
+                else {currentPage = 1;}
                 break;
             case PREV_PAGE: 
                 if (currentPage > 1) { --currentPage; }
+                else {currentPage = 100;}
                 break;
-            case MAIN_MENU: 
+            case MAIN_MENU:
+                currentPage = 1; 
                 return true;
                 break;
             case SORT_MENU: 
@@ -263,12 +266,16 @@ bool UI::userSettings(){
 
 bool UI::viewLog(size_t logSelect){
     using enum ViewLog;
-    printHeader("Log Viewer");
     std::vector<Log*> logs = s.getCurrentUser()->getLogs();
     if(logSelect < logs.size()){
         logs.at(logSelect)->print();
     }
-    
+    else {
+        printErr("Log doesn't exist");
+        return true;
+    }
+
+    printHeader("Log Viewer");
     std::cout << "- Options\n";
     //std::cout << EDIT_LOG << ": Edit log\n";
     //std::cout << DELETE_LOG << ": Delete log\n";

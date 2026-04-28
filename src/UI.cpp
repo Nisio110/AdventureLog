@@ -265,7 +265,9 @@ bool UI::viewLog(size_t logSelect){
     using enum ViewLog;
     printHeader("Log Viewer");
     std::vector<Log*> logs = s.getCurrentUser()->getLogs();
-    logs.at(logSelect)->print();
+    if(logSelect < logs.size()){
+        logs.at(logSelect)->print();
+    }
     
     std::cout << "- Options\n";
     //std::cout << EDIT_LOG << ": Edit log\n";

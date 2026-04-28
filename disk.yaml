@@ -33,6 +33,11 @@ id: 7
 name: Zoro
 password: sord
 ---
+object: User
+id: 8
+name: Adam1
+password: Password
+---
 object: CaveLog
 id: 1
 duration-mins: 210
@@ -86,7 +91,7 @@ area:
 note: tee hee. bish bash bosh.
 date: 27/04/2026
 owner-id: 1
-cave-name: go fuck yourself
+cave-name: idk
 srt-cave: false
 cave-leader: false
 rigging: true
@@ -111,7 +116,7 @@ note: :3
 date: 34524652345
 owner-id: 6
 distance: 3452345
-weather: Shit
+weather: bad
 ---
 object: CaveLog
 id: 11
@@ -136,6 +141,16 @@ cave-name: Some fish idk
 srt-cave: false
 cave-leader: false
 rigging: false
+---
+object: HikeLog
+id: 15
+duration-mins: 120
+area: Fernhill Park
+note: lovely day, garda horses and dogs were nice, went to the playground after. Cubs enjoyed
+date: 28/04/2026
+owner-id: 8
+distance: 10
+weather: Sunny, dry, warm
 ---
 object: Participant
 name: Bulma
@@ -186,4 +201,34 @@ object: Participant
 name: Ussop
 id: 7
 log-id: 7
+---
+object: Participant
+name: Adam Farrelly
+id: 11
+log-id: 15
+---
+object: Participant
+name: James Carroll
+id: 12
+log-id: 15
+---
+object: Participant
+name: Susan
+id: 13
+log-id: 15
+---
+object: Participant
+name: Pete
+id: 14
+log-id: 15
+---
+object: Participant
+name: Maeve
+id: 15
+log-id: 15
+---
+object: Participant
+name: Various Cubs
+id: 16
+log-id: 15
 ---

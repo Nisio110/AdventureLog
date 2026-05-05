@@ -5,9 +5,6 @@
 class UI {
     State s;
     User u;
-    int menu {0};
-    int page {1};
-    bool loop {true};
 
 public:
     UI(std::string path = State::defaultDiskPath);

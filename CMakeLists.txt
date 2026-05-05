@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.25)
-set(CMAKE_CXX_COMPILER /bin/g++)
-project(AdventureLog LANGUAGES CXX)
+set(CMAKE_CXX_COMPILER /usr/bin/g++)
+set(CMAKE_C_COMPILER /usr/bin/gcc)
+project(AdventureLog)
 
 set(CMAKE_CXX_STANDARD 26)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(ENABLE_COVERAGE "Build with coverage instrumentation (gcc/clang)" OFF)
 

@@ -38,6 +38,11 @@ id: 8
 name: Adam1
 password: Password
 ---
+object: User
+id: 9
+name: ostap
+password: test
+---
 object: CaveLog
 id: 1
 duration-mins: 210

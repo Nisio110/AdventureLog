@@ -111,3 +111,4 @@ srt-cave: false
 Save files are plain text — open them in any editor to read, back up, or move to another machine. The keys the format recognises are defined in `namespace keys` ([include/Disk.h](include/Disk.h)).
 
 Design artifacts (UML, flow graphs, early planning) live in [docs/](docs/).
+
